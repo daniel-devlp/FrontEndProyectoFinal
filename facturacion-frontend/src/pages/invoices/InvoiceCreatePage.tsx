@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/common/Navbar';
 import Table from '../../components/common/Table';
 import SearchBar from '../../components/common/SearchBar';
@@ -57,6 +57,7 @@ const InvoiceCreatePage = () => {
     setClientModalOpen(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSelectProduct = (product: ProductDto, quantity: number) => {
     if (quantity > product.stock) {
       toast.error('La cantidad excede el stock disponible');
@@ -187,9 +188,9 @@ const InvoiceCreatePage = () => {
       } else {
         toast.error('Error inesperado al crear la factura');
       }
-    }
-  };
+    }  };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDownloadInvoice = () => {
     if (!selectedClient) {
       toast.error('Debe seleccionar un cliente antes de descargar la factura');

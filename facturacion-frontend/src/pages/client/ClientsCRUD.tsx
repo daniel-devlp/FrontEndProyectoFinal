@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../components/common/Navbar';
-import { useClients, validateClientFieldsup } from '../../hooks/useClients';
+import { useClients, validateClientFields, validateClientFieldsUpdate } from '../../hooks/useClients';
 import type { ClientDto } from '../../@types/clients';
 import '../../assets/styles/ClientsCRUD.css';
 import Modal from '../../components/common/Modal';
@@ -8,7 +8,6 @@ import Table from '../../components/common/Table';
 import DynamicButton from '../../components/common/DynamicButton';
 import { toast } from 'react-toastify';
 import SearchBar from '../../components/common/SearchBar';
-import { validateClientFields } from '../../hooks/useClients';
 
 const ClientsCRUD = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,7 +62,7 @@ const ClientsCRUD = () => {
       identificationType: selectedClient.identificationType || 'cedula',
     };
 
-    const errors = validateClientFieldsup(clientToUpdate, clients);
+    const errors = validateClientFieldsUpdate(clientToUpdate, clients);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       toast.error('Error en los datos del cliente. Por favor, revise los campos marcados en rojo.');

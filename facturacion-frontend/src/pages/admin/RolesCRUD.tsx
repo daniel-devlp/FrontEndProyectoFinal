@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Navbar from '../../components/common/Navbar';
 import Table from '../../components/common/Table';
 import Modal from '../../components/common/Modal';
