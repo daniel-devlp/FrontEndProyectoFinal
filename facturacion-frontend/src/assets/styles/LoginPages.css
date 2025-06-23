@@ -1,0 +1,211 @@
+.loginContainer {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem; /* Más espacio interno */
+  background-color: #ffffff; /* Fondo blanco puro */
+  border-radius: 16px; /* Bordes más redondeados */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Sombra más suave */
+  margin: 0 auto;
+  color: black;
+}
+
+.loginForm {
+  width: 100%;
+  box-sizing: border-box; /* Importante para el cálculo del ancho */
+  padding: 0; /* Ajusta según necesites */
+  margin: 0; /* Elimina márgenes por defecto */
+  color: black;
+}
+
+/* Resto de tus estilos... */
+.appTitle {
+  text-align: center;
+  color: #1e293b; /* Neutral text color */
+  font-size: 2rem; /* Tamaño más grande */
+  font-weight: 700;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.divider::before {
+  margin-right: 1rem;
+}
+
+.divider::after {
+  margin-left: 1rem;
+}
+
+.footerLinks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  flex-wrap: wrap; /* Permite que los links se apilen en móviles */
+  gap: 0.5rem; /* Espacio entre links cuando se apliquen */
+}
+
+.footerLinks a {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap; /* Evita que el texto se divida */
+}
+
+.footerLinks a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Estilos para el popupMessage */
+.popupMessage {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popupMessage.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.popupMessage.info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.popupContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popupContent button {
+  background: none;
+  border: none;
+  color: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* Estilos para el LoginErrorHandler */
+.loginErrorHandler {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.errorContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.errorCloseButton {
+  background-color: #721c24;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.errorCloseButton:hover {
+  background-color: #5a1a1e;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos responsivos */
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 1.5rem;
+    max-width: 95%; /* Más ancho en móviles muy pequeños */
+    margin: 1rem auto; /* Margen superior e inferior */
+  }
+  
+  .appTitle {
+    margin-bottom: 1rem;
+  }
+  
+  .divider {
+    margin: 1rem 0;
+  }
+  
+  .footerLinks {
+    flex-direction: column; /* Apila los links verticalmente */
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+/* Estilos responsivos adicionales */
+@media (max-width: 768px) {
+  .loginContainer {
+    padding: 2rem;
+    max-width: 85%; /* Ajusta el ancho para tablets */
+  }
+
+  .appTitle {
+    font-size: 1.75rem; /* Reduce el tamaño del título */
+  }
+
+  .footerLinks {
+    flex-direction: column; /* Apila los links verticalmente */
+    align-items: center;
+    gap: 1rem; /* Más espacio entre los links */
+  }
+}
+
+@media (min-width: 1024px) {
+  .loginContainer {
+    max-width: 500px; /* Ajusta el ancho para pantallas grandes */
+    padding: 3rem; /* Más espacio interno */
+  }
+
+  .appTitle {
+    font-size: 2.5rem; /* Aumenta el tamaño del título */
+  }
+
+  .footerLinks {
+    justify-content: space-between; /* Distribuye los links horizontalmente */
+    gap: 2rem; /* Más espacio entre los links */
+  }
+}

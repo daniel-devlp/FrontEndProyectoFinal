@@ -29,3 +29,29 @@ interface SelectedProduct extends Product {
   Quantity: number;
   Subtotal: number;
 }
+
+export interface ProductDto {
+  productId: number;
+  code: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+}
+
+export interface ProductCreateDto {
+  code: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+}
+
+export interface ProductUpdateDto {
+  productId: number;
+  code: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+}

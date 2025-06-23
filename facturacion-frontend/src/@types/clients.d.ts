@@ -23,3 +23,35 @@ interface ClientFilters {
   byEmail?: string;
   limit?: number;
 }
+
+export interface ClientDto {
+  clientId: number;
+  identificationType: 'cedula';
+  identificationNumber: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+export interface ClientCreateDto {
+  identificationType: 'cedula';
+  identificationNumber: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+export interface ClientUpdateDto {
+  clientId: number;
+  identificationType: 'cedula';
+  identificationNumber: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+}

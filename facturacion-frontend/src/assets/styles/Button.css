@@ -1,0 +1,38 @@
+/* Modernized button styles */
+.button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px; /* Rounded corners */
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button.primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.button.primary:hover {
+  background-color: #0056b3;
+}
+
+.button.secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+.button.secondary:hover {
+  background-color: #5a6268;
+}
+
+.button.danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.button.danger:hover {
+  background-color: #c82333;
+}

@@ -1,0 +1,114 @@
+.invoices {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f9f9f9; /* Light background */
+}
+
+.invoices-crud {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  margin-left: 300px; /* Increased space for the navbar */
+}
+
+.crud-dashboard {
+  flex: 1;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.card p {
+  color: #64748b;
+}
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden;
+}
+
+.crud-table th,
+.crud-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.crud-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.crud-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 50%;
+}
+
+/* Modernized modal styles for InvoicesCRUD */
+.invoices-modal {
+  background-color: #ffffff; /* Pure white background */
+  padding: 2rem;
+  border-radius: 16px; /* Rounded corners */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+  margin: 2rem auto;
+}
+
+.invoices-modal-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b; /* Neutral text color */
+  margin-bottom: 1rem;
+}
+
+.invoices-modal-body {
+  font-size: 1rem;
+  color: #4b5563; /* Secondary text color */
+}

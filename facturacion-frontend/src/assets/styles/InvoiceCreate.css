@@ -1,0 +1,11 @@
+/* Estilos para la creación de facturas */
+.invoice-create {
+  padding: 2rem;
+  background-color: #f9f9f9; /* Fondo más claro */
+  border-radius: 12px; /* Bordes más redondeados */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+margin-left: 300px; /* Increased space for the navbar */
+  width: 100%;
+  box-sizing: border-box;
+  overflow: auto; /* Allow scrolling */
+}

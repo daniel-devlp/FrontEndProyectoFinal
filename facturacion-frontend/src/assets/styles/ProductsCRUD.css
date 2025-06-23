@@ -1,0 +1,176 @@
+/* Modernized styles for ProductsCRUD */
+.products-crud {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f9f9f9; /* Light background */
+  padding: 2rem;
+  margin-left: 300px; /* Increased space for the navbar */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: auto; /* Allow scrolling */
+  font-family: var(--font-family);
+}
+
+.crud-dashboard {
+  flex: 1;
+  padding: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.card p {
+  color: #64748b;
+}
+
+.crud-table {
+  width: 100%; /* Asegurar que la tabla ocupe el ancho completo */
+  max-width: 100%; /* Evitar que la tabla exceda el ancho del contenedor */
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed; /* Forzar un diseño fijo para las columnas */
+  background-color: transparent; /* Evitar conflictos de fondo */
+  box-sizing: border-box; /* Incluir padding y borde en el cálculo del ancho */
+  overflow-x: hidden; /* Eliminar desplazamiento horizontal */
+}
+
+.crud-table th {
+  position: sticky;
+  top: 0;
+  background-color: #f4f4f4;
+  z-index: 1;
+}
+
+.crud-table th:nth-child(3),
+.crud-table td:nth-child(3) {
+  max-width: 200px; /* Limitar el ancho máximo de la columna de descripción */
+  min-width: 200px; /* Limitar el ancho mínimo de la columna de descripción */
+  word-wrap: break-word; /* Ajustar contenido dentro de las celdas */
+  overflow-wrap: break-word; /* Evitar desbordamiento de texto */
+}
+
+.crud-table th,
+.crud-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+  word-wrap: break-word; /* Ajustar contenido dentro de las celdas */
+  overflow-wrap: break-word; /* Evitar desbordamiento de texto */
+}
+
+.crud-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.crud-table tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.crud-table tr:hover {
+  background-color: #e2e2e2; /* Resaltar al pasar el mouse */
+}
+
+.crud-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.form-field input {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  color: var(--text);
+  background-color: #f9f9f9;
+  transition: var(--transition);
+}
+
+.form-field input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px var(--primary);
+  outline: none;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 50%;
+}
+
+/* Modernized modal styles for ProductsCRUD */
+.products-modal {
+  background-color: #ffffff; /* Pure white background */
+  padding: 2rem;
+  border-radius: 16px; /* Rounded corners */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+  margin: 2rem auto;
+}
+
+.products-modal-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b; /* Neutral text color */
+  margin-bottom: 1rem;
+}
+
+.products-modal-body {
+  font-size: 1rem;
+  color: #4b5563; /* Secondary text color */
+}

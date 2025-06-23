@@ -1,0 +1,9 @@
+/* Estilos modernizados para la página de login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8); /* Fondo degradado */
+  color: #ffffff; /* Texto blanco para contraste */
+}

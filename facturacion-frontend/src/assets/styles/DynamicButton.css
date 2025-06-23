@@ -1,0 +1,35 @@
+.dynamic-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+  border: none;
+}
+
+.edit-btn {
+  background-color: #facc15; /* Yellow */
+  color: #000; /* Black text */
+}
+
+.edit-btn:hover {
+  background-color: #eab308; /* Darker yellow */
+}
+
+.delete-btn {
+  background-color: #ef4444; /* Red */
+  color: #fff; /* White text */
+}
+
+.delete-btn:hover {
+  background-color: #dc2626; /* Darker red */
+}
+
+.save-btn {
+  background-color: #10b981; /* Green */
+  color: #fff; /* White text */
+}
+
+.save-btn:hover {
+  background-color: #059669; /* Darker green */
+}

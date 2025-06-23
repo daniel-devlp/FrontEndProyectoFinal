@@ -1,0 +1,52 @@
+/* Updated table styles to match the provided image */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #1e293b;
+  text-align: left;
+  padding: 10px;
+}
+
+.table td {
+  color: #333;
+  padding: 10px;
+  text-align: left;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #e2e2e2;
+}
+
+.table .actions button {
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.table .actions .edit-btn {
+  background-color: #ffc107; /* Yellow for edit */
+  color: #fff;
+}
+
+.table .actions .delete-btn {
+  background-color: #dc3545; /* Red for delete */
+  color: #fff;
+}
+
+.table .actions button:hover {
+  opacity: 0.9;
+}

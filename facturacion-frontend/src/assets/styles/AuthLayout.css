@@ -1,0 +1,86 @@
+/* AuthLayout.css */
+.authLayout {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+  background-color: #f3f4f6; /* Light background */
+}
+
+/* Capa semitransparente para mejorar legibilidad */
+.authLayout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  z-index: 0;
+}
+
+.content {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+  display: flex;
+  justify-content: center; /* Cambiado a centrado para mejor responsividad */
+  position: relative;
+  z-index: 1; /* Asegura que el contenido esté sobre la capa semitransparente */
+}
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+  .content {
+    max-width: 1000px;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .content {
+    max-width: 800px;
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .authLayout {
+    background-position: 60% center; /* Ajusta posición en móviles */
+  }
+  
+  .content {
+    max-width: 90%;
+    padding: 1rem;
+    justify-content: center; /* Centrado en móviles */
+  }
+}
+
+@media (max-width: 576px) {
+  .authLayout {
+    min-height: 100vh;
+    height: auto;
+    background-attachment: scroll; /* Desactiva parallax en móviles */
+  }
+  
+  .content {
+    max-width: 95%;
+    padding: 1rem 0.5rem;
+  }
+}
+
+/* Para dispositivos muy altos */
+@media (min-height: 1000px) {
+  .authLayout {
+    align-items: flex-start;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
