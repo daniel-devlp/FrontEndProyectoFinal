@@ -60,18 +60,15 @@ const AppContent: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <ToastContainer
-        position="top-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+     <ToastContainer
+  position="top-center"
+  autoClose={5000}        // ✅ 5 segundos automático
+  hideProgressBar={false} // ✅ Muestra barra de progreso
+  closeOnClick={true}     // ✅ Cierre manual con clic
+  pauseOnHover={true}     // ✅ Pausa al hacer hover
+  draggable={true}        // ✅ Arrastrable
+  theme="colored"         // ✅ Tema con colores
+/>
       <Routes>
         <Route 
           path="/login" 

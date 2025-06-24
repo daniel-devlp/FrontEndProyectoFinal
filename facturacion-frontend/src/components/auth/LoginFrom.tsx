@@ -12,15 +12,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onLogin, 
   loading = false, 
   error 
-}) => {
-  const [email, setEmail] = useState('');
+}) => {  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);  const handleForgotPassword = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Toast simple que debe funcionar correctamente
+    toast.info('Para recuperar tu contraseña, por favor comunícate con el administrador del sistema.');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email) {
+    e.preventDefault();    if (!email) {
       toast.error('Por favor ingresa tu email');
       return;
     }
@@ -84,8 +85,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 remember me
-              </label>
-              <a href="/forgot-password" className="forgotPassword">
+              </label>              <a 
+                href="#" 
+                className="forgotPassword"
+                onClick={handleForgotPassword}
+              >
                 forgot password
               </a>
             </div>
@@ -98,9 +102,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               {loading ? 'Loading...' : 'Login'}
             </button>
 
-            <div className="createAccount">
-              <a href="/register">Create Account</a>
-            </div>
+           
           </form>
         </div>
       </div>

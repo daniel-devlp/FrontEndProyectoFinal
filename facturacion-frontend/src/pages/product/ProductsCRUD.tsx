@@ -79,7 +79,6 @@ const ProductsCRUD: React.FC = () => {
 
     return newErrors;
   };
-
   const handleEdit = async () => {
     const validationErrors = validateProductForm(selectedProduct);
     if (Object.keys(validationErrors).length > 0) {
@@ -91,15 +90,13 @@ const ProductsCRUD: React.FC = () => {
 
     try {
       await updateProduct(selectedProduct.productId, selectedProduct);
-      toast.success('Producto actualizado exitosamente');
       handleEditModalClose();
       setErrors({});
     } catch (error) {
-      toast.error('Error al actualizar producto');
+      // El toast ya se muestra en el hook useProducts, no necesitamos duplicarlo aquí
       console.error('Error al actualizar producto:', error);
     }
   };
-
   const handleDelete = async (productId: number) => {
     toast.info(
       <div>
@@ -115,9 +112,9 @@ const ProductsCRUD: React.FC = () => {
                     toast.dismiss();
                     try {
                       await deleteProduct(productId);
-                      toast.success('Producto eliminado exitosamente');
+                      // El toast de éxito ya se muestra en el hook
                     } catch (error) {
-                      toast.error('Error al eliminar producto');
+                      // El toast de error ya se muestra en el hook
                       console.error('Error al eliminar producto:', error);
                     }
                   }}
@@ -135,7 +132,6 @@ const ProductsCRUD: React.FC = () => {
       </div>
     );
   };
-
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateProductForm(newProduct);
@@ -148,7 +144,6 @@ const ProductsCRUD: React.FC = () => {
 
     try {
       await createProduct(newProduct);
-      toast.success('Producto creado exitosamente');
       setModalOpen(false);
       setNewProduct({
         code: '',
@@ -159,7 +154,7 @@ const ProductsCRUD: React.FC = () => {
       });
       setErrors({});
     } catch (error) {
-      toast.error('Error al crear producto');
+      // El toast ya se muestra en el hook useProducts, no necesitamos duplicarlo aquí
       console.error('Error al crear producto:', error);
     }
   };

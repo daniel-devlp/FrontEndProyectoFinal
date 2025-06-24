@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './../../assets/styles/Navbar.css';
 import { authService } from '../../services/authService';
 import { useAuth } from '../../hooks/useAuth';
@@ -16,8 +17,8 @@ const Navbar: React.FC = () => {
       try {
         const data = await authService.getCurrentUser();
         setUsername(data.userName || 'Usuario');
-      } catch (error) {
-        console.error('Error fetching username:', error);
+      } catch (error) {        console.error('Error fetching username:', error);
+        toast.error('Error al obtener información del usuario');
         setUsername('Usuario');
       }
     };
@@ -55,13 +56,14 @@ const Navbar: React.FC = () => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isMenuOpen]);
-
   const handleLogout = async () => {
     try {
       await authService.logout();
+      toast.success('Sesión cerrada exitosamente');
       window.location.href = "/";
     } catch (error) {
       console.error("Error during logout:", error);
+      toast.error('Error al cerrar sesión');
     }
   };
 

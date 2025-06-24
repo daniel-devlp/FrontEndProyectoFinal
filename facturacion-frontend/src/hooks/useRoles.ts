@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { rolesService } from '../services/rolesService';
 import type { RoleDto, RoleCreateDto, RoleUpdateDto } from '../@types/roles';
 
@@ -23,31 +24,34 @@ export const useRoles = () => {
 
     fetchRoles();
   }, []);
-
   const createRole = async (dto: RoleCreateDto) => {
     try {
       await rolesService.createRole(dto);
       setRoles((prev) => [...prev, { ...dto, id: Date.now().toString() }]);
+      toast.success('Rol creado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al crear rol: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
-
   const updateRole = async (id: string, dto: RoleUpdateDto) => {
     try {
       await rolesService.updateRole(id, dto);
       setRoles((prev) => prev.map((role) => (role.id === id ? { ...role, ...dto } : role)));
+      toast.success('Rol actualizado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al actualizar rol: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
-
   const deleteRole = async (id: string) => {
     try {
       await rolesService.deleteRole(id);
       setRoles((prev) => prev.filter((role) => role.id !== id));
+      toast.success('Rol eliminado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al eliminar rol: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 

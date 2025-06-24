@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
 import { invoiceService } from '../services/invoiceService';
 import type {
   InvoiceDto,
@@ -41,9 +42,9 @@ export const useInvoices = ({
           pageSize,          searchTerm,
         });
         setInvoices(response.data);
-        setTotalItems(response.totalItems);
-      } catch (err) {
+        setTotalItems(response.totalItems);      } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
+        toast.error('Error al cargar facturas: ' + (err instanceof Error ? err.message : 'Error desconocido'));
       } finally {
         setLoading(false);
         setSearching(false);
@@ -73,7 +74,6 @@ export const useInvoices = ({
       }
     };
   }, [pageNumber, pageSize, searchTerm, isInitialLoad]);
-
   const createInvoice = async (dto: InvoiceCreateDto) => {
     try {
       await invoiceService.createInvoice(dto);
@@ -103,8 +103,10 @@ export const useInvoices = ({
           ),
         } as InvoiceDto,
       ]);
+      toast.success('Factura creada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al crear factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 
@@ -127,21 +129,23 @@ export const useInvoices = ({
                   (sum, detail) => sum + detail.quantity * 0,
                   0
                 ),
-              }
-            : invoice
+              }            : invoice
         )
       );
+      toast.success('Factura actualizada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al actualizar factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
-
   const deleteInvoice = async (id: number) => {
     try {
       await invoiceService.deleteInvoice(id);
       setInvoices((prev) => prev.filter((invoice) => invoice.invoiceId !== id));
+      toast.success('Factura eliminada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al eliminar factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 

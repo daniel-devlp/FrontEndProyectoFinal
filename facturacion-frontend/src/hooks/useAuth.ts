@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { authService } from '../services/authService';
 
 export const useAuth = () => {
@@ -113,9 +114,9 @@ export const useAuth = () => {
     window.location.href = '/';
   };
 
-  const storeAuthData = (token: string, user: any) => {
-    if (!user || !user.roles || user.roles.length === 0) {
+  const storeAuthData = (token: string, user: any) => {    if (!user || !user.roles || user.roles.length === 0) {
       console.error('El usuario no tiene roles definidos:', user);
+      toast.error('El usuario no tiene roles asignados. Contacte al administrador.');
       throw new Error('El usuario no tiene roles válidos.');
     }
 

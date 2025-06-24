@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import Navbar from '../../components/common/Navbar';
 import Table from '../../components/common/Table';
 import Modal from '../../components/common/Modal';
@@ -12,19 +13,38 @@ const RolesCRUD = () => {
   useEffect(() => {
     fetchRoles();
   }, [fetchRoles]);
+  const handleCreate = async (data: RoleCreateDto) => {
+    try {
+      await createRole(data);
+      toast.success('Rol creado exitosamente');
+    } catch (error) {
+      toast.error('Error al crear el rol');
+    }
+  };
 
-  const handleCreate = (data: RoleCreateDto) => createRole(data);
+  const handleUpdate = async (id: string, data: RoleUpdateDto) => {
+    try {
+      await updateRole(id, data);
+      toast.success('Rol actualizado exitosamente');
+    } catch (error) {
+      toast.error('Error al actualizar el rol');
+    }
+  };
 
-  const handleUpdate = (id: string, data: RoleUpdateDto) => updateRole(id, data);
-
-  const handleDelete = (id: string) => deleteRole(id);
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteRole(id);
+      toast.success('Rol eliminado exitosamente');
+    } catch (error) {
+      toast.error('Error al eliminar el rol');
+    }
+  };
 
   return (
     <div className="roles-crud">
       <Navbar />
-      <h1>Gestión de Roles</h1>
-      {loading && <p>Cargando...</p>}
-      {error && <p>Error: {error}</p>}
+      <h1>Gestión de Roles</h1>      {loading && <div>Cargando roles...</div>}
+      {error && toast.error(`Error: ${error}`)}
       <Table
         columns={[
           { key: 'id', header: 'ID' },

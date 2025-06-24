@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
 import { productService } from '../services/productService';
 import type { ProductDto, ProductCreateDto, ProductUpdateDto } from '../@types/products';
 
@@ -90,45 +91,51 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
 
     return errors;
   };
-
   const createProduct = async (dto: ProductCreateDto) => {
     const errors = validateProductFields(dto, products);
     if (Object.keys(errors).length > 0) {
       setError('Error en los datos del producto. Por favor, revise los campos.');
+      toast.error('Error en los datos del producto. Por favor, revise los campos.');
       throw new Error('Validación fallida');
     }
 
     try {
       await productService.createProduct(dto);
       setProducts((prev) => [...prev, { ...dto, productId: Date.now() }]);
+      toast.success('Producto creado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al crear producto: ' + (err instanceof Error ? err.message : 'Error desconocido'));
       throw err;
     }
-  };
-
-  const updateProduct = async (id: number, dto: ProductUpdateDto) => {
-    const errors = validateProductFields(dto, products);
+  };  const updateProduct = async (id: number, dto: ProductUpdateDto) => {
+    // Excluir el producto actual de la validación de código único
+    const otherProducts = products.filter(p => p.productId !== id);
+    const errors = validateProductFields(dto, otherProducts);
     if (Object.keys(errors).length > 0) {
       setError('Error en los datos del producto. Por favor, revise los campos.');
+      toast.error('Error en los datos del producto. Por favor, revise los campos.');
       throw new Error('Validación fallida');
     }
 
     try {
       await productService.updateProduct(id, dto);
       setProducts((prev) => prev.map((product) => (product.productId === id ? { ...product, ...dto } : product)));
+      toast.success('Producto actualizado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al actualizar producto: ' + (err instanceof Error ? err.message : 'Error desconocido'));
       throw err;
     }
   };
-
   const deleteProduct = async (id: number) => {
     try {
       await productService.deleteProduct(id);
       setProducts((prev) => prev.filter((product) => product.productId !== id));
+      toast.success('Producto eliminado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      toast.error('Error al eliminar producto: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 

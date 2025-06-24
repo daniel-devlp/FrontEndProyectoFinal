@@ -47,8 +47,7 @@ export const validateClientFieldsUpdate = (
       errors.identificationNumber = 'La cédula debe tener exactamente 10 caracteres';
     } else if (!/^[0-9]+$/.test(client.identificationNumber)) {
       errors.identificationNumber = 'La cédula solo debe contener números';
-    } else if (existingClients.some((c) => c.identificationNumber === client.identificationNumber)) {
-      errors.identificationNumber = 'Ya existe un cliente con esta cédula';
+    
     } else if ( !validateCedula(client.identificationNumber)) {
       errors.identificationNumber = 'La cédula no es válida';
     }
@@ -91,6 +90,7 @@ export const validateClientFieldsUpdate = (
   }
   return errors;
 };
+
 export const validateClientFields = (
   client: Partial<ClientDto>,
   existingClients: ClientDto[] = [],
