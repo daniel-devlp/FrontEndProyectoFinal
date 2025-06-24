@@ -101,3 +101,299 @@
   font-size: 1rem;
   color: #4b5563; /* Secondary text color */
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet y pantallas medianas (1200px y menos) */
+@media (max-width: 1200px) {
+  .roles-crud {
+    margin-left: 280px;
+    width: calc(100vw - 280px);
+    padding: 1.5rem;
+  }
+  
+  .crud-table th,
+  .crud-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet en modo portrait (992px y menos) */
+@media (max-width: 992px) {
+  .roles-crud {
+    margin-left: 0;
+    width: 100vw;
+    padding: 1rem;
+    padding-top: 80px;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .crud-table {
+    min-width: 600px;
+  }
+}
+
+/* Tablet en modo landscape y móviles grandes (768px y menos) */
+@media (max-width: 768px) {
+  .roles-crud {
+    padding: 0.75rem;
+    padding-top: 70px;
+  }
+  
+  .table-container {
+    padding: 0.75rem;
+    border-radius: 6px;
+  }
+  
+  .crud-table th,
+  .crud-table td {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
+  
+  .crud-table .dynamic-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    min-width: unset;
+  }
+  
+  /* Card layout para móviles */
+  .table-container.mobile-cards {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  
+  .table-container.mobile-cards .crud-table {
+    display: none;
+  }
+  
+  .mobile-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .mobile-card-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .mobile-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .mobile-card-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .mobile-card-label {
+    font-weight: 500;
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+  
+  .mobile-card-value {
+    color: #1e293b;
+    font-size: 0.9rem;
+  }
+  
+  .mobile-card-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .mobile-card-actions .dynamic-button {
+    flex: 1;
+    min-width: calc(50% - 0.25rem);
+    text-align: center;
+  }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+  .roles-crud {
+    padding: 0.5rem;
+    padding-top: 65px;
+  }
+  
+  .table-container {
+    padding: 0.5rem;
+    margin: 0;
+  }
+  
+  .crud-table th,
+  .crud-table td {
+    padding: 0.3rem;
+    font-size: 0.75rem;
+  }
+  
+  .mobile-card {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-card-header {
+    font-size: 1rem;
+  }
+  
+  .mobile-card-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .mobile-card-actions .dynamic-button {
+    min-width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+  .roles-crud {
+    padding: 0.25rem;
+    padding-top: 60px;
+  }
+  
+  .table-container {
+    padding: 0.25rem;
+  }
+  
+  .mobile-card {
+    padding: 0.5rem;
+  }
+  
+  .mobile-card-header {
+    font-size: 0.9rem;
+  }
+  
+  .mobile-card-label,
+  .mobile-card-value {
+    font-size: 0.8rem;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .roles-crud {
+    padding-top: 60px;
+  }
+  
+  .table-container {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+}
+
+/* Mejoras de accesibilidad y focus */
+@media (max-width: 768px) {
+  .crud-table th,
+  .crud-table td,
+  .dynamic-button,
+  .mobile-card {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .dynamic-button:focus,
+  .mobile-card:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .roles-crud {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+  
+  .table-container {
+    background-color: #1e293b;
+  }
+  
+  .crud-table {
+    background-color: #1e293b;
+    color: #e2e8f0;
+  }
+  
+  .crud-table th {
+    background-color: #334155;
+    color: #f1f5f9;
+  }
+  
+  .crud-table tbody tr:nth-child(even) {
+    background-color: #334155;
+  }
+  
+  .crud-table tbody tr:hover {
+    background-color: #475569;
+  }
+  
+  .mobile-card {
+    background-color: #1e293b;
+    color: #e2e8f0;
+  }
+  
+  .mobile-card-header {
+    color: #f1f5f9;
+    border-bottom-color: #475569;
+  }
+  
+  .mobile-card-label {
+    color: #94a3b8;
+  }
+  
+  .mobile-card-value {
+    color: #e2e8f0;
+  }
+  
+  .mobile-card-actions {
+    border-top-color: #475569;
+  }
+}
+
+/* Print styles */
+@media print {
+  .roles-crud {
+    margin-left: 0;
+    width: 100%;
+    background: white;
+    color: black;
+  }
+  
+  .table-container {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .mobile-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  
+  .dynamic-button {
+    display: none;
+  }
+}

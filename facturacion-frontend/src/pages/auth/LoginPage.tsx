@@ -3,10 +3,19 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
 import { AuthLayout } from '../../components/auth/AuthLayout';
 import { LoginForm } from '../../components/auth/LoginFrom';
+import RoleSelectionModal from '../../components/auth/RoleSelectionModal';
 import '../../assets/styles/LoginPages.css';
 
 export default function LoginPage() {
-  const { login, errorCode, technicalMessage, loading } = useAuth();
+  const { 
+    login, 
+    errorCode, 
+    technicalMessage, 
+    loading, 
+    requiresRoleSelection, 
+    availableRoles,
+    selectRole 
+  } = useAuth();
   const [attempts, setAttempts] = useState(0);
 
   const handleLogin = async (email: string, password: string) => {
@@ -17,13 +26,17 @@ export default function LoginPage() {
     }
 
     try {
-      const role = await login(email, password);
-      toast.success('¡Bienvenido! Redirigiendo...');
+      const result = await login(email, password);
       
-      setTimeout(() => {
-        const redirectPath = role === 'Administrator' ? '/admin/dashboard' : '/user/dashboard';
-        window.location.href = redirectPath;
-      }, 1500);
+      if (result && !result.requiresRoleSelection) {
+        // Usuario tiene un solo rol, redirigir directamente
+        toast.success('¡Bienvenido! Redirigiendo...');
+        setTimeout(() => {
+          const redirectPath = result.selectedRole === 'Administrator' ? '/admin/dashboard' : '/user/dashboard';
+          window.location.href = redirectPath;
+        }, 1500);
+      }
+      // Si requiresRoleSelection es true, el modal se mostrará automáticamente
     } catch (error) {
       setAttempts((prev) => prev + 1);
       
@@ -47,7 +60,27 @@ export default function LoginPage() {
       }
     }
   };
+
+  const handleRoleSelection = (role: string) => {
+    selectRole(role);
+    toast.success(`¡Bienvenido como ${role === 'Administrator' ? 'Administrador' : 'Usuario'}! Redirigiendo...`);
+    
+    setTimeout(() => {
+      const redirectPath = role === 'Administrator' ? '/admin/dashboard' : '/user/dashboard';
+      window.location.href = redirectPath;
+    }, 1500);
+  };
+
   return (
-    <LoginForm onLogin={handleLogin} loading={loading} />
+    <>
+      <LoginForm onLogin={handleLogin} loading={loading} />
+      
+      <RoleSelectionModal
+        isOpen={requiresRoleSelection}
+        roles={availableRoles}
+        onRoleSelect={handleRoleSelection}
+        onClose={() => {}} // No permitir cerrar sin seleccionar
+      />
+    </>
   );
 }

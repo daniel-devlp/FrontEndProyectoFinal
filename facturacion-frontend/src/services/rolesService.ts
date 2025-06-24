@@ -1,6 +1,6 @@
 import type { RoleDto, RoleCreateDto, RoleUpdateDto } from '../@types/roles';
 
-const API_URL = 'http://invoiceDevWeb.somee.com/api/Roles';
+const API_URL = 'https://invoiceDevWeb.somee.com/api/Roles';
 const token = localStorage.getItem('authToken');
 
 const headers = {

@@ -189,3 +189,390 @@ html, body, #root,
 .read-the-docs {
   color: #888;
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet y pantallas medianas (1200px y menos) */
+@media (max-width: 1200px) {
+  /* Ajustar logos y elementos principales */
+  .logo {
+    height: 5em;
+    padding: 1.25em;
+  }
+  
+  .card {
+    padding: 1.5em;
+  }
+  
+  /* Mejorar performance en tablets */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Tablet en modo portrait (992px y menos) */
+@media (max-width: 992px) {
+  /* Ajustar scroll y contenedores para tablet */
+  body:has(.products-crud), 
+  body:has(.clients-crud), 
+  body:has(.users-crud), 
+  body:has(.roles-crud), 
+  body:has(.invoices) {
+    padding-top: 80px;
+  }
+  
+  .logo {
+    height: 4em;
+    padding: 1em;
+  }
+  
+  .card {
+    padding: 1.25em;
+    border-radius: 8px;
+  }
+  
+  /* Optimizar touch scrolling */
+  html, body, #root {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Tablet en modo landscape y móviles grandes (768px y menos) */
+@media (max-width: 768px) {
+  /* Ajustes para móviles */
+  body:has(.products-crud), 
+  body:has(.clients-crud), 
+  body:has(.users-crud), 
+  body:has(.roles-crud), 
+  body:has(.invoices) {
+    padding-top: 70px;
+  }
+  
+  .products-crud, .clients-crud, .users-crud, .roles-crud, .invoices {
+    min-height: calc(100vh - 70px);
+  }
+  
+  .logo {
+    height: 3.5em;
+    padding: 0.75em;
+  }
+  
+  .card {
+    padding: 1em;
+    border-radius: 6px;
+  }
+  
+  /* Mejorar rendimiento táctil */
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Evitar zoom en inputs */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* Mejorar viewport */
+  html {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+  body:has(.products-crud), 
+  body:has(.clients-crud), 
+  body:has(.users-crud), 
+  body:has(.roles-crud), 
+  body:has(.invoices) {
+    padding-top: 65px;
+  }
+  
+  .products-crud, .clients-crud, .users-crud, .roles-crud, .invoices {
+    min-height: calc(100vh - 65px);
+  }
+  
+  .logo {
+    height: 3em;
+    padding: 0.5em;
+  }
+  
+  .card {
+    padding: 0.75em;
+    border-radius: 4px;
+  }
+  
+  .read-the-docs {
+    font-size: 0.9rem;
+  }
+  
+  /* Optimizar memoria en móviles pequeños */
+  * {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+  body:has(.products-crud), 
+  body:has(.clients-crud), 
+  body:has(.users-crud), 
+  body:has(.roles-crud), 
+  body:has(.invoices) {
+    padding-top: 60px;
+  }
+  
+  .products-crud, .clients-crud, .users-crud, .roles-crud, .invoices {
+    min-height: calc(100vh - 60px);
+  }
+  
+  .logo {
+    height: 2.5em;
+    padding: 0.25em;
+  }
+  
+  .card {
+    padding: 0.5em;
+  }
+  
+  .read-the-docs {
+    font-size: 0.8rem;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  body:has(.products-crud), 
+  body:has(.clients-crud), 
+  body:has(.users-crud), 
+  body:has(.roles-crud), 
+  body:has(.invoices) {
+    padding-top: 60px;
+  }
+  
+  .products-crud, .clients-crud, .users-crud, .roles-crud, .invoices {
+    min-height: calc(100vh - 60px);
+  }
+  
+  .logo {
+    height: 2.5em;
+    padding: 0.25em;
+  }
+  
+  .card {
+    padding: 0.5em;
+  }
+  
+  /* Optimizar scroll horizontal en landscape */
+  html, body {
+    overflow-x: hidden;
+  }
+}
+
+/* Mejoras generales para dispositivos táctiles */
+@media (pointer: coarse) {
+  /* Mejorar tamaños de toque */
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mejorar scroll suave */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Mejorar performance en dispositivos táctiles */
+  * {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+}
+
+/* Mejoras para dispositivos con hover */
+@media (hover: hover) {
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+    transition: filter 300ms ease;
+  }
+  
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+    transition: filter 300ms ease;
+  }
+}
+
+/* Mejoras para dispositivos sin hover (móviles) */
+@media (hover: none) {
+  .logo:hover {
+    filter: none;
+  }
+  
+  .logo.react:hover {
+    filter: none;
+  }
+  
+  /* Agregar estados activos para móviles */
+  .logo:active {
+    filter: drop-shadow(0 0 1em #646cffaa);
+    transform: scale(0.98);
+  }
+  
+  .logo.react:active {
+    filter: drop-shadow(0 0 1em #61dafbaa);
+    transform: scale(0.98);
+  }
+}
+
+/* Dark mode responsive */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+  
+  .card {
+    background-color: #1e293b;
+    color: #e2e8f0;
+  }
+  
+  .read-the-docs {
+    color: #94a3b8;
+  }
+  
+  .logo {
+    filter: brightness(1.1);
+  }
+}
+
+/* Reducir animaciones para usuarios que las prefieren */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .logo {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  @keyframes logo-spin {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  * {
+    border-width: 2px;
+    outline-width: 2px;
+  }
+  
+  .card {
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+  }
+  
+  .read-the-docs {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .logo {
+    filter: contrast(1.5);
+  }
+}
+
+/* Print styles */
+@media print {
+  html, body {
+    overflow: visible !important;
+    height: auto !important;
+    background: white !important;
+    color: black !important;
+  }
+  
+  .logo {
+    display: none;
+  }
+  
+  .card {
+    background: transparent;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .read-the-docs {
+    color: #666;
+  }
+  
+  /* Ocultar elementos interactivos */
+  button, .logo {
+    display: none !important;
+  }
+  
+  /* Optimizar para impresión */
+  .products-crud, .clients-crud, .users-crud, .roles-crud, .invoices {
+    min-height: auto !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+}
+
+/* Mejoras de performance */
+@media (max-width: 768px) {
+  /* Optimizar rendering en móviles */
+  * {
+    will-change: auto;
+  }
+  
+  /* Solo aplicar will-change a elementos que realmente lo necesitan */
+  .logo,
+  button:hover,
+  a:hover {
+    will-change: transform, filter;
+  }
+  
+  /* Mejorar compositing */
+  .card,
+  .products-crud, 
+  .clients-crud, 
+  .users-crud, 
+  .roles-crud, 
+  .invoices {
+    contain: layout style paint;
+  }
+}
+
+/* Viewport específicos para diferentes dispositivos */
+@media screen and (max-device-width: 480px) {
+  html {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+  
+  body {
+    font-size: 16px; /* Evitar zoom automático en iOS */
+  }
+}
+
+/* iPad específico */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .card {
+    padding: 1.5em;
+  }
+  
+  .logo {
+    height: 4.5em;
+  }
+}

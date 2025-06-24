@@ -13,7 +13,7 @@ interface EnrichedInvoiceDetailDto extends InvoiceDetailDto {
   productName?: string;
 }
 
-const API_URL = 'http://invoiceDevWeb.somee.com/api/Invoice';
+const API_URL = 'https://invoiceDevWeb.somee.com/api/Invoice';
 
 const getAuthHeaders = () => {
   const token = getToken();
@@ -105,7 +105,8 @@ export const invoiceService = {
       headers: getAuthHeaders(),
     });
     if (!response.ok) throw new Error('Failed to remove product from invoice');
-  },  generateInvoicePDF: (
+  },  
+  generateInvoicePDF: (
     client: { name: string; email: string; phone: string },
     details: EnrichedInvoiceDetailDto[],
     total: number

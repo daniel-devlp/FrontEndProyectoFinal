@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { ProductDto, ProductCreateDto, ProductUpdateDto } from '../@types/products';
 import { getToken } from './authService';
 
-const API_URL = 'http://invoiceDevWeb.somee.com/api/Product';
+const API_URL = 'https://invoiceDevWeb.somee.com/api/Product';
 
 const getAuthHeaders = () => {
   const token = getToken();

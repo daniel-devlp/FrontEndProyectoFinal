@@ -1,0 +1,365 @@
+/* Estilos específicos para UserClientsCRUD */
+
+.user-clients-crud {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  font-family: var(--font-family);
+}
+
+.user-clients-dashboard {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  width: calc(100vw - 280px);
+  max-width: calc(100vw - 280px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.user-clients-dashboard h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.user-clients-dashboard p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.user-clients-dashboard .search-bar {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.user-clients-dashboard .table-container {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.user-clients-dashboard .pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.user-clients-dashboard .pagination-controls button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-clients-dashboard .pagination-controls button:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.user-clients-dashboard .pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.user-clients-dashboard .pagination-controls span {
+  color: #666;
+  font-weight: 500;
+}
+
+.user-clients-dashboard .crud-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-clients-dashboard .info-card {
+  background-color: #e8f4f8;
+  border: 1px solid #bee5eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-clients-dashboard .info-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: #0c5460;
+}
+
+.user-clients-dashboard .info-card p {
+  margin: 0;
+  color: #0c5460;
+}
+
+/* =================================
+   RESPONSIVE DESIGN - UserClientsCRUD
+   ================================= */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .user-clients-dashboard {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
+    max-width: calc(100vw - 260px);
+    padding: 1.5rem;
+  }
+  
+  .user-clients-dashboard h1 {
+    font-size: 2.2rem;
+  }
+  
+  .user-clients-dashboard p {
+    font-size: 1rem;
+  }
+  
+  .user-clients-dashboard .search-bar,
+  .user-clients-dashboard .table-container {
+    padding: 1.25rem;
+  }
+}
+
+/* Mobile & Small Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .user-clients-dashboard {
+    margin-left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    padding: 1rem;
+    padding-top: 5rem; /* Espacio para botón hamburguesa */
+    gap: 1rem;
+  }
+  
+  .user-clients-dashboard h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .user-clients-dashboard p {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-clients-dashboard .search-bar {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+  
+  .user-clients-dashboard .table-container {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  
+  /* Hacer la tabla scrollable horizontalmente en móviles */
+  .user-clients-dashboard .table-container table {
+    min-width: 600px;
+  }
+  
+  /* Ajustar botones en móviles */
+  .user-clients-dashboard .table-container .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    margin: 0.1rem;
+  }
+  
+  /* Ajustar paginación */
+  .user-clients-dashboard .pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .user-clients-dashboard .pagination .page-link {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile Devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .user-clients-dashboard {
+    padding: 0.75rem;
+    padding-top: 4rem;
+  }
+  
+  .user-clients-dashboard h1 {
+    font-size: 1.5rem;
+  }
+  
+  .user-clients-dashboard p {
+    font-size: 0.85rem;
+  }
+  
+  .user-clients-dashboard .search-bar,
+  .user-clients-dashboard .table-container {
+    padding: 0.75rem;
+    border-radius: 4px;
+  }
+  
+  /* Hacer la tabla más compacta en móviles pequeños */
+  .user-clients-dashboard .table-container table {
+    font-size: 0.85rem;
+  }
+  
+  .user-clients-dashboard .table-container th,
+  .user-clients-dashboard .table-container td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .user-clients-dashboard .table-container .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Ajustar el buscador */
+  .user-clients-dashboard .search-bar input {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+  
+  .user-clients-dashboard .search-bar button {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Extra Small Devices (max-width: 360px) */
+@media (max-width: 360px) {
+  .user-clients-dashboard {
+    padding: 0.5rem;
+    padding-top: 3.5rem;
+  }
+  
+  .user-clients-dashboard h1 {
+    font-size: 1.3rem;
+  }
+  
+  .user-clients-dashboard .search-bar,
+  .user-clients-dashboard .table-container {
+    padding: 0.5rem;
+  }
+  
+  .user-clients-dashboard .table-container table {
+    font-size: 0.8rem;
+    min-width: 500px;
+  }
+  
+  .user-clients-dashboard .table-container th,
+  .user-clients-dashboard .table-container td {
+    padding: 0.25rem 0.15rem;
+  }
+  
+  .user-clients-dashboard .pagination .page-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .user-clients-dashboard {
+    padding-top: 3rem;
+  }
+  
+  .user-clients-dashboard h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .user-clients-dashboard p {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Card Layout for Very Small Screens */
+@media (max-width: 480px) {
+  .user-clients-dashboard .table-responsive-cards {
+    display: block;
+  }
+  
+  .user-clients-dashboard .table-responsive-cards table {
+    display: none;
+  }
+  
+  .user-clients-dashboard .client-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007bff;
+  }
+  
+  .user-clients-dashboard .client-card h5 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1rem;
+  }
+  
+  .user-clients-dashboard .client-card p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .user-clients-dashboard .client-card .card-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .user-clients-dashboard .client-card .btn-sm {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .user-clients-dashboard .table-container .btn:hover {
+    transform: none;
+  }
+  
+  .user-clients-dashboard .table-container .btn:active {
+    transform: scale(0.95);
+  }
+  
+  .user-clients-dashboard .pagination .page-link:hover {
+    transform: none;
+  }
+  
+  .user-clients-dashboard .pagination .page-link:active {
+    transform: scale(0.95);
+  }
+}

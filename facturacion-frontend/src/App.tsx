@@ -5,14 +5,17 @@ import { useAuth } from './hooks/useAuth';
 import LoginPage from './pages/auth/LoginPage';
 import HomeAdmin from './pages/admin/HomeAdmin';
 import HomeUser from './pages/user/HomeUser';
+import UserDashboard from './pages/user/UserDashboard';
+import UserClientsCRUD from './pages/user/UserClientsCRUD';
+import UserProductsView from './pages/user/UserProductsView';
+import UserInvoices from './pages/user/UserInvoices';
 import InvoiceCreate from './pages/invoices/InvoiceCreatePage';
 import UsersCRUD from './pages/admin/UsersCRUD';
 import RolesCRUD from './pages/admin/RolesCRUD';
 import ProductsCRUD from './pages/product/ProductsCRUD';
 import ClientsCRUD from './pages/client/ClientsCRUD';
 import Invoices from './pages/invoices/Invoices';
-import ProtectedRoute from '../src/components/common/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
+import RoleProtectedRoute from '../src/components/common/RoleProtectedRoute';
 import './assets/styles/App.css';
 import './assets/styles/Navbar.css';
 import './assets/styles/LoginPage.css';
@@ -26,22 +29,8 @@ import './assets/styles/Toast.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-const getUserRole = (): string => {
-  const userData = localStorage.getItem('userData');
-
-  if (!userData) return '';
-
-  try {
-    const parsedData = JSON.parse(userData);
-    return parsedData.roles && parsedData.roles.length > 0 ? parsedData.roles[0] : '';
-  } catch (error) {
-    return '';
-  }
-};
-
 const AppContent: React.FC = () => {
-  const { isAuthenticated, isInitialized, loading } = useAuth();
-  const userRole = getUserRole();
+  const { isAuthenticated, isInitialized, loading, selectedRole } = useAuth();
 
   // Asegurar scroll natural sin interferencias
   useEffect(() => {
@@ -88,102 +77,139 @@ const AppContent: React.FC = () => {
           path="/login" 
           element={
             isAuthenticated ? 
-            <Navigate to={userRole === "Administrator" ? "/admin" : "/user"} replace /> : 
+            <Navigate to={selectedRole === "Administrator" ? "/admin" : "/user"} replace /> : 
             <LoginPage />
           } 
         />
         <Route 
           path="/" 
           element={
-            <Navigate to={isAuthenticated ? (userRole === "Administrator" ? "/admin" : "/user") : "/login"} replace />
+            <Navigate to={isAuthenticated ? (selectedRole === "Administrator" ? "/admin" : "/user") : "/login"} replace />
           } 
         />
+        {/* Rutas de Administrador */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator"]}>
               <HomeAdmin />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/admin/users"
           element={
-            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator"]}>
               <UsersCRUD />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/admin/roles"
           element={
-            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator"]}>
               <RolesCRUD />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/admin/products"
           element={
-            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator"]}>
               <ProductsCRUD />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/admin/clients"
           element={
-            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator"]}>
               <ClientsCRUD />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/admin/invoices"
           element={
-            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator"]}>
               <Invoices />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
+
+        {/* Rutas de Usuario Normal */}
         <Route
           path="/user"
           element={
-            <ProtectedRoute allowedRoles={["User"]} userRole={userRole}>
-              <HomeUser />
-            </ProtectedRoute>
+            <RoleProtectedRoute allowedRoles={["user"]}>
+              <UserDashboard />
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/user/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["User"]} userRole={userRole}>
-              <HomeUser />
-            </ProtectedRoute>
+            <RoleProtectedRoute allowedRoles={["user"]}>
+              <UserDashboard />
+            </RoleProtectedRoute>
           }
         />
         <Route
+          path="/user/clients"
+          element={
+            <RoleProtectedRoute allowedRoles={["user"]}>
+              <UserClientsCRUD />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/products"
+          element={
+            <RoleProtectedRoute allowedRoles={["user"]}>
+              <UserProductsView />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/invoices"
+          element={
+            <RoleProtectedRoute allowedRoles={["user"]}>
+              <UserInvoices />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/invoices/create"
+          element={
+            <RoleProtectedRoute allowedRoles={["user"]}>
+              <InvoiceCreate />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* Rutas compartidas */}
+        <Route
           path="/invoices/create"
           element={
-            <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator", "user"]}>
               <InvoiceCreate />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/factura/nueva"
           element={
-            <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator", "user"]}>
               <InvoiceCreate />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
         <Route
           path="/invoices"
           element={
-            <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
+            <RoleProtectedRoute allowedRoles={["Administrator", "user"]}>
               <Invoices />
-            </ProtectedRoute>
+            </RoleProtectedRoute>
           }
         />
       </Routes>
@@ -192,11 +218,7 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+  return <AppContent />;
 };
 
 export default App;

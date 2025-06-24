@@ -1,7 +1,7 @@
 import type { UserDto, UserCreateDto, UserUpdateDto } from '../@types/users';
 import axios from 'axios';
 
-const API_URL = 'http://invoiceDevWeb.somee.com/api/Users';
+const API_URL = 'https://invoiceDevWeb.somee.com/api/Users';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('authToken');

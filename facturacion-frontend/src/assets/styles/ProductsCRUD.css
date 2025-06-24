@@ -389,3 +389,475 @@
   font-size: 1rem;
   color: #4b5563; /* Secondary text color */
 }
+
+/* =================================
+   RESPONSIVE DESIGN - ProductsCRUD
+   ================================= */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .crud-dashboard {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
+    max-width: calc(100vw - 260px);
+    padding: 1.5rem;
+  }
+  
+  .crud-dashboard h1 {
+    font-size: 2.2rem;
+  }
+  
+  .crud-dashboard .description {
+    font-size: 1rem;
+  }
+  
+  .dashboard-cards {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+  
+  .card {
+    padding: 1.25rem;
+  }
+  
+  .search-bar,
+  .table-container,
+  .modal-container {
+    padding: 1.25rem;
+  }
+}
+
+/* Mobile & Small Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .products-crud {
+    width: 100vw !important;
+  }
+  
+  .crud-dashboard {
+    margin-left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    padding: 1rem;
+    padding-top: 5rem; /* Espacio para botón hamburguesa */
+    gap: 1rem;
+  }
+  
+  .crud-dashboard h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .crud-dashboard .description {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .card {
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card p {
+    font-size: 0.85rem;
+  }
+  
+  .search-bar {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+  
+  .search-bar input {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .search-bar button {
+    font-size: 0.85rem;
+    padding: 0.75rem 1.25rem;
+    width: 100%;
+  }
+  
+  .table-container {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  
+  /* Hacer la tabla scrollable horizontalmente en móviles */
+  .table-container table {
+    min-width: 700px;
+    font-size: 0.9rem;
+  }
+  
+  .table-container th,
+  .table-container td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  /* Ajustar botones en móviles */
+  .table-container .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    margin: 0.1rem;
+  }
+  
+  /* Ajustar paginación */
+  .pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .pagination .page-link {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Modal adjustments */
+  .modal-container {
+    padding: 1rem;
+    border-radius: 6px;
+  }
+  
+  .modal-container h2 {
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .modal-container form {
+    gap: 1rem;
+  }
+  
+  .modal-container input,
+  .modal-container select,
+  .modal-container textarea {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+  
+  .modal-container .form-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .modal-container .form-buttons button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile Devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .crud-dashboard {
+    padding: 0.75rem;
+    padding-top: 4rem;
+  }
+  
+  .crud-dashboard h1 {
+    font-size: 1.5rem;
+  }
+  
+  .crud-dashboard .description {
+    font-size: 0.85rem;
+  }
+  
+  .dashboard-cards {
+    padding: 0.75rem;
+  }
+  
+  .card {
+    padding: 0.75rem;
+  }
+  
+  .card h3 {
+    font-size: 1rem;
+  }
+  
+  .card p {
+    font-size: 0.8rem;
+  }
+  
+  .search-bar,
+  .table-container,
+  .modal-container {
+    padding: 0.75rem;
+    border-radius: 4px;
+  }
+  
+  .search-bar input {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+  
+  .search-bar button {
+    font-size: 0.8rem;
+    padding: 0.6rem 1rem;
+  }
+  
+  /* Hacer la tabla más compacta en móviles pequeños */
+  .table-container table {
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+  
+  .table-container th,
+  .table-container td {
+    padding: 0.4rem 0.2rem;
+  }
+  
+  .table-container .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+  
+  .pagination .page-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .modal-container h2 {
+    font-size: 1.2rem;
+  }
+  
+  .modal-container input,
+  .modal-container select,
+  .modal-container textarea {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+  
+  .modal-container .form-buttons button {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+}
+
+/* Extra Small Devices (max-width: 360px) */
+@media (max-width: 360px) {
+  .crud-dashboard {
+    padding: 0.5rem;
+    padding-top: 3.5rem;
+  }
+  
+  .crud-dashboard h1 {
+    font-size: 1.3rem;
+  }
+  
+  .dashboard-cards {
+    padding: 0.5rem;
+  }
+  
+  .card {
+    padding: 0.6rem;
+  }
+  
+  .search-bar,
+  .table-container,
+  .modal-container {
+    padding: 0.5rem;
+  }
+  
+  .table-container table {
+    font-size: 0.8rem;
+    min-width: 550px;
+  }
+  
+  .table-container th,
+  .table-container td {
+    padding: 0.3rem 0.15rem;
+  }
+  
+  .pagination .page-link {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .crud-dashboard {
+    padding-top: 3rem;
+  }
+  
+  .crud-dashboard h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .crud-dashboard .description {
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Card Layout for Very Small Screens */
+@media (max-width: 480px) {
+  .products-list-cards {
+    display: block;
+  }
+  
+  .products-list-cards .table-container {
+    display: none;
+  }
+  
+  .product-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #28a745;
+  }
+  
+  .product-card .product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .product-card .product-name {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+  }
+  
+  .product-card .product-code {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .product-card .product-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .product-card .product-info div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-card .product-info span:first-child {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .product-card .product-info span:last-child {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  
+  .product-card .product-price {
+    background: #e9ecef;
+    padding: 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 600;
+    color: #28a745;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .product-card .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .product-card .btn-sm {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+/* Grid Layout for Medium Mobile Screens */
+@media (min-width: 481px) and (max-width: 768px) {
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .product-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .product-card .product-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.25rem;
+  }
+  
+  .product-card .card-actions {
+    justify-content: center;
+    gap: 0.75rem;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .card:hover {
+    transform: none;
+  }
+  
+  .card:active {
+    transform: scale(0.98);
+  }
+  
+  .table-container .btn:hover {
+    transform: none;
+  }
+  
+  .table-container .btn:active {
+    transform: scale(0.95);
+  }
+  
+  .pagination .page-link:hover {
+    transform: none;
+  }
+  
+  .pagination .page-link:active {
+    transform: scale(0.95);
+  }
+  
+  .product-card:hover {
+    transform: none;
+  }
+  
+  .product-card:active {
+    transform: scale(0.98);
+  }
+}

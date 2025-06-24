@@ -76,3 +76,302 @@
 .table td.text-left {
   text-align: left;
 }
+
+/* =================================
+   RESPONSIVE DESIGN - Table
+   ================================= */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .table th,
+  .table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .table .actions button {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    margin: 0 3px;
+  }
+}
+
+/* Mobile & Small Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table {
+    min-width: 600px;
+    font-size: 0.85rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 6px 4px;
+    white-space: nowrap;
+  }
+  
+  .table th {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .table .actions {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+  }
+  
+  .table .actions button {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+    margin: 0 1px;
+    border-radius: 3px;
+    min-width: 30px;
+    min-height: 30px;
+  }
+  
+  /* Sticky first column for better UX */
+  .table th:first-child,
+  .table td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: inherit;
+    z-index: 1;
+  }
+  
+  .table th:first-child {
+    background-color: #f4f4f4;
+  }
+  
+  .table tr:nth-child(even) td:first-child {
+    background-color: #f9f9f9;
+  }
+  
+  .table tr:hover td:first-child {
+    background-color: #e2e2e2;
+  }
+}
+
+/* Small Mobile Devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .table {
+    min-width: 500px;
+    font-size: 0.8rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 4px 2px;
+  }
+  
+  .table th {
+    font-size: 0.75rem;
+  }
+  
+  .table .actions button {
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    min-width: 25px;
+    min-height: 25px;
+  }
+  
+  /* Show only icons on very small screens */
+  .table .actions button .btn-text {
+    display: none;
+  }
+  
+  .table .actions .edit-btn::before {
+    content: "✏️";
+  }
+  
+  .table .actions .delete-btn::before {
+    content: "🗑️";
+  }
+  
+  .table .actions .view-btn::before {
+    content: "👁️";
+  }
+}
+
+/* Card layout for very small screens */
+@media (max-width: 480px) {
+  .table-cards {
+    display: block;
+  }
+  
+  .table-cards .table {
+    display: none;
+  }
+  
+  .data-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007bff;
+  }
+  
+  .data-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .data-card .card-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+  }
+  
+  .data-card .card-id {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .data-card .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .data-card .card-field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .data-card .card-field .field-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+  }
+  
+  .data-card .card-field .field-value {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  
+  .data-card .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .data-card .card-actions button {
+    flex: 1;
+    min-width: 80px;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+}
+
+/* Extra Small Devices (max-width: 360px) */
+@media (max-width: 360px) {
+  .table {
+    min-width: 450px;
+    font-size: 0.75rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 3px 1px;
+  }
+  
+  .table .actions button {
+    padding: 1px 3px;
+    font-size: 0.65rem;
+    min-width: 22px;
+    min-height: 22px;
+  }
+  
+  .data-card {
+    padding: 0.75rem;
+  }
+  
+  .data-card .card-body {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+  
+  .data-card .card-actions {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}
+
+/* Landscape orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .table {
+    font-size: 0.8rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 5px 3px;
+  }
+  
+  .data-card .card-body {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .table .actions button:hover {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .table .actions button:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  
+  .data-card:hover {
+    transform: none;
+  }
+  
+  .data-card:active {
+    transform: scale(0.98);
+  }
+  
+  .table tr:hover {
+    background-color: transparent;
+  }
+  
+  .table tr:active {
+    background-color: #e2e2e2;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .table {
+    border: 2px solid #000;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #000;
+  }
+  
+  .table .actions button {
+    border: 2px solid currentColor;
+  }
+}

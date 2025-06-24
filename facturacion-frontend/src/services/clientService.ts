@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { ClientDto } from '../@types/clients';
 import { getToken } from './authService'; // Importar función para obtener el token
 
-const BASE_URL = 'http://invoiceDevWeb.somee.com/api/Client';
+const BASE_URL = 'https://invoiceDevWeb.somee.com/api/Client';
 
 const getAuthHeaders = () => {
   const token = getToken(); // Obtener el token JWT

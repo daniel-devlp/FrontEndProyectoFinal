@@ -9,3 +9,100 @@ margin-left: 300px; /* Increased space for the navbar */
   box-sizing: border-box;
   overflow: auto; /* Allow scrolling */
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet y pantallas medianas (1200px y menos) */
+@media (max-width: 1200px) {
+  .invoice-create {
+    margin-left: 280px;
+    padding: 1.5rem;
+  }
+}
+
+/* Tablet en modo portrait (992px y menos) */
+@media (max-width: 992px) {
+  .invoice-create {
+    margin-left: 0;
+    width: 100vw;
+    padding: 1rem;
+    padding-top: 80px;
+    border-radius: 8px;
+  }
+}
+
+/* Tablet en modo landscape y móviles grandes (768px y menos) */
+@media (max-width: 768px) {
+  .invoice-create {
+    padding: 0.75rem;
+    padding-top: 70px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    min-height: calc(100vh - 70px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+  .invoice-create {
+    padding: 0.5rem;
+    padding-top: 65px;
+    border-radius: 4px;
+    min-height: calc(100vh - 65px);
+  }
+}
+
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+  .invoice-create {
+    padding: 0.25rem;
+    padding-top: 60px;
+    min-height: calc(100vh - 60px);
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .invoice-create {
+    padding-top: 60px;
+    min-height: calc(100vh - 60px);
+    padding-bottom: 1rem;
+  }
+}
+
+/* Mejoras de accesibilidad y focus */
+@media (max-width: 768px) {
+  .invoice-create {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .invoice-create:focus-within {
+    outline: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .invoice-create {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Print styles */
+@media print {
+  .invoice-create {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+    background: white;
+    color: black;
+    box-shadow: none;
+    border-radius: 0;
+  }
+}

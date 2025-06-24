@@ -33,3 +33,454 @@
 .save-btn:hover {
   background-color: #059669; /* Darker green */
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet y pantallas medianas (768px y menos) */
+@media (max-width: 768px) {
+  .dynamic-btn {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    /* Mejoras touch */
+    min-height: 44px;
+    min-width: 44px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+    border: none;
+    outline: none;
+  }
+  
+  .dynamic-btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  .dynamic-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .dynamic-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* Variantes de tamaño */
+  .dynamic-btn.small {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    min-height: 36px;
+    min-width: 36px;
+  }
+  
+  .dynamic-btn.large {
+    padding: 0.8rem 1.25rem;
+    font-size: 1.1rem;
+    min-height: 52px;
+    min-width: 52px;
+  }
+  
+  /* Botón con icono solamente */
+  .dynamic-btn.icon-only {
+    padding: 0.6rem;
+    min-width: 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+  }
+  
+  .dynamic-btn.icon-only.small {
+    padding: 0.4rem;
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .dynamic-btn.icon-only.large {
+    padding: 0.8rem;
+    min-width: 52px;
+    width: 52px;
+    height: 52px;
+  }
+  
+  /* Estados activos mejorados */
+  .edit-btn:active {
+    background-color: #d97706;
+  }
+  
+  .delete-btn:active {
+    background-color: #b91c1c;
+  }
+  
+  .save-btn:active {
+    background-color: #047857;
+  }
+  
+  /* Botones adicionales */
+  .cancel-btn {
+    background-color: #6b7280;
+    color: #fff;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #4b5563;
+  }
+  
+  .cancel-btn:active {
+    background-color: #374151;
+  }
+  
+  .info-btn {
+    background-color: #0ea5e9;
+    color: #fff;
+  }
+  
+  .info-btn:hover {
+    background-color: #0284c7;
+  }
+  
+  .info-btn:active {
+    background-color: #0369a1;
+  }
+  
+  .warning-btn {
+    background-color: #f59e0b;
+    color: #fff;
+  }
+  
+  .warning-btn:hover {
+    background-color: #d97706;
+  }
+  
+  .warning-btn:active {
+    background-color: #b45309;
+  }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+  .dynamic-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+  }
+  
+  .dynamic-btn.small {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    min-height: 32px;
+    min-width: 32px;
+  }
+  
+  .dynamic-btn.large {
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .dynamic-btn.icon-only {
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+  
+  .dynamic-btn.icon-only.small {
+    padding: 0.35rem;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+  
+  .dynamic-btn.icon-only.large {
+    padding: 0.7rem;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Grupos de botones en móvil */
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .button-group.center {
+    justify-content: center;
+  }
+  
+  .button-group.end {
+    justify-content: flex-end;
+  }
+  
+  .button-group.vertical {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .button-group.vertical .dynamic-btn {
+    width: 100%;
+  }
+}
+
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+  .dynamic-btn {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  
+  .dynamic-btn.small {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    min-height: 28px;
+    min-width: 28px;
+  }
+  
+  .dynamic-btn.large {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .dynamic-btn.icon-only {
+    padding: 0.4rem;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+  
+  .button-group {
+    gap: 0.25rem;
+  }
+  
+  .button-group.stack-mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .button-group.stack-mobile .dynamic-btn {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .dynamic-btn {
+    padding: 0.4rem 0.8rem;
+    min-height: 36px;
+  }
+  
+  .dynamic-btn.large {
+    padding: 0.5rem 1rem;
+    min-height: 40px;
+  }
+  
+  .dynamic-btn.icon-only {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (max-width: 768px) {
+  .dynamic-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  .dynamic-btn:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  /* Estados de carga */
+  .dynamic-btn.loading {
+    cursor: not-allowed;
+    position: relative;
+    color: transparent;
+  }
+  
+  .dynamic-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin: -0.375rem 0 0 -0.375rem;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: btn-spin 1s linear infinite;
+  }
+  
+  .dynamic-btn.small.loading::after {
+    width: 0.6rem;
+    height: 0.6rem;
+    margin: -0.3rem 0 0 -0.3rem;
+  }
+  
+  .dynamic-btn.large.loading::after {
+    width: 1rem;
+    height: 1rem;
+    margin: -0.5rem 0 0 -0.5rem;
+  }
+  
+  @keyframes btn-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .edit-btn {
+    background-color: #f59e0b;
+    color: #000;
+  }
+  
+  .edit-btn:hover {
+    background-color: #d97706;
+  }
+  
+  .edit-btn:active {
+    background-color: #b45309;
+  }
+  
+  .delete-btn {
+    background-color: #ef4444;
+    color: #fff;
+  }
+  
+  .delete-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  .delete-btn:active {
+    background-color: #b91c1c;
+  }
+  
+  .save-btn {
+    background-color: #10b981;
+    color: #fff;
+  }
+  
+  .save-btn:hover {
+    background-color: #059669;
+  }
+  
+  .save-btn:active {
+    background-color: #047857;
+  }
+  
+  .cancel-btn {
+    background-color: #4b5563;
+    color: #e5e7eb;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #374151;
+  }
+  
+  .cancel-btn:active {
+    background-color: #1f2937;
+  }
+}
+
+/* Reducir animaciones para usuarios que las prefieren */
+@media (prefers-reduced-motion: reduce) {
+  .dynamic-btn {
+    transition: none;
+  }
+  
+  .dynamic-btn:active {
+    transform: none;
+  }
+  
+  .dynamic-btn.loading::after {
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .dynamic-btn {
+    border: 2px solid transparent;
+    font-weight: 600;
+  }
+  
+  .edit-btn {
+    background-color: #ff9900;
+    color: #000;
+    border-color: #cc7700;
+  }
+  
+  .edit-btn:hover,
+  .edit-btn:focus {
+    background-color: #cc7700;
+    border-color: #aa5500;
+  }
+  
+  .delete-btn {
+    background-color: #cc0000;
+    color: #fff;
+    border-color: #990000;
+  }
+  
+  .delete-btn:hover,
+  .delete-btn:focus {
+    background-color: #990000;
+    border-color: #660000;
+  }
+  
+  .save-btn {
+    background-color: #009900;
+    color: #fff;
+    border-color: #007700;
+  }
+  
+  .save-btn:hover,
+  .save-btn:focus {
+    background-color: #007700;
+    border-color: #005500;
+  }
+  
+  .cancel-btn {
+    background-color: #666;
+    color: #fff;
+    border-color: #333;
+  }
+  
+  .cancel-btn:hover,
+  .cancel-btn:focus {
+    background-color: #333;
+    border-color: #000;
+  }
+}
+
+/* Print styles */
+@media print {
+  .dynamic-btn {
+    background: transparent !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+  
+  .dynamic-btn::after {
+    display: none !important;
+  }
+}

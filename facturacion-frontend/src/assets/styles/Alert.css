@@ -21,3 +21,358 @@
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet y pantallas medianas (768px y menos) */
+@media (max-width: 768px) {
+  .alert {
+    padding: 0.9rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Alert con botón de cerrar */
+  .alert.dismissible {
+    padding-right: 3rem;
+  }
+  
+  .alert .close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .alert .close-button:hover,
+  .alert .close-button:focus {
+    background-color: rgba(0, 0, 0, 0.1);
+    outline: none;
+  }
+  
+  .alert.info .close-button {
+    color: #0c5460;
+  }
+  
+  .alert.success .close-button {
+    color: #155724;
+  }
+  
+  .alert.error .close-button {
+    color: #721c24;
+  }
+  
+  .alert.warning .close-button {
+    color: #856404;
+  }
+  
+  /* Alert con icono */
+  .alert.with-icon {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-left: 1rem;
+  }
+  
+  .alert .alert-icon {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+  }
+  
+  .alert .alert-content {
+    flex: 1;
+  }
+  
+  .alert .alert-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .alert .alert-message {
+    margin: 0;
+  }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+  .alert {
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .alert.dismissible {
+    padding-right: 2.5rem;
+  }
+  
+  .alert .close-button {
+    top: 0.25rem;
+    right: 0.25rem;
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 1rem;
+  }
+  
+  .alert.with-icon {
+    gap: 0.5rem;
+    padding-left: 0.75rem;
+  }
+  
+  .alert .alert-icon {
+    font-size: 1.1rem;
+  }
+  
+  .alert .alert-title {
+    font-size: 0.95rem;
+  }
+}
+
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+  .alert {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.6rem;
+  }
+  
+  .alert.dismissible {
+    padding-right: 2.25rem;
+  }
+  
+  .alert .close-button {
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 0.9rem;
+  }
+  
+  .alert .alert-title {
+    font-size: 0.9rem;
+  }
+}
+
+/* Variantes de alerta adicionales */
+@media (max-width: 768px) {
+  .alert.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffecb5;
+  }
+  
+  /* Alert compacta */
+  .alert.compact {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .alert.compact.dismissible {
+    padding-right: 2rem;
+  }
+  
+  .alert.compact .close-button {
+    top: 0.125rem;
+    right: 0.125rem;
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 0.875rem;
+  }
+  
+  /* Alert en posición fija */
+  .alert.fixed {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    margin-bottom: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .alert.fixed.bottom {
+    top: auto;
+    bottom: 1rem;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .alert.fixed {
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+  
+  .alert.fixed.bottom {
+    bottom: 0.5rem;
+  }
+}
+
+/* Animaciones para alerts */
+@media (max-width: 768px) {
+  .alert {
+    animation: alertSlideIn 0.3s ease-out;
+  }
+  
+  .alert.fade-out {
+    animation: alertFadeOut 0.3s ease-in forwards;
+  }
+  
+  @keyframes alertSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes alertFadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (max-width: 768px) {
+  .alert {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .alert .close-button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  .alert[role="alert"],
+  .alert[role="status"] {
+    position: relative;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .alert.info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  
+  .alert.success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #6ee7b7;
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  
+  .alert.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  
+  .alert.warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #fcd34d;
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  
+  .alert .close-button {
+    color: currentColor;
+  }
+  
+  .alert .close-button:hover,
+  .alert .close-button:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Reducir animaciones para usuarios que las prefieren */
+@media (prefers-reduced-motion: reduce) {
+  .alert {
+    animation: none;
+  }
+  
+  .alert.fade-out {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .alert {
+    border-width: 2px;
+    font-weight: 500;
+  }
+  
+  .alert.info {
+    background-color: #e6f3ff;
+    color: #003366;
+    border-color: #0066cc;
+  }
+  
+  .alert.success {
+    background-color: #e6ffe6;
+    color: #003300;
+    border-color: #009900;
+  }
+  
+  .alert.error {
+    background-color: #ffe6e6;
+    color: #330000;
+    border-color: #cc0000;
+  }
+  
+  .alert.warning {
+    background-color: #fff9e6;
+    color: #332200;
+    border-color: #cc9900;
+  }
+  
+  .alert .close-button {
+    font-weight: bold;
+  }
+}
+
+/* Print styles */
+@media print {
+  .alert {
+    background: transparent !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+  
+  .alert .close-button {
+    display: none !important;
+  }
+  
+  .alert.fixed {
+    position: static !important;
+    margin-bottom: 1rem !important;
+  }
+}

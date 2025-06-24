@@ -31,3 +31,198 @@
 .search-item:hover {
   background-color: #f8f9fa;
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet y pantallas medianas (768px y menos) */
+@media (max-width: 768px) {
+  .smart-search {
+    width: 100%;
+  }
+  
+  .search-input {
+    padding: 0.6rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    /* Mejoras touch */
+    -webkit-appearance: none;
+    appearance: none;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  
+  .search-results {
+    border-radius: 6px;
+    max-height: 180px;
+    z-index: 1000;
+    /* Mejoras touch */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .search-item {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #e2e8f0;
+    /* Touch target */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-item:last-child {
+    border-bottom: none;
+  }
+  
+  .search-item:hover,
+  .search-item:focus {
+    background-color: #f1f5f9;
+    outline: none;
+  }
+  
+  .search-item:active {
+    background-color: #e2e8f0;
+  }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+  .search-input {
+    padding: 0.5rem;
+    font-size: 0.95rem;
+    border-radius: 4px;
+  }
+  
+  .search-results {
+    max-height: 160px;
+    border-radius: 4px;
+    /* Ajuste para pantallas pequeñas */
+    left: -5px;
+    right: -5px;
+    width: calc(100% + 10px);
+  }
+  
+  .search-item {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+  .search-input {
+    padding: 0.45rem;
+    font-size: 0.9rem;
+  }
+  
+  .search-results {
+    max-height: 140px;
+    left: -10px;
+    right: -10px;
+    width: calc(100% + 20px);
+  }
+  
+  .search-item {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .search-results {
+    max-height: 120px;
+  }
+}
+
+/* Mejoras de accesibilidad y focus */
+@media (max-width: 768px) {
+  .search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+  }
+  
+  .search-item {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-item:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .search-input {
+    background-color: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+  }
+  
+  .search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  .search-input::placeholder {
+    color: #94a3b8;
+  }
+  
+  .search-results {
+    background-color: #1e293b;
+    border-color: #475569;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .search-item {
+    color: #e2e8f0;
+    border-bottom-color: #475569;
+  }
+  
+  .search-item:hover,
+  .search-item:focus {
+    background-color: #334155;
+  }
+  
+  .search-item:active {
+    background-color: #475569;
+  }
+}
+
+/* Reducir animaciones para usuarios que las prefieren */
+@media (prefers-reduced-motion: reduce) {
+  .search-input,
+  .search-item {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .search-input {
+    border-width: 2px;
+    border-color: #000;
+  }
+  
+  .search-input:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.3);
+  }
+  
+  .search-results {
+    border-width: 2px;
+    border-color: #000;
+  }
+  
+  .search-item {
+    border-bottom-width: 1px;
+    border-bottom-color: #000;
+  }
+  
+  .search-item:hover,
+  .search-item:focus {
+    background-color: #000;
+    color: #fff;
+  }
+}
