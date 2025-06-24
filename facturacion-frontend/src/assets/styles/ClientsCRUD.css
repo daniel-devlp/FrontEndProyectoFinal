@@ -67,7 +67,7 @@
   overflow-y: visible; /* Mostrar todo el contenido */
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
   padding: 1rem;
   width: 100%;
   box-sizing: border-box;
@@ -90,7 +90,7 @@
   padding: 12px 8px;
   font-weight: 600;
   color: #495057;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid #ffffff;
   font-size: 0.9rem;
 }
 
@@ -104,7 +104,7 @@
 
 .crud-table th,
 .crud-table td {
-  border: 1px solid #dee2e6;
+  border: 1px solid #ffffff;
   padding: 8px 6px;
   text-align: left;
   vertical-align: middle;
@@ -556,7 +556,7 @@
     padding: 1rem;
     margin-bottom: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-left: 4px solid #007bff;
+    border-left: 4px solid #ffffff;
   }
   
   .client-card .client-header {

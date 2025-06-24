@@ -100,7 +100,7 @@
   padding: 12px 8px; /* Reducir padding horizontal */
   font-weight: 600;
   color: #495057;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid #ffffff;
   font-size: 0.9rem; /* Reducir tamaño de fuente para optimizar espacio */
 }
 
@@ -114,7 +114,7 @@
 
 .crud-table th,
 .crud-table td {
-  border: 1px solid #dee2e6;
+  border: 1px solid #ffffff;
   padding: 8px 6px; /* Reducir padding para optimizar espacio */
   text-align: left;
   vertical-align: middle;
@@ -728,7 +728,7 @@
     padding: 1rem;
     margin-bottom: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-left: 4px solid #28a745;
+    border-left: 4px solid #ffffff;
   }
   
   .product-card .product-header {

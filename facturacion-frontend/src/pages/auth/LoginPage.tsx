@@ -32,7 +32,7 @@ export default function LoginPage() {
         // Usuario tiene un solo rol, redirigir directamente
         toast.success('¡Bienvenido! Redirigiendo...');
         setTimeout(() => {
-          const redirectPath = result.selectedRole === 'Administrator' ? '/admin/dashboard' : '/user/dashboard';
+          const redirectPath = result.selectedRole === 'Administrator' ? '/admin' : '/user/dashboard';
           window.location.href = redirectPath;
         }, 1500);
       }

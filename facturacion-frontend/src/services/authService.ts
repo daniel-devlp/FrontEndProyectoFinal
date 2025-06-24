@@ -40,7 +40,7 @@ export const authService = {
 
   getCurrentUser: async () => {
     const token = localStorage.getItem('authToken');
-    const apiEndpoint = 'http://invoiceDevWeb.somee.com/api/Users/me';
+    const apiEndpoint = 'https://invoiceDevWeb.somee.com/api/Users/me';
     const requestOptions = {
       method: 'GET',
       headers: {

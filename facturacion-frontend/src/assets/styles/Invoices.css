@@ -141,7 +141,7 @@
   color: #1e293b; /* Neutral text color */
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid #ffffff;
 }
 
 .invoices-modal-body {
@@ -187,7 +187,7 @@
   background-color: #f8f9fa;
   padding: 1.5rem;
   border-radius: 8px;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #ffffff;
 }
 
 .info-title {
