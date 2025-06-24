@@ -31,6 +31,36 @@ const InvoiceCreatePage = () => {
     invoiceDetails: [],
   });
   const itemsPerPage = 10;
+  // Función para manejar el cambio de búsqueda y resetear la página
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Resetear siempre a la página 1 cuando se busque
+  };
+
+  // Funciones para abrir modales y resetear búsqueda
+  const openClientModal = () => {
+    setSearchTerm(''); // Limpiar búsqueda anterior
+    setCurrentPage(1); // Resetear página
+    setClientModalOpen(true);
+  };
+
+  const openProductModal = () => {
+    setSearchTerm(''); // Limpiar búsqueda anterior
+    setCurrentPage(1); // Resetear página
+    setProductModalOpen(true);
+  };
+
+  const closeClientModal = () => {
+    setSearchTerm(''); // Limpiar búsqueda al cerrar
+    setCurrentPage(1); // Resetear página
+    setClientModalOpen(false);
+  };
+
+  const closeProductModal = () => {
+    setSearchTerm(''); // Limpiar búsqueda al cerrar
+    setCurrentPage(1); // Resetear página
+    setProductModalOpen(false);
+  };
 
   const { clients, totalItems: totalClients, loading: loadingClients, error: errorClients } = useClients({
     pageNumber: currentPage,
@@ -51,12 +81,11 @@ const InvoiceCreatePage = () => {
       setNewInvoice((prev) => ({ ...prev, userId: currentUserId }));
     }
   }, [currentUserId]);
-
   const handleSelectClient = (client: ClientDto) => {
     setSelectedClient(client);
     setNewInvoice((prev) => ({ ...prev, clientId: client.clientId }));
     toast.success(`Cliente seleccionado: ${client.firstName} ${client.lastName}`);
-    setClientModalOpen(false);
+    closeClientModal();
   };
   const handleSelectProduct = (product: ProductDto) => {
     // Verificar si el producto ya está en la lista
@@ -77,10 +106,9 @@ const InvoiceCreatePage = () => {
     setNewInvoice((prev) => ({
       ...prev,
       invoiceDetails: [...prev.invoiceDetails, productDetail],
-    }));
-    
+    }));    
     toast.success(`Producto agregado: ${product.name}`);
-    setProductModalOpen(false);
+    closeProductModal();
   };
 
   // Validamos el objeto `newInvoice` antes de enviarlo
@@ -282,10 +310,26 @@ const InvoiceCreatePage = () => {
             <div className="section">
               <h1>Crear Nueva Factura</h1>
             </div>
-            
-            <div className="section">
-              <h2>Número de Factura</h2>
-              <p>{newInvoice.invoiceNumber}</p>
+              <div className="section">
+              <h2>Información de la Factura</h2>
+              <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+                <div>
+                  <p><strong>Número de Factura:</strong></p>
+                  <p style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333' }}>
+                    {newInvoice.invoiceNumber}
+                  </p>
+                </div>
+                <div>
+                  <p><strong>Fecha de Emisión:</strong></p>
+                  <p style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333' }}>
+                    {new Date(newInvoice.issueDate).toLocaleDateString('es-ES', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
             </div>
 
           {/* Selección de Cliente */}
@@ -300,14 +344,13 @@ const InvoiceCreatePage = () => {
               </div>
             ) : (
               <p>No se ha seleccionado un cliente</p>
-            )}
-            <DynamicButton
+            )}            <DynamicButton
               type="save"
-              onClick={() => setClientModalOpen(true)}
+              onClick={openClientModal}
               label="Seleccionar Cliente"
             />
           </div>        {/* Modal para seleccionar cliente */}
-        <Modal isOpen={isClientModalOpen} onClose={() => setClientModalOpen(false)}>
+        <Modal isOpen={isClientModalOpen} onClose={closeClientModal}>
           <div style={{ position: 'relative' }}>
             <button
               style={{
@@ -326,7 +369,7 @@ const InvoiceCreatePage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-              onClick={() => setClientModalOpen(false)}
+              onClick={closeClientModal}
             >
               X
             </button>            <h2>Seleccionar Cliente</h2>
@@ -335,12 +378,11 @@ const InvoiceCreatePage = () => {
                 <SearchBar
                   placeholder="Buscar clientes..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
                 />
-              </div>              <DynamicButton
-                type="save"
-                onClick={() => {
-                  setClientModalOpen(false);
+              </div><DynamicButton
+                type="save"                onClick={() => {
+                  closeClientModal();
                   navigate('/admin/clients');
                 }}
                 label="Crear Cliente"
@@ -519,13 +561,13 @@ const InvoiceCreatePage = () => {
             <p>No se han agregado productos</p>          )}
           <DynamicButton
             type="save"
-            onClick={() => setProductModalOpen(true)}
+            onClick={openProductModal}
             label="Agregar Producto"
           />
         </div>
 
         {/* Modal para seleccionar producto */}
-        <Modal isOpen={isProductModalOpen} onClose={() => setProductModalOpen(false)}>
+        <Modal isOpen={isProductModalOpen} onClose={closeProductModal}>
           <div style={{ position: 'relative' }}>
             <button
               style={{
@@ -544,15 +586,14 @@ const InvoiceCreatePage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-              onClick={() => setProductModalOpen(false)}
+              onClick={closeProductModal}
             >
               X
-            </button>
-            <h2>Seleccionar Producto</h2>
+            </button>            <h2>Seleccionar Producto</h2>
             <SearchBar
               placeholder="Buscar productos..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
             />
             {loadingProducts ? (
               <p>Cargando productos...</p>
