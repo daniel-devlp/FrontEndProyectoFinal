@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { productService } from '../services/productService';
 import type { ProductDto, ProductCreateDto, ProductUpdateDto } from '../@types/products';
 
@@ -6,12 +6,23 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
   const [products, setProducts] = useState<ProductDto[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
+      // Solo mostrar loading completo en la carga inicial
+      if (isInitialLoad) {
+        setLoading(true);
+      } else {
+        // Para búsquedas, usar un estado separado
+        setSearching(true);
+      }
+      
       setError(null);
+      
       try {
         const response = await productService.getAllProducts({ pageNumber, pageSize, searchTerm });
         console.log('Respuesta completa del servidor:', response);
@@ -26,11 +37,33 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
         setError(err instanceof Error ? err.message : 'Error desconocido');
       } finally {
         setLoading(false);
+        setSearching(false);
+        setIsInitialLoad(false);
       }
     };
 
-    fetchProducts();
-  }, [pageNumber, pageSize, searchTerm]);
+    // Limpiar timeout anterior
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Si es búsqueda (no carga inicial), aplicar debounce
+    if (!isInitialLoad && searchTerm !== '') {
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchProducts();
+      }, 300); // 300ms de debounce
+    } else {
+      // Carga inmediata para carga inicial o búsqueda vacía
+      fetchProducts();
+    }
+
+    // Cleanup
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [pageNumber, pageSize, searchTerm, isInitialLoad]);
 
   const validateProductFields = (product: Partial<ProductDto>, existingProducts: ProductDto[] = []) => {
     const errors: Record<string, string> = {};
@@ -99,5 +132,5 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
     }
   };
 
-  return { products, totalItems, loading, error, createProduct, updateProduct, deleteProduct };
+  return { products, totalItems, loading, searching, error, createProduct, updateProduct, deleteProduct };
 };

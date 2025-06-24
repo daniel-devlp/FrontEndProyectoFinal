@@ -164,53 +164,54 @@ const UsersCRUD = () => {
   return (
     <div className="users-crud">
       <Navbar />
-      <div className="crud-dashboard">
-        <h1>Gestión de Usuarios</h1>
+      <div className="crud-dashboard">        <h1>Gestión de Usuarios</h1>
         {loading && <p>Cargando...</p>}
         {error && <p>Error: {error}</p>}
-        <Table
-          columns={[
-            { key: 'userName', header: 'Nombre de Usuario' },
-            { key: 'email', header: 'Correo Electrónico' },
-            { key: 'roles', header: 'Roles' },
-            { key: 'estado', header: 'Estado' }
-          ]}
-          data={users.map((user) => ({
-            ...user,
-            roles: user.roles.join(', '),
-            estado: user.isLocked ? 'Bloqueado' : 'Activo',
-          }))}
-          renderActions={(user) => (
-            <>
-              <DynamicButton
-                type="edit"
-                onClick={() => {
-                  setSelectedUser({
-                    ...user,
-                    roles: user.roles.split(',').map((role) => role.trim()),
-                  });
-                  setEditModalOpen(true);
-                }}
-                label="Editar"
-              />
-              <DynamicButton
-                type="delete"
-                onClick={() => handleDeleteUser(user.id)}
-                label="Eliminar"
-              />
-              {user.isLocked && (
+        <div className="table-container">
+          <Table
+            columns={[
+              { key: 'userName', header: 'Nombre de Usuario' },
+              { key: 'email', header: 'Correo Electrónico' },
+              { key: 'roles', header: 'Roles' },
+              { key: 'estado', header: 'Estado' }
+            ]}
+            data={users.map((user) => ({
+              ...user,
+              roles: user.roles.join(', '),
+              estado: user.isLocked ? 'Bloqueado' : 'Activo',
+            }))}
+            renderActions={(user) => (
+              <>
                 <DynamicButton
-                  type="save"
-                  onClick={async () => {
-                    await unlockUser(user.id);
-                    setSelectedUser((prev) => ({ ...prev, isLocked: false }));
+                  type="edit"
+                  onClick={() => {
+                    setSelectedUser({
+                      ...user,
+                      roles: user.roles.split(',').map((role) => role.trim()),
+                    });
+                    setEditModalOpen(true);
                   }}
-                  label="Desbloquear"
+                  label="Editar"
                 />
-              )}
-            </>
-          )}
-        />
+                <DynamicButton
+                  type="delete"
+                  onClick={() => handleDeleteUser(user.id)}
+                  label="Eliminar"
+                />
+                {user.isLocked && (
+                  <DynamicButton
+                    type="save"
+                    onClick={async () => {
+                      await unlockUser(user.id);
+                      setSelectedUser((prev) => ({ ...prev, isLocked: false }));
+                    }}
+                    label="Desbloquear"
+                  />
+                )}
+              </>
+            )}
+          />
+        </div>
         <div className="crud-actions">
           <DynamicButton
             type="save"

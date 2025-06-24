@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { invoiceService } from '../services/invoiceService';
 import type {
   InvoiceDto,
@@ -18,17 +18,27 @@ export const useInvoices = ({
   const [invoices, setInvoices] = useState<InvoiceDto[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const fetchInvoices = async () => {
-      setLoading(true);
+      // Solo mostrar loading completo en la carga inicial
+      if (isInitialLoad) {
+        setLoading(true);
+      } else {
+        // Para búsquedas, usar un estado separado
+        setSearching(true);
+      }
+      
       setError(null);
+      
       try {
         const response = await invoiceService.getAllInvoices({
           pageNumber,
-          pageSize,
-          searchTerm,
+          pageSize,          searchTerm,
         });
         setInvoices(response.data);
         setTotalItems(response.totalItems);
@@ -36,11 +46,33 @@ export const useInvoices = ({
         setError(err instanceof Error ? err.message : 'Error desconocido');
       } finally {
         setLoading(false);
+        setSearching(false);
+        setIsInitialLoad(false);
       }
     };
 
-    fetchInvoices();
-  }, [pageNumber, pageSize, searchTerm]);
+    // Limpiar timeout anterior
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Si es búsqueda (no carga inicial), aplicar debounce
+    if (!isInitialLoad && searchTerm !== '') {
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchInvoices();
+      }, 300); // 300ms de debounce
+    } else {
+      // Carga inmediata para carga inicial o búsqueda vacía
+      fetchInvoices();
+    }
+
+    // Cleanup
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [pageNumber, pageSize, searchTerm, isInitialLoad]);
 
   const createInvoice = async (dto: InvoiceCreateDto) => {
     try {
@@ -113,5 +145,5 @@ export const useInvoices = ({
     }
   };
 
-  return { invoices, totalItems, loading, error, createInvoice, updateInvoice, deleteInvoice };
+  return { invoices, totalItems, loading, searching, error, createInvoice, updateInvoice, deleteInvoice };
 };

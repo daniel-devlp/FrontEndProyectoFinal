@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import '../../assets/styles/LoginForm.css';
+
 interface LoginFormProps {
   onLogin: (email: string, password: string) => void;
   loading?: boolean;
@@ -13,51 +15,95 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email) {
+      toast.error('Por favor ingresa tu email');
+      return;
+    }
+    
+    if (!password) {
+      toast.error('Por favor ingresa tu contraseña');
+      return;
+    }
+    
     onLogin(email, password);
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="loginForm">
-      <h2 className="title">Iniciar Sesión</h2>
-      
-      {error && <div className="error">{error}</div>}
+  React.useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);  return (
+    <div className="loginContainer">
+      <div className="loginFormCard">
+        {/* Header decorativo exacto a la primera imagen */}
+        <div className="loginHeader">
+          {/* Círculo decorativo (sol) */}
+          <div className="decorative-circle"></div>
+          {/* Montaña central */}
+          <div className="mountain-center"></div>
+        </div>
+        
+        <div className="loginContent">
+          <form onSubmit={handleSubmit} className="loginForm">
+            <h2 className="title">Login</h2>
+            
+            <div className="formGroup">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input"
+                placeholder="Username"
+                required
+                disabled={loading}
+              />
+            </div>
 
-      <div className="formGroup">
-        <label htmlFor="email" className="label">Correo Electrónico</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="input"
-          required
-          disabled={loading}
-        />
+            <div className="formGroup">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input"
+                placeholder="Password"
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <div className="loginOptions">
+              <label className="rememberMe">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                remember me
+              </label>
+              <a href="/forgot-password" className="forgotPassword">
+                forgot password
+              </a>
+            </div>
+
+            <button 
+              type="submit" 
+              className="submitButton"
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Login'}
+            </button>
+
+            <div className="createAccount">
+              <a href="/register">Create Account</a>
+            </div>
+          </form>
+        </div>
       </div>
-
-      <div className="formGroup">
-        <label htmlFor="password" className="label">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="input"
-          required
-          disabled={loading}
-        />
-      </div>
-
-      <button 
-        type="submit" 
-        className="submitButton"
-        disabled={loading}
-      >
-        {loading ? 'Cargando...' : 'Ingresar'}
-      </button>
-    </form>
+    </div>
   );
 };

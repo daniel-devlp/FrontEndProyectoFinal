@@ -1,43 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Table from '../../components/common/Table';
 import SearchBar from '../../components/common/SearchBar';
 import DynamicButton from '../../components/common/DynamicButton';
 import { toast } from 'react-toastify';
+import { useInvoices } from '../../hooks/useInvoices';
 import { invoiceService } from '../../services/invoiceService';
 import type { InvoiceDto } from '../../@types/invoices';
 import '../../assets/styles/Invoices.css';
 
 const InvoicesCRUD: React.FC = () => {
   const navigate = useNavigate();
-  const [invoices, setInvoices] = useState<InvoiceDto[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); // Cambiar el tipo de error a null para evitar advertencias
   const itemsPerPage = 10;
 
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      setLoading(true);
-      try {
-        const response = await invoiceService.getAllInvoices({
-          pageNumber: currentPage,
-          pageSize: itemsPerPage,
-          searchTerm,
-        });
-        setInvoices(response.data);
-        setTotalItems(response.totalItems);
-      } catch (err) {
-        toast.error('Error al cargar las facturas');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchInvoices();
-  }, [currentPage, searchTerm]);
+  const { invoices, totalItems, loading, searching, error, deleteInvoice } = useInvoices({
+    pageNumber: currentPage,
+    pageSize: itemsPerPage,
+    searchTerm,
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -75,11 +58,9 @@ const InvoicesCRUD: React.FC = () => {
       draggable: false,
       position: "top-center",
       onClose: async () => {
-        const confirmed = window.confirm('Confirma la eliminación de la factura.');
-        if (confirmed) {
+        const confirmed = window.confirm('Confirma la eliminación de la factura.');        if (confirmed) {
           try {
-            await invoiceService.deleteInvoice(invoiceId);
-            setInvoices((prev) => prev.filter((invoice) => invoice.invoiceId !== invoiceId));
+            await deleteInvoice(invoiceId);
             toast.success('Factura eliminada exitosamente');
           } catch (err) {
             toast.error('Error al eliminar la factura');
@@ -95,14 +76,25 @@ const InvoicesCRUD: React.FC = () => {
 
   return (
     <div className="invoices-crud">
-      <Navbar />
-      <h1>Gestión de Facturas</h1>
-      <SearchBar
-        placeholder="Buscar facturas..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-      {loading && <p>Cargando...</p>}
+      <Navbar />      <h1>Gestión de Facturas</h1>
+      <div className="search-bar">
+        <SearchBar
+          placeholder="Buscar facturas..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+        {searching && (
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#666', 
+            marginTop: '5px',
+            fontStyle: 'italic'
+          }}>
+            Buscando...
+          </div>
+        )}
+      </div>
+      {loading && invoices.length === 0 && <p>Cargando...</p>}
       {error && <p>Error: {error}</p>}
       <Table
         columns={[

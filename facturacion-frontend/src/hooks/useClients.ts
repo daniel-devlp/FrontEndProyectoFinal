@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import type { ClientDto } from '../@types/clients';
 import { clientService } from '../services/clientService';
@@ -154,12 +154,23 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
   const [clients, setClients] = useState<ClientDto[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const fetchClients = async () => {
-      setLoading(true);
+      // Solo mostrar loading completo en la carga inicial
+      if (isInitialLoad) {
+        setLoading(true);
+      } else {
+        // Para búsquedas, usar un estado separado
+        setSearching(true);
+      }
+      
       setError(null);
+      
       try {
         const response = await clientService.getAllClients({ pageNumber, pageSize, searchTerm });
         setClients(response.data.items);
@@ -169,11 +180,33 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
         toast.error('Error al cargar clientes. Por favor, intente nuevamente.');
       } finally {
         setLoading(false);
+        setSearching(false);
+        setIsInitialLoad(false);
       }
     };
 
-    fetchClients();
-  }, [pageNumber, pageSize, searchTerm]);
+    // Limpiar timeout anterior
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Si es búsqueda (no carga inicial), aplicar debounce
+    if (!isInitialLoad && searchTerm !== '') {
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchClients();
+      }, 300); // 300ms de debounce
+    } else {
+      // Carga inmediata para carga inicial o búsqueda vacía
+      fetchClients();
+    }
+
+    // Cleanup
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [pageNumber, pageSize, searchTerm, isInitialLoad]);
 
   const createClient = async (client: ClientDto) => {
     const errors = validateClientFields(client, clients);
@@ -226,5 +259,5 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
     }
   };
 
-  return { clients, totalItems, loading, error, createClient, updateClient, deleteClient };
+  return { clients, totalItems, loading, searching, error, createClient, updateClient, deleteClient };
 };

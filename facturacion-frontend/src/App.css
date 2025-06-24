@@ -1,8 +1,155 @@
+/* SOLUCIÓN DEFINITIVA PARA SCROLL - MÁXIMA COMPATIBILIDAD */
+html {
+  height: 100% !important;
+  overflow: scroll !important; /* FORZAR scroll siempre */
+  scroll-behavior: smooth !important;
+}
+
+body {
+  height: 100% !important;
+  overflow: scroll !important; /* FORZAR scroll siempre */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* FORZAR SCROLL EN PÁGINAS CRUD - SOLUCIÓN FINAL */
+body:has(.products-crud), 
+body:has(.clients-crud), 
+body:has(.users-crud), 
+body:has(.roles-crud), 
+body:has(.invoices) {
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+/* ALTERNATIVA PARA NAVEGADORES QUE NO SOPORTAN :has */
+.products-crud, .clients-crud, .users-crud, .roles-crud, .invoices {
+  min-height: 150vh !important; /* FORZAR altura mínima para activar scroll */
+  height: auto !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* HABILITAR SCROLL FUNCIONAL EN TODOS LOS ELEMENTOS */
+html, body, #root, 
+.clients-crud, .products-crud, .users-crud, .roles-crud, .invoices,
+.crud-dashboard, .table-container, .crud-table {
+  /* EVENTOS DE SCROLL HABILITADOS */
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+  
+  /* COMPATIBILIDAD CON DIFERENTES NAVEGADORES */
+  -ms-overflow-style: scrollbar !important;
+  scrollbar-width: auto !important;
+  
+  /* ASEGURAR QUE EL SCROLL FUNCIONE */
+  user-select: auto !important;
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+}
+
+/* ESTILOS ESPECÍFICOS PARA ELEMENTOS INTERACTIVOS */
+.crud-table tr, .crud-table td, .crud-table th,
+.dashboard-cards, .card, .search-bar, .modal {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+/* SCROLL BAR VISIBLE SIEMPRE */
+::-webkit-scrollbar {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 6px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888 !important;
+  border-radius: 6px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555 !important;
+}
+
+/* FORZAR CONTENIDO COMPLETO EN TODAS LAS PÁGINAS CRUD */
+.clients-crud, .products-crud, .users-crud, .roles-crud, .invoices, .invoices-crud {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: scroll !important; /* FORZAR scroll siempre */
+  overflow-x: hidden !important;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  min-height: 100vh !important;
+  max-height: none !important;
+  width: 100% !important;
+  position: relative !important;
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important; /* Permitir scroll táctil */
+  -webkit-overflow-scrolling: touch !important; /* iOS scroll suave */
+}
+
+/* FORZAR DASHBOARDS CRUD A MOSTRAR TODO EL CONTENIDO */
+.crud-dashboard {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: visible !important; /* MOSTRAR todo sin cortar */
+  overflow-x: hidden !important;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  min-height: auto !important;
+  max-height: none !important;
+  flex: 1 !important;
+  width: 100% !important;
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important; /* Permitir scroll táctil */
+}
+
+/* FORZAR TABLAS A MOSTRAR TODO EL CONTENIDO */
+.table-container, .table-responsive {
+  overflow-y: visible !important; /* MOSTRAR todo sin cortar */
+  overflow-x: hidden !important;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  max-height: none !important;
+  width: 100% !important;
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important; /* Permitir scroll táctil */
+}
+
+.crud-table {
+  width: 100% !important;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  max-height: none !important;
+  overflow: visible !important; /* MOSTRAR todo */
+  table-layout: auto !important; /* PERMITIR crecimiento automático */
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important; /* Permitir scroll táctil */
+}
+
+/* FORZAR CONTENEDORES DE TARJETAS */
+.dashboard-cards, .card {
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  max-height: none !important;
+  overflow: visible !important;
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important; /* Permitir scroll táctil */
 }
 
 .logo {
@@ -11,9 +158,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }

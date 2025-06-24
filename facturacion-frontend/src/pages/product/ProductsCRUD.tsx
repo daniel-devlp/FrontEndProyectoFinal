@@ -32,8 +32,7 @@ const ProductsCRUD: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const itemsPerPage = 10;
-
-  const { products, totalItems, loading, error, createProduct, updateProduct, deleteProduct } = useProducts({
+  const { products, totalItems, loading, searching, error, createProduct, updateProduct, deleteProduct } = useProducts({
     pageNumber: currentPage,
     pageSize: itemsPerPage,
     searchTerm,
@@ -164,8 +163,8 @@ const ProductsCRUD: React.FC = () => {
       console.error('Error al crear producto:', error);
     }
   };
-
-  if (loading) {
+  // Solo mostrar loading completo durante la carga inicial
+  if (loading && products.length === 0) {
     return <p>Cargando productos...</p>;
   }
 
@@ -182,56 +181,66 @@ const ProductsCRUD: React.FC = () => {
     <div className="products-crud">
       <Navbar />
       <div className="crud-dashboard">
-        <h1>Gestión de Productos</h1>
-        <p>Total de productos: {totalItems}</p>
-        <div className="search-bar">
+        <h1>Gestión de Productos</h1>        <p>Total de productos: {totalItems}</p>        <div className="search-bar">
           <SearchBar
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={handleSearchChange}
           />
-        </div>
-        <Table
-          columns={[
-            { key: 'code', header: 'Código' },
-            { key: 'name', header: 'Nombre' },
-            { key: 'description', header: 'Descripción' },
-            { key: 'price', header: 'Precio' },
-            { key: 'stock', header: 'Stock' },
-          ]}
-          data={products}
-          renderActions={(product) => (
-            <>
-              <DynamicButton
-                type="edit"
-                onClick={() => {
-                  setSelectedProduct(product);
-                  setEditModalOpen(true);
-                }}
-                label="Editar"
-              />
-              <DynamicButton
-                type="delete"
-                onClick={() => handleDelete(product.productId)}
-                label="Eliminar"
-              />
-            </>
+          {searching && (
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#666', 
+              marginTop: '5px',
+              fontStyle: 'italic'
+            }}>
+              Buscando...
+            </div>
           )}
-        />
-        <div className="pagination-controls">
-          <button
-            disabled={currentPage === 1 || loading}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            Anterior
-          </button>
-          <span>Página {currentPage} de {totalPages}</span>
-          <button
-            disabled={currentPage === totalPages || loading}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            Siguiente
-          </button>
+        </div>
+        <div className="table-container">
+          <Table
+            columns={[
+              { key: 'code', header: 'Código' },
+              { key: 'name', header: 'Nombre' },
+              { key: 'description', header: 'Descripción' },
+              { key: 'price', header: 'Precio' },
+              { key: 'stock', header: 'Stock' },
+            ]}
+            data={products}
+            renderActions={(product) => (
+              <>
+                <DynamicButton
+                  type="edit"
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setEditModalOpen(true);
+                  }}
+                  label="Editar"
+                />
+                <DynamicButton
+                  type="delete"
+                  onClick={() => handleDelete(product.productId)}
+                  label="Eliminar"
+                />
+              </>
+            )}
+          />
+          <div className="pagination-controls">
+            <button
+              disabled={currentPage === 1 || loading}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Anterior
+            </button>
+            <span>Página {currentPage} de {totalPages}</span>
+            <button
+              disabled={currentPage === totalPages || loading}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
         </div>
         <div className="crud-actions">
           <DynamicButton

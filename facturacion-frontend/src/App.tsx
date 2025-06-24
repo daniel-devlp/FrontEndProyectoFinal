@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './hooks/useAuth';
 import LoginPage from './pages/auth/LoginPage';
 import HomeAdmin from './pages/admin/HomeAdmin';
 import HomeUser from './pages/user/HomeUser';
@@ -21,6 +22,7 @@ import './assets/styles/InvoiceCreate.css';
 import './assets/styles/UsersCRUD.css';
 import './assets/styles/RolesCRUD.css';
 import './assets/styles/ProductsCRUD.css';
+import './assets/styles/Toast.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -37,106 +39,162 @@ const getUserRole = (): string => {
   }
 };
 
-const App: React.FC = () => {
-  const userRole = getUserRole(); // Obtén el rol del usuario
+const AppContent: React.FC = () => {
+  const { isAuthenticated, isInitialized, loading } = useAuth();
+  const userRole = getUserRole();
+
+  // Asegurar scroll natural sin interferencias
+  useEffect(() => {
+    // Habilitar scroll vertical de forma natural
+    document.body.style.overflowY = 'auto';
+    document.documentElement.style.overflowY = 'auto';
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
+  }, []);
+
+  // Mostrar loading mientras se inicializa
+  if (!isInitialized || loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '20px',
+        color: '#667eea',
+        fontWeight: '600'
+      }}>
+        <div>Cargando aplicación...</div>
+      </div>
+    );
+  }
 
   return (
+    <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <Routes>
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated ? 
+            <Navigate to={userRole === "Administrator" ? "/admin" : "/user"} replace /> : 
+            <LoginPage />
+          } 
+        />
+        <Route 
+          path="/" 
+          element={
+            <Navigate to={isAuthenticated ? (userRole === "Administrator" ? "/admin" : "/user") : "/login"} replace />
+          } 
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+              <HomeAdmin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+              <UsersCRUD />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/roles"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+              <RolesCRUD />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+              <ProductsCRUD />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/clients"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+              <ClientsCRUD />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/invoices"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
+              <Invoices />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute allowedRoles={["User"]} userRole={userRole}>
+              <HomeUser />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["User"]} userRole={userRole}>
+              <HomeUser />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invoices/create"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
+              <InvoiceCreate />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/factura/nueva"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
+              <InvoiceCreate />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invoices"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
+              <Invoices />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+const App: React.FC = () => {
+  return (
     <AuthProvider>
-      <BrowserRouter>
-        <ToastContainer />
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
-                <HomeAdmin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
-                <UsersCRUD />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/roles"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
-                <RolesCRUD />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/products"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
-                <ProductsCRUD />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/clients"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
-                <ClientsCRUD />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/invoices"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator"]} userRole={userRole}>
-                <Invoices />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/user"
-            element={
-              <ProtectedRoute allowedRoles={["User"]} userRole={userRole}>
-                <HomeUser />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/user/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["User"]} userRole={userRole}>
-                <HomeUser />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/invoices/create"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
-                <InvoiceCreate />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/factura/nueva"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
-                <InvoiceCreate />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/invoices"
-            element={
-              <ProtectedRoute allowedRoles={["Administrator", "user"]} userRole={userRole}>
-                <Invoices />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <AppContent />
     </AuthProvider>
   );
 };

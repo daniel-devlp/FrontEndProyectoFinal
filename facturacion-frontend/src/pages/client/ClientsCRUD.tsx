@@ -13,8 +13,7 @@ const ClientsCRUD = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const itemsPerPage = 10;
-
-  const { clients, totalItems, loading, error, createClient, updateClient, deleteClient } = useClients({
+  const { clients, totalItems, loading, searching, error, createClient, updateClient, deleteClient } = useClients({
     pageNumber: currentPage,
     pageSize: itemsPerPage,
     searchTerm,
@@ -162,57 +161,69 @@ const ClientsCRUD = () => {
   return (
     <div className="clients-crud">
       <Navbar />
-      <div className="crud-dashboard">
-        <h1>Gestión de Clientes</h1>
+      <div className="crud-dashboard">        <h1>Gestión de Clientes</h1>
         <p>Total de clientes: {totalItems}</p>
-        {loading && <p>Cargando...</p>}
-        {error && <p>Error: {error}</p>}
-        <SearchBar
-          placeholder="Buscar clientes..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-        <Table
-          columns={[
-            { key: 'identificationNumber', header: 'Número de Identificación' },
-            { key: 'fullName', header: 'Nombre' },
-            { key: 'email', header: 'Correo Electrónico' },
-            { key: 'phone', header: 'Teléfono' },
-            { key: 'address', header: 'Dirección' },
-          ]}
-          data={clients.map((client) => ({
-            ...client,
-            fullName: `${client.firstName} ${client.lastName}`,
-          }))}
-          renderActions={(client) => (
-            <>
-              <DynamicButton
-                type="edit"
-                onClick={() => handleOpenModal('update', client)}
-                label="Editar"
-              />
-              <DynamicButton
-                type="delete"
-                onClick={() => handleDelete(client.clientId)}
-                label="Eliminar"
-              />
-            </>
+        {loading && clients.length === 0 && <p>Cargando...</p>}
+        {error && <p>Error: {error}</p>}        <div className="search-bar">
+          <SearchBar
+            placeholder="Buscar clientes..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          {searching && (
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#666', 
+              marginTop: '5px',
+              fontStyle: 'italic'
+            }}>
+              Buscando...
+            </div>
           )}
-        />
-        <div className="pagination-controls">
-          <button
-            disabled={currentPage === 1 || loading}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            Anterior
-          </button>
-          <span>Página {currentPage} de {totalPages}</span>
-          <button
-            disabled={currentPage === totalPages || loading}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            Siguiente
-          </button>
+        </div>
+        <div className="table-container">
+          <Table
+            columns={[
+              { key: 'identificationNumber', header: 'Número de Identificación' },
+              { key: 'fullName', header: 'Nombre' },
+              { key: 'email', header: 'Correo Electrónico' },
+              { key: 'phone', header: 'Teléfono' },
+              { key: 'address', header: 'Dirección' },
+            ]}
+            data={clients.map((client) => ({
+              ...client,
+              fullName: `${client.firstName} ${client.lastName}`,
+            }))}
+            renderActions={(client) => (
+              <>
+                <DynamicButton
+                  type="edit"
+                  onClick={() => handleOpenModal('update', client)}
+                  label="Editar"
+                />
+                <DynamicButton
+                  type="delete"
+                  onClick={() => handleDelete(client.clientId)}
+                  label="Eliminar"
+                />
+              </>
+            )}
+          />
+          <div className="pagination-controls">
+            <button
+              disabled={currentPage === 1 || loading}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Anterior
+            </button>
+            <span>Página {currentPage} de {totalPages}</span>
+            <button
+              disabled={currentPage === totalPages || loading}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
         </div>
         <div className="crud-actions">
           <DynamicButton

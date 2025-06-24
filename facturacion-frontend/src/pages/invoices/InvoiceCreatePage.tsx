@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Table from '../../components/common/Table';
 import SearchBar from '../../components/common/SearchBar';
@@ -14,6 +15,7 @@ import axios from 'axios';
 import '../../assets/styles/InvoiceCreatePage.css';
 
 const InvoiceCreatePage = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isClientModalOpen, setClientModalOpen] = useState<boolean>(false);
@@ -56,47 +58,29 @@ const InvoiceCreatePage = () => {
     toast.success(`Cliente seleccionado: ${client.firstName} ${client.lastName}`);
     setClientModalOpen(false);
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleSelectProduct = (product: ProductDto, quantity: number) => {
-    if (quantity > product.stock) {
-      toast.error('La cantidad excede el stock disponible');
-      return;
-    }
-
+  const handleSelectProduct = (product: ProductDto) => {
+    // Verificar si el producto ya está en la lista
     const existingProduct = selectedProducts.find((p) => p.productId === product.productId);
     if (existingProduct) {
-      setSelectedProducts((prev) =>
-        prev.map((p) =>
-          p.productId === product.productId
-            ? { ...p, quantity: p.quantity + quantity }
-            : p
-        )
-      );
-      setNewInvoice((prev) => ({
-        ...prev,
-        invoiceDetails: prev.invoiceDetails.map((detail) =>
-          detail.productId === product.productId
-            ? { ...detail, quantity: detail.quantity + quantity }
-            : detail
-        ),
-      }));
-      toast.success(`Cantidad actualizada para el producto: ${product.name}`);
+      toast.error(`El producto ${product.name} ya está agregado a la factura`);
       return;
     }
 
+    // Agregar producto con cantidad inicial de 1
     const productDetail: InvoiceDetailDto = {
       productId: product.productId,
-      quantity,
+      quantity: 1,
       unitPrice: product.price,
     };
 
-    setSelectedProducts((prev) => [...prev, { ...product, quantity }]);
+    setSelectedProducts((prev) => [...prev, { ...product, quantity: 1 }]);
     setNewInvoice((prev) => ({
       ...prev,
       invoiceDetails: [...prev.invoiceDetails, productDetail],
     }));
+    
     toast.success(`Producto agregado: ${product.name}`);
+    setProductModalOpen(false);
   };
 
   // Validamos el objeto `newInvoice` antes de enviarlo
@@ -206,28 +190,82 @@ const InvoiceCreatePage = () => {
       newInvoice.invoiceDetails,
       newInvoice.invoiceDetails.reduce((total, detail) => total + detail.unitPrice * detail.quantity, 0)
     );
-  };
+  };  const handleQuantityChange = (productId: number, newQuantity: number) => {
+    // Validaciones solo para cantidades mayores a 0
+    if (newQuantity > 0) {
+      if (newQuantity < 1) {
+        toast.error('La cantidad debe ser al menos 1');
+        return;
+      }
 
-  const handleQuantityChange = (productId: number, quantity: number) => {
-    if (quantity < 1) {
-      toast.error('La cantidad debe ser al menos 1');
-      return;
+      // Obtener el stock del producto
+      const product = products.find(p => p.productId === productId);
+      if (product && newQuantity > product.stock) {
+        toast.error(`La cantidad no puede exceder el stock disponible (${product.stock})`);
+        return;
+      }
     }
 
+    // Actualizar cantidad en selectedProducts
     setSelectedProducts((prev) =>
       prev.map((p) =>
-        p.productId === productId ? { ...p, quantity } : p
+        p.productId === productId ? { ...p, quantity: newQuantity } : p
       )
     );
+
+    // Solo actualizar invoiceDetails si la cantidad es válida (mayor a 0)
+    if (newQuantity > 0) {
+      setNewInvoice((prev) => ({
+        ...prev,
+        invoiceDetails: prev.invoiceDetails.map((detail) =>
+          detail.productId === productId
+            ? { ...detail, quantity: newQuantity }
+            : detail
+        ),
+      }));
+    } else {
+      // Si la cantidad es 0 (campo vacío), mantener la cantidad anterior en invoiceDetails
+      // para no afectar los cálculos hasta que se ingrese una cantidad válida
+      const currentProduct = selectedProducts.find(p => p.productId === productId);
+      if (currentProduct && currentProduct.quantity > 0) {
+        setNewInvoice((prev) => ({
+          ...prev,
+          invoiceDetails: prev.invoiceDetails.map((detail) =>
+            detail.productId === productId
+              ? { ...detail, quantity: currentProduct.quantity }
+              : detail
+          ),
+        }));
+      }
+    }
   };
 
-  const calculateTotal = () => {
+  const handleRemoveProduct = (productId: number) => {
+    setSelectedProducts((prev) => prev.filter((p) => p.productId !== productId));
+    setNewInvoice((prev) => ({
+      ...prev,
+      invoiceDetails: prev.invoiceDetails.filter((detail) => detail.productId !== productId),
+    }));
+    
+    const product = products.find(p => p.productId === productId);
+    if (product) {
+      toast.success(`Producto removido: ${product.name}`);
+    }
+  };
+  const calculateSubtotal = () => {
     return newInvoice.invoiceDetails.reduce(
       (total, detail) => total + detail.unitPrice * detail.quantity,
       0
     );
   };
 
+  const calculateIVA = () => {
+    return calculateSubtotal() * 0.12;
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateIVA();
+  };
   // Ajustamos el tipo de datos para garantizar que las propiedades estén disponibles
   const clientsWithFullDetails = clients.map((client) => ({
     ...client,
@@ -235,38 +273,40 @@ const InvoiceCreatePage = () => {
     address: client.address || '',
     fullName: `${client.firstName} ${client.lastName}`,
   }));
-
   return (
     <div className="invoice-create">
       <Navbar />
-      <div className="content">
-        <h1>Crear Nueva Factura</h1>
-        <div className="section">
-          <h2>Número de Factura</h2>
-          <p>{newInvoice.invoiceNumber}</p>
-        </div>
-
-        {/* Selección de Cliente */}
-        <div className="section">
-          <h2>Cliente</h2>
-          {selectedClient ? (
-            <div>
-              <p><strong>Cédula:</strong> {selectedClient.identificationNumber}</p>
-              <p><strong>Nombre Completo:</strong> {selectedClient.firstName} {selectedClient.lastName}</p>
-              <p><strong>Dirección:</strong> {selectedClient.address}</p>
-              <p><strong>Teléfono:</strong> {selectedClient.phone}</p>
+      <div className="main-layout">
+        <div className="content">
+          <div className="invoice-dashboard">
+            <div className="section">
+              <h1>Crear Nueva Factura</h1>
             </div>
-          ) : (
-            <p>No se ha seleccionado un cliente</p>
-          )}
-          <DynamicButton
-            type="save"
-            onClick={() => setClientModalOpen(true)}
-            label="Seleccionar Cliente"
-          />
-        </div>
+            
+            <div className="section">
+              <h2>Número de Factura</h2>
+              <p>{newInvoice.invoiceNumber}</p>
+            </div>
 
-        {/* Modal para seleccionar cliente */}
+          {/* Selección de Cliente */}
+          <div className="section">
+            <h2>Cliente</h2>
+            {selectedClient ? (
+              <div>
+                <p><strong>Cédula:</strong> {selectedClient.identificationNumber}</p>
+                <p><strong>Nombre Completo:</strong> {selectedClient.firstName} {selectedClient.lastName}</p>
+                <p><strong>Dirección:</strong> {selectedClient.address}</p>
+                <p><strong>Teléfono:</strong> {selectedClient.phone}</p>
+              </div>
+            ) : (
+              <p>No se ha seleccionado un cliente</p>
+            )}
+            <DynamicButton
+              type="save"
+              onClick={() => setClientModalOpen(true)}
+              label="Seleccionar Cliente"
+            />
+          </div>        {/* Modal para seleccionar cliente */}
         <Modal isOpen={isClientModalOpen} onClose={() => setClientModalOpen(false)}>
           <div style={{ position: 'relative' }}>
             <button
@@ -289,13 +329,23 @@ const InvoiceCreatePage = () => {
               onClick={() => setClientModalOpen(false)}
             >
               X
-            </button>
-            <h2>Seleccionar Cliente</h2>
-            <SearchBar
-              placeholder="Buscar clientes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            </button>            <h2>Seleccionar Cliente</h2>
+            <div style={{ marginBottom: '15px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <div style={{ flex: 1 }}>
+                <SearchBar
+                  placeholder="Buscar clientes..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>              <DynamicButton
+                type="save"
+                onClick={() => {
+                  setClientModalOpen(false);
+                  navigate('/admin/clients');
+                }}
+                label="Crear Cliente"
+              />
+            </div>
             {loadingClients ? (
               <p>Cargando clientes...</p>
             ) : errorClients ? (
@@ -335,34 +385,138 @@ const InvoiceCreatePage = () => {
           </div>
         </Modal>
 
-        {/* Selección de Productos */}
-        <div className="section">
-          <h2>Productos</h2>
-          {selectedProducts.length > 0 ? (
-            <table>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Cantidad</th>
-                  <th>Precio Unitario</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedProducts.map((product) => (
-                  <tr key={product.productId}>
-                    <td>{product.name}</td>
-                    <td>{product.quantity}</td>
-                    <td>{product.price}</td>
-                    <td>{(product.price * product.quantity).toFixed(2)}</td>
+          {/* Selección de Productos */}
+          <div className="section">          <h2>Productos</h2>          {selectedProducts.length > 0 ? (
+            <div className="table-container">
+              <div className="table-wrapper">
+                <table className="invoice-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: '30%' }}>Nombre</th>
+                    <th className="text-center" style={{ width: '12%' }}>Cant.</th>
+                    <th className="text-right" style={{ width: '15%' }}>Stock</th>
+                    <th className="text-right" style={{ width: '18%' }}>Precio Unit.</th>
+                    <th className="text-right" style={{ width: '15%' }}>Subtotal</th>
+                    <th className="text-center" style={{ width: '10%' }}>Acc.</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>No se han agregado productos</p>
-          )}
-          <p><strong>Total:</strong> ${calculateTotal().toFixed(2)}</p>
+                </thead>                <tbody>
+                  {selectedProducts.map((product) => {
+                    const stockDisponible = products.find(p => p.productId === product.productId)?.stock || 0;
+                    return (
+                      <tr key={product.productId}>
+                        <td style={{ width: '30%' }} title={product.name}>{product.name}</td>
+                        <td className="text-center" style={{ width: '12%' }}>                          <input
+                            type="number"
+                            min="1"
+                            max={stockDisponible}
+                            value={product.quantity === 0 ? '' : product.quantity}
+                            onChange={(e) => {
+                              const inputValue = e.target.value;
+                              
+                              // Si el campo está vacío, permitir que se quede vacío temporalmente
+                              if (inputValue === '') {
+                                // Actualizar temporalmente a 0 para mostrar campo vacío
+                                setSelectedProducts((prev) =>
+                                  prev.map((p) =>
+                                    p.productId === product.productId ? { ...p, quantity: 0 } : p
+                                  )
+                                );
+                                return;
+                              }
+                              
+                              const newQuantity = parseInt(inputValue);
+                              
+                              // Validar que sea un número válido
+                              if (isNaN(newQuantity)) {
+                                return;
+                              }
+                              
+                              // Validar rango y actualizar
+                              if (newQuantity >= 1 && newQuantity <= stockDisponible) {
+                                handleQuantityChange(product.productId, newQuantity);
+                              } else if (newQuantity > stockDisponible) {
+                                toast.error(`La cantidad no puede exceder el stock disponible (${stockDisponible})`);
+                                // No actualizar el valor si excede el stock
+                              } else if (newQuantity < 1) {
+                                toast.error('La cantidad debe ser al menos 1');
+                                // No actualizar el valor si es menor a 1
+                              }
+                            }}
+                            onBlur={(e) => {
+                              // Al perder el foco, asegurar que tenga un valor válido
+                              const inputValue = e.target.value;
+                              if (inputValue === '' || parseInt(inputValue) < 1 || isNaN(parseInt(inputValue))) {
+                                handleQuantityChange(product.productId, 1);
+                                toast.info('Cantidad ajustada a 1 (mínimo permitido)');
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              // Permitir: backspace, delete, tab, escape, enter
+                              if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+                                  // Permitir: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                                  (e.keyCode === 65 && e.ctrlKey === true) ||
+                                  (e.keyCode === 67 && e.ctrlKey === true) ||
+                                  (e.keyCode === 86 && e.ctrlKey === true) ||
+                                  (e.keyCode === 88 && e.ctrlKey === true) ||
+                                  // Permitir: home, end, left, right, down, up
+                                  (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                return;
+                              }
+                              // Asegurar que sea un número (0-9)
+                              if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                e.preventDefault();
+                              }
+                            }}
+                            style={{
+                              width: '60px',
+                              padding: '6px 8px',
+                              border: '2px solid #e0e0e0',
+                              borderRadius: '6px',
+                              textAlign: 'center',
+                              fontSize: '0.85rem',
+                              fontWeight: '500',
+                              transition: 'all 0.3s ease',
+                              backgroundColor: '#ffffff',
+                              color: '#333333'
+                            }}
+                            placeholder="1"
+                          />
+                        </td>
+                        <td className="text-right" style={{ width: '15%' }}>{stockDisponible}</td>
+                        <td className="text-right" style={{ width: '18%' }}>${product.price.toFixed(2)}</td>
+                        <td className="text-right" style={{ width: '15%' }}>${product.quantity > 0 ? (product.price * product.quantity).toFixed(2) : '0.00'}</td>
+                        <td className="text-center" style={{ width: '10%' }}>
+                          <DynamicButton
+                            type="delete"
+                            onClick={() => handleRemoveProduct(product.productId)}
+                            label="×"
+                          />
+                        </td>
+                      </tr>
+                    );                  })}                </tbody></table>
+              
+                {/* Tabla de totales en la parte baja derecha */}
+                <div className="totals-container">
+                  <table className="invoice-totals-summary">
+                    <tbody>
+                      <tr>
+                        <td>Subtotal:</td>
+                        <td className="amount">${calculateSubtotal().toFixed(2)}</td>
+                      </tr>
+                      <tr>
+                        <td>IVA (12%):</td>
+                        <td className="amount">${calculateIVA().toFixed(2)}</td>
+                      </tr>
+                      <tr className="total-row">
+                        <td>TOTAL:</td>
+                        <td className="amount">${calculateTotal().toFixed(2)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>) : (
+            <p>No se han agregado productos</p>          )}
           <DynamicButton
             type="save"
             onClick={() => setProductModalOpen(true)}
@@ -404,72 +558,22 @@ const InvoiceCreatePage = () => {
               <p>Cargando productos...</p>
             ) : errorProducts ? (
               <p>Error: {errorProducts}</p>
-            ) : (
-              <Table
+            ) : (              <Table
                 columns={[
                   { key: 'name', header: 'Nombre' },
                   { key: 'price', header: 'Precio' },
                   { key: 'stock', header: 'Stock' },
-                 // { key: 'quantity', header: 'Cantidad' },
                 ]}
-                data={products.filter(product => product.stock > 0).map(product => ({ ...product, quantity: 1 }))}
+                data={products.filter(product => 
+                  product.stock > 0 && 
+                  !selectedProducts.some(selected => selected.productId === product.productId)
+                )}
                 renderActions={(product) => (
-                  <div>
-                    <input
-                      type="number"
-                      min="1"
-                      max={product.stock}
-                      value={selectedProducts.find((p) => p.productId === product.productId)?.quantity || 1}
-                      onChange={(e) => {
-                        const newQuantity = Number(e.target.value);
-                        if (newQuantity < 1) {
-                          toast.error('La cantidad debe ser al menos 1');
-                          return;
-                        }
-                        if (newQuantity > product.stock) {
-                          toast.error('La cantidad excede el stock disponible');
-                          return;
-                        }
-                        setSelectedProducts((prev) => {
-                          const existingProduct = prev.find((p) => p.productId === product.productId);
-                          if (existingProduct) {
-                            return prev.map((p) =>
-                              p.productId === product.productId ? { ...p, quantity: newQuantity } : p
-                            );
-                          }
-                          return [...prev, { ...product, quantity: newQuantity }];
-                        });
-                      }}
-                    />
-                    <DynamicButton
-                      type="save"
-                      onClick={() => {
-                        const selectedProduct = selectedProducts.find((p) => p.productId === product.productId);
-                        if (selectedProduct) {
-                          setNewInvoice((prev) => ({
-                            ...prev,
-                            invoiceDetails: [...prev.invoiceDetails, {
-                              productId: product.productId,
-                              quantity: selectedProduct.quantity,
-                              unitPrice: product.price,
-                            }],
-                          }));
-                          toast.success(`Producto agregado: ${product.name}`);
-                        } else {
-                          setNewInvoice((prev) => ({
-                            ...prev,
-                            invoiceDetails: [...prev.invoiceDetails, {
-                              productId: product.productId,
-                              quantity: 1,
-                              unitPrice: product.price,
-                            }],
-                          }));
-                          toast.success(`Producto agregado: ${product.name}`);
-                        }
-                      }}
-                      label="Agregar"
-                    />
-                  </div>
+                  <DynamicButton
+                    type="save"
+                    onClick={() => handleSelectProduct(product)}
+                    label="Seleccionar"
+                  />
                 )}
               />
             )}
@@ -488,24 +592,26 @@ const InvoiceCreatePage = () => {
                 Siguiente
               </button>
             </div>
-          </div>
-        </Modal>
+          </div>        </Modal>
 
         {/* Acciones finales */}
-        <div className="form-actions">
-          <DynamicButton
-            type="save"
-            onClick={handleSaveInvoice}
-            label="Guardar Factura"
-          />
-          {/* <DynamicButton
-            type="save"
-            onClick={handleDownloadInvoice}
-            label="Descargar Factura"
-          /> */}
+        <div className="section">
+          <div className="form-actions">
+            <DynamicButton
+              type="save"
+              onClick={handleSaveInvoice}
+              label="Guardar Factura"
+            />
+            {/* <DynamicButton
+              type="save"
+              onClick={handleDownloadInvoice}
+              label="Descargar Factura"
+            /> */}
+          </div>
         </div>
-      </div>
-    </div>
+      </div>    </div>
+  </div>
+</div>
   );
 };
 

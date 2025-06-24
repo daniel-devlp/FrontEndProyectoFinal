@@ -1,11 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [technicalMessage, setTechnicalMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Cambiado a true inicialmente
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Verificar autenticación al cargar la aplicación
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const userData = localStorage.getItem('userData');
+      
+      if (token && userData) {
+        // Verificar si el token no ha expirado (opcional)
+        const user = JSON.parse(userData);
+        setIsAuthenticated(true);
+        console.log('Usuario ya autenticado:', user);
+      }
+    } catch (error) {
+      console.error('Error al verificar autenticación:', error);
+      // Limpiar datos corruptos
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      localStorage.removeItem('authHeader');
+    } finally {
+      setLoading(false);
+      setIsInitialized(true);
+    }
+  };
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -51,13 +80,14 @@ export const useAuth = () => {
       authHeader,
     });
   };
-
   return {
     isAuthenticated,
+    isInitialized, // Nuevo estado
     errorCode,
     technicalMessage,
     loading,
     login,
     logout,
+    checkAuthStatus, // Nueva función
   };
 };

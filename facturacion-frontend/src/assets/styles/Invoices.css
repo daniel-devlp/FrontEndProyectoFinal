@@ -1,15 +1,29 @@
 .invoices {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #f9f9f9; /* Light background */
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  background-color: #f9f9f9;
+  overflow-y: scroll !important; /* FORZAR scroll siempre visible */
+  overflow-x: hidden !important;
+  max-height: none !important;
+  position: relative !important;
+  width: 100vw !important;
 }
 
 .invoices-crud {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   padding: 2rem;
-  margin-left: 300px; /* Increased space for the navbar */
+  margin-left: 300px;
+  width: calc(100vw - 320px);
+  max-width: calc(100vw - 320px);
+  box-sizing: border-box;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  min-height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important; /* MOSTRAR todo el contenido */
+  overflow-x: hidden !important;
 }
 
 .crud-dashboard {
@@ -47,9 +61,25 @@
   color: #64748b;
 }
 
+/* Contenedor para la tabla sin scroll horizontal */
+.table-container {
+  overflow-x: hidden; /* Eliminar completamente el scroll horizontal */
+  overflow-y: visible; /* Mostrar todo el contenido */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .crud-table {
   width: 100%;
+  max-width: 100%; /* Asegurar que no exceda el contenedor */
   border-collapse: collapse;
+  table-layout: fixed; /* Forzar distribución fija de columnas */
+  background-color: #ffffff;
+  box-sizing: border-box;
   margin-top: 1rem;
   border-radius: 8px; /* Rounded corners */
   overflow: hidden;

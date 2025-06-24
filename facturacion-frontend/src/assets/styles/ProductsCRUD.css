@@ -1,25 +1,41 @@
 /* Modernized styles for ProductsCRUD */
 .products-crud {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #f9f9f9; /* Light background */
-  padding: 2rem;
-  margin-left: 300px; /* Increased space for the navbar */
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: auto; /* Allow scrolling */
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  background-color: #f9f9f9;
   font-family: var(--font-family);
+  overflow-y: scroll !important; /* FORZAR scroll siempre visible */
+  overflow-x: hidden !important;
+  max-height: none !important;
+  position: relative !important;
+  width: 100vw !important;
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
 }
 
 .crud-dashboard {
-  flex: 1;
+  flex: 1 !important;
   padding: 2rem;
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  margin-left: 280px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  width: calc(100vw - 280px);
+  max-width: calc(100vw - 280px);
+  height: fit-content !important; /* AJUSTAR a todo el contenido */
+  min-height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important; /* MOSTRAR todo el contenido */
+  overflow-x: hidden !important;
+  /* HABILITAR EVENTOS DE SCROLL */
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
 }
 
 .dashboard-cards {
@@ -27,8 +43,8 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   background-color: #ffffff;
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card {
@@ -54,57 +70,256 @@
   color: #64748b;
 }
 
+/* Contenedor con scroll para la tabla */
+.table-container {
+  flex: 0 0 auto; /* No contraer, permitir que crezca según contenido */
+  overflow-x: hidden; /* Eliminar completamente el scroll horizontal */
+  overflow-y: visible; /* Mostrar todo el contenido sin scroll interno */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .crud-table {
-  width: 100%; /* Asegurar que la tabla ocupe el ancho completo */
-  max-width: 100%; /* Evitar que la tabla exceda el ancho del contenedor */
+  width: 100%;
+  max-width: 100%; /* Asegurar que no exceda el contenedor */
   border-collapse: collapse;
-  margin-top: 1rem;
-  table-layout: fixed; /* Forzar un diseño fijo para las columnas */
-  background-color: transparent; /* Evitar conflictos de fondo */
-  box-sizing: border-box; /* Incluir padding y borde en el cálculo del ancho */
-  overflow-x: hidden; /* Eliminar desplazamiento horizontal */
+  table-layout: fixed; /* Forzar distribución fija de columnas */
+  background-color: #ffffff;
+  box-sizing: border-box;
 }
 
 .crud-table th {
   position: sticky;
   top: 0;
-  background-color: #f4f4f4;
-  z-index: 1;
+  background-color: #f8f9fa;
+  z-index: 10;
+  padding: 12px 8px; /* Reducir padding horizontal */
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  font-size: 0.9rem; /* Reducir tamaño de fuente para optimizar espacio */
 }
 
-.crud-table th:nth-child(3),
-.crud-table td:nth-child(3) {
-  max-width: 200px; /* Limitar el ancho máximo de la columna de descripción */
-  min-width: 200px; /* Limitar el ancho mínimo de la columna de descripción */
-  word-wrap: break-word; /* Ajustar contenido dentro de las celdas */
-  overflow-wrap: break-word; /* Evitar desbordamiento de texto */
-}
+/* Distribución de columnas sin anchos mínimos que causen overflow */
+.crud-table th:nth-child(1) { width: 12%; } /* Código */
+.crud-table th:nth-child(2) { width: 20%; } /* Nombre */
+.crud-table th:nth-child(3) { width: 35%; } /* Descripción */
+.crud-table th:nth-child(4) { width: 12%; } /* Precio */
+.crud-table th:nth-child(5) { width: 8%; }  /* Stock */
+.crud-table th:nth-child(6) { width: 13%; } /* Acciones */
 
 .crud-table th,
 .crud-table td {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  padding: 8px 6px; /* Reducir padding para optimizar espacio */
   text-align: left;
-  word-wrap: break-word; /* Ajustar contenido dentro de las celdas */
-  overflow-wrap: break-word; /* Evitar desbordamiento de texto */
+  vertical-align: middle;
+  font-size: 0.85rem; /* Reducir tamaño de fuente */
+}
+
+.crud-table td {
+  overflow: hidden;
+  text-overflow: ellipsis; /* Mostrar "..." cuando el texto es muy largo */
+  max-width: 0; /* Forzar el ellipsis cuando sea necesario */
+}
+
+/* Configuración específica por columna */
+.crud-table td:nth-child(1) { /* Código */
+  white-space: nowrap;
+}
+
+.crud-table td:nth-child(2) { /* Nombre */
+  white-space: nowrap;
+}
+
+.crud-table td:nth-child(3) { /* Descripción */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+  /* Eliminar max-height para mostrar todo el contenido */
+}
+
+.crud-table td:nth-child(4) { /* Precio */
+  white-space: nowrap;
+  text-align: right;
+  font-weight: 500;
+}
+
+.crud-table td:nth-child(5) { /* Stock */
+  white-space: nowrap;
+  text-align: center;
+  font-weight: 500;
+}
+
+.crud-table td:nth-child(6) { /* Acciones */
+  text-align: center;
+  padding: 4px;
 }
 
 .crud-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f8f9fa;
 }
 
 .crud-table tr:nth-child(odd) {
   background-color: #ffffff;
 }
 
+/* Estilos para botones en la tabla */
+.crud-table .dynamic-button {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  margin: 1px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Contenedor de acciones en la tabla */
+.crud-table td:nth-child(6) .dynamic-button {
+  display: inline-block;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .crud-table tr:hover {
-  background-color: #e2e2e2; /* Resaltar al pasar el mouse */
+  background-color: #e9ecef;
+  transition: background-color 0.2s ease;
 }
 
 .crud-actions {
-  margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
+  padding: 1rem 0;
+  border-top: 1px solid #dee2e6;
+  background-color: #ffffff;
+}
+
+/* Controles de paginación */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+  border-radius: 0 0 8px 8px;
+}
+
+.pagination-controls button {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  background-color: #ffffff;
+  color: #495057;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .crud-dashboard {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
+  }
+}
+
+@media (max-width: 992px) {
+  .crud-dashboard {
+    margin-left: 0;
+    width: 100vw;
+    padding: 1rem;
+  }
+  
+  .products-crud {
+    padding: 0;
+  }
+  
+  .table-container {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+  
+  /* Ajustar distribución de columnas en tablet */
+  .crud-table th:nth-child(3) { width: 40%; } /* Más espacio para descripción */
+  .crud-table th:nth-child(1) { width: 10%; } /* Menos espacio para código */
+  .crud-table th:nth-child(4) { width: 10%; } /* Menos espacio para precio */
+}
+
+@media (max-width: 768px) {
+  .crud-dashboard {
+    gap: 1rem;
+    padding: 0.5rem;
+    min-height: calc(100vh - 1rem); /* Ajustar altura mínima */
+  }
+  
+  .crud-table th,
+  .crud-table td {
+    padding: 6px 4px;
+    font-size: 0.8rem;
+  }
+  
+  .crud-table th {
+    font-size: 0.75rem;
+  }
+  
+  /* Redistribuir columnas en móvil */
+  .crud-table th:nth-child(1) { width: 8%; }  /* Código más pequeño */
+  .crud-table th:nth-child(2) { width: 18%; } /* Nombre */
+  .crud-table th:nth-child(3) { width: 45%; } /* Descripción dominante */
+  .crud-table th:nth-child(4) { width: 10%; } /* Precio */
+  .crud-table th:nth-child(5) { width: 7%; }  /* Stock */
+  .crud-table th:nth-child(6) { width: 12%; } /* Acciones */
+  
+  .crud-table .dynamic-button {
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    max-width: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .crud-dashboard {
+    min-height: calc(100vh - 0.5rem); /* Ajustar altura mínima */
+  }
+  
+  .crud-table th,
+  .crud-table td {
+    padding: 4px 2px;
+    font-size: 0.75rem;
+  }
+  
+  .crud-table th {
+    font-size: 0.7rem;
+  }
+  
+  /* Columnas muy compactas en móviles pequeños */
+  .crud-table th:nth-child(1) { width: 6%; }  /* Código mínimo */
+  .crud-table th:nth-child(2) { width: 16%; } /* Nombre */
+  .crud-table th:nth-child(3) { width: 50%; } /* Descripción */
+  .crud-table th:nth-child(4) { width: 9%; }  /* Precio */
+  .crud-table th:nth-child(5) { width: 6%; }  /* Stock */
+  .crud-table th:nth-child(6) { width: 13%; } /* Acciones */
+  
+  .crud-table .dynamic-button {
+    padding: 1px 2px;
+    font-size: 0.65rem;
+    max-width: 40px;
+  }
 }
 
 .form-field {

@@ -50,3 +50,29 @@
 .table .actions button:hover {
   opacity: 0.9;
 }
+
+/* Alineación específica para columnas numéricas */
+.table th:nth-child(3),
+.table th:nth-child(4),
+.table th:nth-child(5),
+.table td:nth-child(3),
+.table td:nth-child(4),
+.table td:nth-child(5) {
+  text-align: right;
+}
+
+/* Para tablas con diferentes estructuras, usar clases específicas */
+.table th.text-right,
+.table td.text-right {
+  text-align: right;
+}
+
+.table th.text-center,
+.table td.text-center {
+  text-align: center;
+}
+
+.table th.text-left,
+.table td.text-left {
+  text-align: left;
+}

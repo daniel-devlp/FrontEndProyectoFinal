@@ -1,20 +1,33 @@
-/* AuthLayout.css */
+/* AuthLayout que ocupa toda la pantalla como en la imagen */
 .authLayout {
   min-height: 100vh;
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
   position: relative;
   overflow: hidden;
-  background-color: #f3f4f6; /* Light background */
+  background: linear-gradient(135deg, 
+    #667eea 0%, 
+    #764ba2 15%, 
+    #f093fb 30%, 
+    #f5576c 45%, 
+    #4facfe 60%, 
+    #00f2fe 75%, 
+    #a8edea 90%, 
+    #fed6e3 100%);
+  background-size: 400% 400%;
+  animation: gradientFlow 15s ease infinite;
 }
 
-/* Capa semitransparente para mejorar legibilidad */
+/* Animación del gradiente de fondo */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Formas geométricas flotantes como en la imagen - toda la pantalla */
 .authLayout::before {
   content: '';
   position: absolute;
@@ -22,8 +35,60 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-  z-index: 0;
+  background-image: 
+    /* Formas grandes para toda la pantalla */
+    radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 70% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 35%),
+    radial-gradient(circle at 30% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 35%);
+  background-size: 60% 60%, 70% 70%, 50% 50%, 55% 55%;
+  background-position: -20% -20%, 120% 120%, 60% 10%, 10% 90%;
+  animation: floatingShapes 25s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes floatingShapes {
+  0%, 100% { 
+    background-position: -20% -20%, 120% 120%, 60% 10%, 10% 90%;
+    transform: scale(1) rotate(0deg);
+  }
+  25% { 
+    background-position: 0% 0%, 100% 100%, 80% 30%, 30% 70%;
+    transform: scale(1.1) rotate(90deg);
+  }
+  50% { 
+    background-position: 20% 30%, 80% 70%, 40% 70%, 70% 50%;
+    transform: scale(0.9) rotate(180deg);
+  }
+  75% { 
+    background-position: 10% 20%, 90% 80%, 70% 40%, 40% 80%;
+    transform: scale(1.05) rotate(270deg);
+  }
+}
+
+/* Efectos de partículas brillantes para toda la pantalla */
+.authLayout::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 30% 90%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    radial-gradient(circle at 80% 90%, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+  background-size: 150px 150px, 200px 200px, 180px 180px, 120px 120px, 250px 250px, 100px 100px;
+  animation: sparkle 4s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 .content {
@@ -31,12 +96,24 @@
   max-width: 1200px;
   padding: 2rem;
   display: flex;
-  justify-content: center; /* Cambiado a centrado para mejor responsividad */
+  justify-content: center;
   position: relative;
-  z-index: 1; /* Asegura que el contenido esté sobre la capa semitransparente */
+  z-index: 10;
+  animation: contentFadeIn 1s ease-out;
 }
 
-/* Estilos responsivos */
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive design optimizado */
 @media (max-width: 1200px) {
   .content {
     max-width: 1000px;
@@ -49,17 +126,94 @@
     max-width: 800px;
     padding: 1.25rem;
   }
+  
+  .authLayout {
+    background-size: 300% 300%;
+  }
 }
 
 @media (max-width: 768px) {
+  .content {
+    max-width: 100%;
+    padding: 1rem;
+  }
+  
   .authLayout {
-    background-position: 60% center; /* Ajusta posición en móviles */
+    background-size: 250% 250%;
+    animation-duration: 12s;
+  }
+  
+  .authLayout::before {
+    background-size: 70% 70%, 80% 80%, 60% 60%;
+    animation-duration: 15s;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 0.75rem;
+  }
+  
+  .authLayout {
+    background-size: 200% 200%;
+    animation-duration: 10s;
+  }
+}
+
+/* Mejoras de rendimiento */
+@media (prefers-reduced-motion: reduce) {
+  .authLayout,
+  .authLayout::before,
+  .content {
+    animation: none;
+  }
+  
+  .authLayout {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+}
+
+/* Efectos adicionales para dispositivos de alta resolución */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .authLayout::before {
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+  }
+}
+
+/* Soporte para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .authLayout {
+    background: linear-gradient(135deg, 
+      #1e1e2e 0%, 
+      #2d1b69 25%, 
+      #11009E 50%, 
+      #13005A 75%, 
+      #0F0F0F 100%);
+  }
+  
+  .authLayout::after {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Responsive design ultra-optimizado */
+@media (max-width: 480px) {
+  .authLayout {
+    padding: 1rem 0.5rem;
+    background-attachment: scroll;
+    min-height: -webkit-fill-available; /* iOS viewport fix */
+  }
+  
+  .authLayout::before {
+    opacity: 0.5; /* Reduce efectos en móviles para mejor rendimiento */
   }
   
   .content {
-    max-width: 90%;
-    padding: 1rem;
-    justify-content: center; /* Centrado en móviles */
+    max-width: 100%;
+    padding: 0.5rem;
   }
 }
 
@@ -67,12 +221,50 @@
   .authLayout {
     min-height: 100vh;
     height: auto;
-    background-attachment: scroll; /* Desactiva parallax en móviles */
+    background-attachment: scroll;
+    padding: 1rem;
   }
   
   .content {
     max-width: 95%;
     padding: 1rem 0.5rem;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .authLayout {
+    padding: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .content {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .content {
+    max-width: 600px;
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content {
+    max-width: 800px;
+    padding: 3rem 2rem;
+  }
+  
+  .authLayout::before {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .content {
+    max-width: 1000px;
+    padding: 4rem 3rem;
   }
 }
 
@@ -82,5 +274,24 @@
     align-items: flex-start;
     padding-top: 5rem;
     padding-bottom: 5rem;
+  }
+}
+
+/* Para pantallas ultrawide */
+@media (min-width: 1920px) {
+  .content {
+    max-width: 1200px;
+    padding: 5rem 4rem;
+  }
+}
+
+/* Optimizaciones para dispositivos con preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .authLayout,
+  .authLayout::before,
+  .authLayout::after,
+  .content {
+    animation: none !important;
+    transition: none !important;
   }
 }
