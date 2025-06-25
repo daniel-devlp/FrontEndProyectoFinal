@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { notifications, confirmAction, confirmDestructiveAction, confirmUpdateAction, withLoadingToast } from '../../utils/notifications';
 import Navbar from '../../components/common/Navbar';
-import Table from '../../components/common/Table';
 import Modal from '../../components/common/Modal';
 import DynamicButton from '../../components/common/DynamicButton';
 import { useRoles } from '../../hooks/useRoles';
@@ -11,61 +10,105 @@ const RolesCRUD = () => {
   const { roles, loading, error, createRole, updateRole, deleteRole, fetchRoles } = useRoles();
 
   useEffect(() => {
-    fetchRoles();
-  }, [fetchRoles]);
-  const handleCreate = async (data: RoleCreateDto) => {
+    fetchRoles();  }, [fetchRoles]);  const handleCreate = async (data: RoleCreateDto) => {
+    // Confirmación antes de crear
+    const confirmed = await confirmAction(
+      '¿Estás seguro de que deseas crear este rol?',
+      'Confirmar Creación de Rol'
+    );
+    if (!confirmed) return;
+
     try {
-      await createRole(data);
-      toast.success('Rol creado exitosamente');
+      await withLoadingToast(
+        () => createRole(data),
+        'Creando rol...',
+        'Rol creado exitosamente'
+      );
     } catch (error) {
-      toast.error('Error al crear el rol');
+      notifications.error('Error al crear el rol');
     }
   };
 
   const handleUpdate = async (id: string, data: RoleUpdateDto) => {
+    // Confirmación antes de actualizar
+    const confirmed = await confirmUpdateAction(
+      '¿Estás seguro de que deseas actualizar este rol?',
+      'Confirmar Actualización de Rol'
+    );
+    if (!confirmed) return;
+
     try {
-      await updateRole(id, data);
-      toast.success('Rol actualizado exitosamente');
+      await withLoadingToast(
+        () => updateRole(id, data),
+        'Actualizando rol...',
+        'Rol actualizado exitosamente'
+      );
     } catch (error) {
-      toast.error('Error al actualizar el rol');
+      notifications.error('Error al actualizar el rol');
     }
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      await deleteRole(id);
-      toast.success('Rol eliminado exitosamente');
-    } catch (error) {
-      toast.error('Error al eliminar el rol');
+    const role = roles.find(r => r.id === id);
+    const roleName = role ? role.name : 'este rol';
+    
+    const confirmed = await confirmDestructiveAction(
+      `¿Estás seguro de que deseas eliminar ${roleName}? Esta acción no se puede deshacer.`,
+      'Confirmar Eliminación de Rol',
+      'Sí, eliminar rol'
+    );
+    
+    if (confirmed) {
+      try {
+        await withLoadingToast(
+          () => deleteRole(id),
+          'Eliminando rol...',
+          'Rol eliminado exitosamente'
+        );
+      } catch (error) {
+        notifications.error('Error al eliminar el rol');
+      }
     }
   };
-
   return (
     <div className="roles-crud">
       <Navbar />
       <h1>Gestión de Roles</h1>      {loading && <div>Cargando roles...</div>}
-      {error && toast.error(`Error: ${error}`)}
-      <Table
-        columns={[
-          { key: 'id', header: 'ID' },
-          { key: 'name', header: 'Nombre del Rol' },
-        ]}
-        data={roles}
-        renderActions={(role) => (
-          <>
-            <DynamicButton
-              type="edit"
-              onClick={() => handleUpdate(role.id, { id: role.id, name: 'Nuevo Nombre' })}
-              label="Editar"
-            />
-            <DynamicButton
-              type="delete"
-              onClick={() => handleDelete(role.id)}
-              label="Eliminar"
-            />
-          </>
-        )}
-      />
+      {error && (() => { notifications.error(`Error: ${error}`); return null; })()}      <div className="table-container">
+        <div className="roles-table-container">
+          <table className="roles-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre del Rol</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {roles.map((role) => (
+                <tr key={role.id}>
+                  <td className="text-left">{role.id}</td>
+                  <td className="text-left">{role.name}</td>
+                  <td className="text-left">
+                    <div className="actions-cell">
+                      <DynamicButton
+                        type="edit"
+                        onClick={() => handleUpdate(role.id, { id: role.id, name: 'Nuevo Nombre' })}
+                        label="Editar"
+                      />
+                      <DynamicButton
+                        type="delete"
+                        onClick={() => handleDelete(role.id)}
+                        label="Eliminar"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <Modal
         isOpen={true}
@@ -113,3 +156,6 @@ const RolesCRUD = () => {
 };
 
 export default RolesCRUD;
+
+
+

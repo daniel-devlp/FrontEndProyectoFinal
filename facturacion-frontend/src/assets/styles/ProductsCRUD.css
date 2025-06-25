@@ -230,6 +230,113 @@
   cursor: not-allowed;
 }
 
+/* Estilos específicos para la tabla de productos */
+.products-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.products-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.products-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.products-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.products-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.products-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.products-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para productos */
+.products-table .text-left {
+  text-align: left;
+}
+
+.products-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales */
+.products-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #28a745;
+}
+
+/* Contenedor de acciones en tabla de productos */
+.products-table .actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.products-table .actions-cell .dynamic-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.products-table .actions-cell .dynamic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para tabla de productos */
+@media (max-width: 768px) {
+  .products-table th,
+  .products-table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+  
+  .products-table .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .products-table .actions-cell .dynamic-button {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 1200px) {
   .crud-dashboard {

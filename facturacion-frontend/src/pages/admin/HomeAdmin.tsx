@@ -1,3 +1,73 @@
+/**
+ * Componente HomeAdmin
+ * 
+ * La página principal del panel para administradores del sistema, proporcionando una visión
+ * integral de todo el estado de la aplicación incluyendo estadísticas, acciones rápidas,
+ * y navegación a todas las funciones administrativas.
+ * 
+ * Características Principales:
+ * - Panel de estadísticas del sistema en tiempo real
+ * - Navegación rápida a todas las funciones de admin
+ * - Métricas visuales para clientes, productos, facturas y usuarios
+ * - Estados de carga y manejo de errores
+ * - Diseño responsivo para varios tamaños de pantalla
+ * - Diseño de centro de control administrativo
+ * 
+ * Capacidades Administrativas:
+ * - Ver conteos totales para todas las entidades del sistema
+ * - Acceso rápido a operaciones CRUD
+ * - Vista general del sistema de un vistazo
+ * - Hub de navegación para todas las funciones de admin
+ * 
+ * Experiencia del Usuario:
+ * - Diseño limpio estilo panel
+ * - Tarjetas de estadísticas codificadas por colores
+ * - Botones de navegación intuitivos
+ * - Retroalimentación de carga para obtención de datos
+ * - Interfaz administrativa profesional
+ * 
+ * Implementación Técnica:
+ * - Usa múltiples hooks personalizados para obtención de datos
+ * - Agrega estadísticas de varios servicios
+ * - Implementa estados de carga y error adecuados
+ * - Re-renderizado optimizado a través de gestión del estado
+ * - Compatible con límites de error
+ * 
+ * Seguridad y Acceso:
+ * - Acceso solo para admin (debe estar protegido por guardias de ruta)
+ * - Vista general integral del sistema para supervisión administrativa
+ * - Sin exposición de datos sensibles en estadísticas
+ * 
+ * Puntos de Integración:
+ * - Navegación a todos los módulos CRUD
+ * - Obtención de datos desde hooks de clientes, productos, facturas y usuarios
+ * - Hub central para operaciones administrativas
+ * 
+ * @componente
+ * @ejemplo
+ * ```tsx
+ * // Dentro de una ruta protegida para admin
+ * <HomeAdmin />
+ * ```
+ * 
+ * Estilizado:
+ * - Usa HomeAdmin.css para estilos específicos del componente
+ * - Diseño estilo panel con tarjetas de métricas
+ * - Sistema de cuadrícula responsivo para estadísticas
+ * - Tematización administrativa profesional
+ * 
+ * Mejoras Futuras:
+ * - Gráficos e indicadores interactivos
+ * - Análisis de tendencias y datos históricos
+ * - Actualizaciones en tiempo real via WebSocket
+ * - Filtrado avanzado y rangos de fechas
+ * - Funcionalidad de exportación para reportes
+ * - Monitoreo de actividad del usuario
+ * - Indicadores de salud del sistema
+ * 
+ * @autor Sistema de Facturación
+ * @versión 1.0.0
+ */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
@@ -8,6 +78,11 @@ import { useInvoices } from '../../hooks/useInvoices';
 import { useUsers } from '../../hooks/useUsers';
 import '../../assets/styles/HomeAdmin.css';
 
+/**
+ * Dashboard statistics interface
+ * 
+ * Defines the structure for dashboard metrics and loading states.
+ */
 interface DashboardStats {
   totalClients: number;
   totalProducts: number;
@@ -17,8 +92,24 @@ interface DashboardStats {
   error?: string;
 }
 
+/**
+ * Componente funcional HomeAdmin
+ * 
+ * Renderiza el panel administrativo principal con estadísticas del sistema
+ * y navegación a todas las funciones administrativas.
+ * 
+ * Gestión del Estado:
+ * - stats: Estadísticas agregadas de todos los módulos del sistema
+ * - loading: Estado de carga general para el panel
+ * - error: Manejo de errores para obtención de datos fallida
+ * 
+ * @retorna {JSX.Element} Interfaz completa del panel administrativo
+ */
 const HomeAdmin: React.FC = () => {
+  // Hook de navegación para enrutamiento programático
   const navigate = useNavigate();
+  
+  // Gestión del estado de estadísticas del panel
   const [stats, setStats] = useState<DashboardStats>({
     totalClients: 0,
     totalProducts: 0,
@@ -27,29 +118,63 @@ const HomeAdmin: React.FC = () => {
     loading: true
   });
 
-  // Usar hooks para obtener datos reales
+  // Data fetching hooks for real-time statistics
+  // Each hook fetches only the total count (pageSize: 1) for efficiency
+  
+  /**
+   * Clients statistics hook
+   * Fetches total client count for dashboard display
+   */
   const { totalItems: totalClients, loading: clientsLoading, error: clientsError } = useClients({
     pageNumber: 1,
-    pageSize: 1,
+    pageSize: 1, // Only need count, not actual data
     searchTerm: ''
   });
 
+  /**
+   * Products statistics hook
+   * Fetches total product count for dashboard display
+   */
   const { totalItems: totalProducts, loading: productsLoading, error: productsError } = useProducts({
     pageNumber: 1,
-    pageSize: 1,
+    pageSize: 1, // Only need count, not actual data
     searchTerm: ''
   });
 
+  /**
+   * Invoices statistics hook
+   * Fetches total invoice count for dashboard display
+   */
   const { totalItems: totalInvoices, loading: invoicesLoading, error: invoicesError } = useInvoices({
     pageNumber: 1,
-    pageSize: 1,
+    pageSize: 1, // Only need count, not actual data
     searchTerm: ''
   });
-  const { users, loading: usersLoading, error: usersError } = useUsers();useEffect(() => {
+  
+  /**
+   * Users statistics hook
+   * Fetches user data to calculate total count
+   */
+  const { users, loading: usersLoading, error: usersError } = useUsers();
+
+  /**
+   * Dashboard statistics aggregation effect
+   * 
+   * Combines data from all hooks to create unified dashboard statistics.
+   * Updates the stats state when all data is loaded or when errors occur.
+   * 
+   * Dependencies: All loading states and data from hooks
+   */
+  useEffect(() => {
+    // Check if any data is still loading
     const allLoading = clientsLoading || productsLoading || invoicesLoading || usersLoading;
+    
+    // Check if any hook returned an error
     const hasError = clientsError || productsError || invoicesError || usersError;
 
-    if (!allLoading) {      setStats({
+    // Only update stats when all data is loaded
+    if (!allLoading) {
+      setStats({
         totalClients: totalClients || 0,
         totalProducts: totalProducts || 0,
         totalInvoices: totalInvoices || 0,
@@ -58,12 +183,22 @@ const HomeAdmin: React.FC = () => {
         error: hasError ? 'Error al cargar algunos datos' : undefined
       });
     } else {
+      // Keep loading state active while any hook is still loading
       setStats(prev => ({ ...prev, loading: true }));
-    }  }, [
+    }
+  }, [
+    // Dependencies: all loading states, data, and errors
     clientsLoading, productsLoading, invoicesLoading, usersLoading,
     totalClients, totalProducts, totalInvoices, users,
     clientsError, productsError, invoicesError, usersError
   ]);
+
+  /**
+   * Dashboard cards configuration
+   * 
+   * Defines the visual statistics cards displayed on the dashboard.
+   * Each card includes metrics, styling, and navigation information.
+   */
   const dashboardCards = [
     {
       title: 'Clientes',
@@ -102,6 +237,13 @@ const HomeAdmin: React.FC = () => {
       description: 'Usuarios del sistema'
     }
   ];
+
+  /**
+   * Quick actions configuration
+   * 
+   * Defines quick access buttons for common administrative tasks.
+   * Provides shortcuts to create new entities and manage roles.
+   */
   const quickActions = [
     {
       label: 'Crear Cliente',
@@ -131,12 +273,25 @@ const HomeAdmin: React.FC = () => {
 
   return (
     <div className="home-admin">
+      {/* Componente de Navegación */}
       <Navbar />
+      
       <div className="admin-dashboard">
+        {/* Dashboard Header */}
+        {/* Welcome message and admin context identification */}
         <div className="dashboard-header">
           <h1>Panel de Administración</h1>
           <p>Bienvenido al sistema de facturación - Vista Administrador</p>
-        </div>        {stats.loading ? (
+        </div>
+
+        {/* Loading and Error States */}
+        {/* 
+          Conditional rendering based on data loading status:
+          - Loading spinner while fetching statistics
+          - Error message with retry option
+          - Dashboard content when data is ready
+        */}
+        {stats.loading ? (
           <div className="loading-container">
             <div className="loading-spinner"></div>
             <p>Cargando estadísticas del sistema...</p>
@@ -151,6 +306,11 @@ const HomeAdmin: React.FC = () => {
           </div>
         ) : (
           <>
+            {/* Dashboard Statistics Section */}
+            {/* 
+              Main statistics display with visual cards for each system entity.
+              Cards are clickable and navigate to corresponding CRUD pages.
+            */}
             <div className="stats-section">
               <div className="section-header">
                 <h2>📊 Resumen General</h2>
@@ -182,6 +342,11 @@ const HomeAdmin: React.FC = () => {
               </div>
             </div>
 
+            {/* Quick Actions Section */}
+            {/* 
+              Provides shortcuts to common administrative tasks.
+              Each action navigates directly to the relevant creation/management page.
+            */}
             <div className="actions-section">
               <div className="section-header">
                 <h2>⚡ Acciones Rápidas</h2>
@@ -201,12 +366,18 @@ const HomeAdmin: React.FC = () => {
               </div>
             </div>
 
+            {/* System Information Section */}
+            {/* 
+              Displays system status, last update information, and other
+              administrative context information.
+            */}
             <div className="recent-activity">
               <div className="section-header">
                 <h2>🔧 Información del Sistema</h2>
                 <p>Estado actual y configuración del sistema</p>
               </div>
               <div className="info-cards">
+                {/* System Status Card */}
                 <div className="info-card system-status">
                   <div className="info-card-header">
                     <span className="info-icon">🟢</span>
@@ -228,6 +399,8 @@ const HomeAdmin: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Last Update Information */}
                 <div className="info-card update-info">
                   <div className="info-card-header">
                     <span className="info-icon">📅</span>
@@ -243,6 +416,8 @@ const HomeAdmin: React.FC = () => {
                     {new Date().toLocaleTimeString('es-ES')}
                   </p>
                 </div>
+                
+                {/* Commented Welcome Card - Available for future use */}
                 {/* <div className="info-card welcome-card">
                   <div className="info-card-header">
                     <span className="info-icon">👋</span>

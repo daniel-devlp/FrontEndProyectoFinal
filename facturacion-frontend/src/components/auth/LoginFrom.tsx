@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { notifications } from '../../utils/notifications';
 import '../../assets/styles/LoginForm.css';
 
 interface LoginFormProps {
@@ -17,17 +17,17 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [rememberMe, setRememberMe] = useState(false);  const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
     // Toast simple que debe funcionar correctamente
-    toast.info('Para recuperar tu contraseña, por favor comunícate con el administrador del sistema.');
+    notifications.info('Para recuperar tu contraseña, por favor comunícate con el administrador del sistema.');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();    if (!email) {
-      toast.error('Por favor ingresa tu email');
+      notifications.error('Por favor ingresa tu email');
       return;
     }
     
     if (!password) {
-      toast.error('Por favor ingresa tu contraseña');
+      notifications.error('Por favor ingresa tu contraseña');
       return;
     }
     
@@ -36,7 +36,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   React.useEffect(() => {
     if (error) {
-      toast.error(error);
+      notifications.error(error);
     }
   }, [error]);  return (
     <div className="loginContainer">
@@ -109,3 +109,5 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     </div>
   );
 };
+
+

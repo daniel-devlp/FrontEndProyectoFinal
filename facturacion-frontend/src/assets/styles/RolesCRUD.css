@@ -397,3 +397,108 @@
     display: none;
   }
 }
+
+/* Estilos específicos para la tabla de roles */
+.roles-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.roles-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.roles-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.roles-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.roles-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.roles-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.roles-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.roles-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para roles */
+.roles-table .text-left {
+  text-align: left;
+}
+
+.roles-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales */
+.roles-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Contenedor de acciones en tabla de roles */
+.roles-table .actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.roles-table .actions-cell .dynamic-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.roles-table .actions-cell .dynamic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para tabla de roles */
+@media (max-width: 768px) {
+  .roles-table th,
+  .roles-table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+  
+  .roles-table .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .roles-table .actions-cell .dynamic-button {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}

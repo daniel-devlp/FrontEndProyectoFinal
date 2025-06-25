@@ -318,12 +318,12 @@ html, body {
 }
 
 /* Distribución de columnas ultra-optimizada para máximo aprovechamiento */
-.invoice-table th:nth-child(1) { width: 26%; } /* Nombre */
-.invoice-table th:nth-child(2) { width: 8%; } /* Cantidad */
-.invoice-table th:nth-child(3) { width: 10%; } /* Stock */
-.invoice-table th:nth-child(4) { width: 22%; } /* Precio Unit. */
-.invoice-table th:nth-child(5) { width: 22%; } /* Subtotal */
-.invoice-table th:nth-child(6) { width: 12%; } /* Acciones */
+.invoice-table th:nth-child(1) { width: 30%; } /* Nombre */
+.invoice-table th:nth-child(2) { width: 15%; } /* Código */
+.invoice-table th:nth-child(3) { width: 12%; } /* Cantidad */
+.invoice-table th:nth-child(4) { width: 13%; } /* Stock */
+.invoice-table th:nth-child(5) { width: 15%; } /* Precio Unit. */
+.invoice-table th:nth-child(6) { width: 15%; } /* Subtotal */
 
 /* Configuración específica ultra-compacta por columna */
 .invoice-table td:nth-child(1) { /* Nombre del producto */
@@ -332,23 +332,26 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.65rem;
+  text-align: left;
 }
 
-.invoice-table td:nth-child(2) { /* Cantidad */
+.invoice-table td:nth-child(2) { /* Código del producto */
+  text-align: left;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.invoice-table td:nth-child(3) { /* Cantidad */
   text-align: center;
 }
 
-.invoice-table td:nth-child(3),
 .invoice-table td:nth-child(4),
-.invoice-table td:nth-child(5) { /* Stock, Precio, Subtotal */  text-align: right;
+.invoice-table td:nth-child(5),
+.invoice-table td:nth-child(6) { /* Stock, Precio, Subtotal */  
+  text-align: right;
   font-variant-numeric: tabular-nums;
   font-weight: 500;
   font-size: 0.65rem;
-}
-
-.invoice-table td:nth-child(6) { /* Acciones */
-  text-align: center;
-  padding: 1px;
 }
 
 /* Hover effects and alternating colors */
@@ -539,15 +542,16 @@ html, body {
 
 /* Alineaciones de texto */
 .text-left {
-  text-align: left;
+  text-align: left !important;
 }
 
 .text-center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .text-right {
-  text-align: right;
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Estilos para el resumen de la factura */
@@ -1102,4 +1106,174 @@ html, body {
     font-size: 0.45rem !important;
     min-width: 20px !important;
   }
+}
+
+/* Estilos específicos para las tablas de selección en creación de facturas */
+.clients-select-table-container,
+.products-select-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.clients-select-table,
+.products-select-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.clients-select-table thead tr,
+.products-select-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.clients-select-table th,
+.products-select-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.clients-select-table td,
+.products-select-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.clients-select-table tbody tr:hover,
+.products-select-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.clients-select-table tbody tr:nth-child(even),
+.products-select-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.clients-select-table tbody tr:nth-child(odd),
+.products-select-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para las tablas de selección */
+.clients-select-table .text-left,
+.products-select-table .text-left {
+  text-align: left;
+}
+
+.clients-select-table .text-right,
+.products-select-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales en selección de productos */
+.products-select-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #28a745;
+}
+
+/* Estilos para tabla de productos con scroll cuando hay muchos productos */
+.products-select-table-container {
+  max-height: 400px; /* Altura máxima de la tabla */
+  overflow-y: auto; /* Scroll vertical cuando sea necesario */
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.products-select-table thead {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 10;
+}
+
+.products-select-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.products-select-table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.products-select-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Estilos para productos sin stock en el modal de selección */
+.products-select-table tr.no-stock {
+  opacity: 0.6;
+  background-color: #f8f9fa !important;
+}
+
+.products-select-table tr.no-stock td {
+  color: #6c757d;
+}
+
+.products-select-table .stock-zero {
+  color: #dc3545 !important;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.products-select-table .not-available {
+  color: #dc3545;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.products-select-table .product-added {
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Hover effects para productos disponibles */
+.products-select-table tr:not(.no-stock):hover {
+  background-color: #e9ecef !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Double-click hint for removing products */
+.invoice-table tbody tr[title*="Doble clic"] {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.invoice-table tbody tr[title*="Doble clic"]:hover {
+  background-color: #fff3cd !important;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.invoice-table tbody tr[title*="Doble clic"]:hover::after {
+  content: " (doble clic para eliminar)";
+  position: absolute;
+  background: #212529;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  pointer-events: none;
+  z-index: 1000;
+  margin-left: 10px;
+  white-space: nowrap;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
-import { toast } from 'react-toastify';
+import { notifications } from '../../utils/notifications';
 import DynamicButton from '../common/DynamicButton';
 import Modal from '../common/Modal';
 
@@ -22,7 +22,7 @@ const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
 
   const handleRoleConfirmation = () => {
     if (!selectedRole) {
-      toast.error('Por favor selecciona un rol');
+      notifications.error('Por favor selecciona un rol');
       return;
     }
     
@@ -148,3 +148,6 @@ const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
 };
 
 export default RoleSelectionModal;
+
+
+

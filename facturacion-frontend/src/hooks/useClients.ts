@@ -1,7 +1,90 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 👥 HOOK PERSONALIZADO PARA GESTIÓN DE CLIENTES
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 
+ * Este hook centraliza toda la lógica relacionada con la gestión de clientes
+ * incluyendo operaciones CRUD, validaciones, paginación y búsqueda.
+ * 
+ * 🎯 FUNCIONALIDADES PRINCIPALES:
+ * • Operaciones CRUD completas (Create, Read, Update, Delete)
+ * • Validación avanzada de cédulas ecuatorianas
+ * • Sistema de paginación automática
+ * • Búsqueda en tiempo real con debounce
+ * • Manejo de estados de carga y errores
+ * • Integración con sistema de notificaciones moderno
+ * • Validación de campos con mensajes específicos
+ * • Prevención de duplicados por cédula/email
+ * 
+ * 🔧 VALIDACIONES IMPLEMENTADAS:
+ * • Algoritmo oficial de validación de cédula ecuatoriana
+ * • Validación de formato de email
+ * • Verificación de longitud de campos
+ * • Validación de caracteres permitidos
+ * • Prevención de duplicados en la base de datos
+ * • Validación de números de teléfono
+ * 
+ * 🚀 MEJORAS FUTURAS SUGERIDAS:
+ * • Validación de RUC para empresas
+ * • Soporte para pasaportes internacionales
+ * • Geocodificación de direcciones
+ * • Validación de códigos postales
+ * • Sistema de tags/categorías para clientes
+ * • Historial de transacciones por cliente
+ * • Integración con APIs de verificación de identidad
+ * • Sistema de calificación/scoring de clientes
+ * • Exportación a diferentes formatos (CSV, Excel, PDF)
+ * • Importación masiva desde archivos
+ * 
+ * 💡 EJEMPLO DE USO:
+ * ```typescript
+ * const { 
+ *   clients, 
+ *   loading, 
+ *   createClient, 
+ *   updateClient, 
+ *   deleteClient 
+ * } = useClients({ 
+ *   pageNumber: 1, 
+ *   pageSize: 10, 
+ *   searchTerm: '' 
+ * });
+ * ```
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
 import { useState, useEffect, useRef } from 'react';
-import { toast } from 'react-toastify';
+import { notifications } from '../utils/notifications';
 import type { ClientDto } from '../@types/clients';
 import { clientService } from '../services/clientService';
+
+/**
+ * 🆔 VALIDADOR DE CÉDULA ECUATORIANA
+ * 
+ * Implementa el algoritmo oficial de validación de cédulas de Ecuador
+ * según las especificaciones del Registro Civil.
+ * 
+ * @param cedula - Número de cédula como string de 10 dígitos
+ * @returns boolean - true si la cédula es válida, false en caso contrario
+ * 
+ * 🔍 ALGORITMO DE VALIDACIÓN:
+ * 1. Verifica que tenga exactamente 10 dígitos numéricos
+ * 2. Valida que los primeros 2 dígitos correspondan a una provincia válida (01-24)
+ * 3. Verifica que el tercer dígito sea menor a 6 (reservado para personas naturales)
+ * 4. Aplica el algoritmo de módulo 10 con coeficientes específicos
+ * 5. Compara el dígito verificador calculado con el proporcionado
+ * 
+ * 💡 CASOS ESPECIALES:
+ * • Provincias válidas: 01-24 (Azuay hasta Orellana + zonas no delimitadas)
+ * • Tercer dígito: 0-5 para personas naturales, 6-8 para empresas públicas, 9 para jurídicas
+ * • Coeficientes: [2,1,2,1,2,1,2,1,2] aplicados a los primeros 9 dígitos
+ * 
+ * 🚀 MEJORAS FUTURAS:
+ * • Soporte para validación de RUC (empresas)
+ * • Cache de validaciones para mejorar performance
+ * • Integración con API del Registro Civil para verificación online
+ * • Validación de cédulas de extranjeros residentes
+ */
 
 const validateCedula = (cedula: string): boolean => {
   const tamanoLongitudCedula = 10;
@@ -177,7 +260,7 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
         setTotalItems(response.data.totalCount);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
-        toast.error('Error al cargar clientes. Por favor, intente nuevamente.');
+        notifications.error('Error al cargar clientes. Por favor, intente nuevamente.');
       } finally {
         setLoading(false);
         setSearching(false);
@@ -211,7 +294,7 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
   const createClient = async (client: ClientDto) => {
     const errors = validateClientFields(client, clients);
     if (Object.keys(errors).length > 0) {
-      toast.error('Error en los datos del cliente. Por favor, revise los campos.');
+      notifications.error('Error en los datos del cliente. Por favor, revise los campos.');
       return;
     }
 
@@ -220,14 +303,14 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
       setClients((prev) => [...prev, client]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error('Error al crear cliente. Por favor, intente nuevamente.');
+      notifications.error('Error al crear cliente. Por favor, intente nuevamente.');
     }
   };
 
   const updateClient = async (clientId: number, client: ClientDto) => {
     const errors = validateClientFieldsUpdate(client, clients, false); // No validar cédula en actualización
     if (Object.keys(errors).length > 0) {
-      toast.error('Error en los datos del cliente. Por favor, revise los campos.');
+      notifications.error('Error en los datos del cliente. Por favor, revise los campos.');
       return;
     }
 
@@ -238,26 +321,22 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error('Error al actualizar cliente. Por favor, intente nuevamente.');
+      notifications.error('Error al actualizar cliente. Por favor, intente nuevamente.');
     }
   };
 
   const deleteClient = async (clientId: number) => {
-    // const confirmFirst = window.confirm('¿Estás seguro de que deseas eliminar este cliente?');
-    // if (!confirmFirst) return;
-
-    // const confirmSecond = window.confirm('Esta acción es irreversible. ¿Deseas continuar?');
-    // if (!confirmSecond) return;
-
     try {
       await clientService.deleteClient(clientId);
       setClients((prev) => prev.filter((c) => c.clientId !== clientId));
-      //toast.success('Cliente eliminado exitosamente.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error('Error al eliminar cliente. Por favor, intente nuevamente.');
+      notifications.error('Error al eliminar cliente. Por favor, intente nuevamente.');
     }
   };
 
   return { clients, totalItems, loading, searching, error, createClient, updateClient, deleteClient };
 };
+
+
+

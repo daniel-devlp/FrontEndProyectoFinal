@@ -255,7 +255,6 @@
 .products-table th,
 .products-table td {
   padding: 1rem;
-  text-align: left;
   border-bottom: 1px solid #ecf0f1;
 }
 
@@ -264,6 +263,35 @@
   text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 0.5px;
+}
+
+/* Alignment specific rules */
+.products-table .text-left {
+  text-align: left !important;
+}
+
+.products-table .text-right {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.products-table .text-center {
+  text-align: center !important;
+}
+
+/* Column specific styling */
+.products-table td:nth-child(1), /* Producto */
+.products-table td:nth-child(2) { /* Código */
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.products-table td:nth-child(3), /* Cantidad */
+.products-table td:nth-child(4), /* Precio Unit. */
+.products-table td:nth-child(5) { /* Subtotal */
+  color: #27ae60;
+  font-weight: 500;
 }
 
 .products-table tbody tr:nth-child(even) {
@@ -275,21 +303,7 @@
   transition: background-color 0.2s ease;
 }
 
-.product-name {
-  font-weight: 600;
-  color: #2c3e50;
-}
 
-.product-quantity {
-  text-align: center;
-  font-weight: 500;
-}
-
-.product-price, .product-subtotal {
-  text-align: right;
-  font-weight: 500;
-  color: #27ae60;
-}
 
 .invoice-total {
   margin-top: 2rem;
@@ -788,5 +802,113 @@
   
   .invoice-card:active {
     transform: scale(0.98);
+  }
+}
+
+/* Estilos específicos para la tabla de facturas */
+.invoices-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.invoices-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.invoices-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.invoices-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.invoices-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.invoices-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.invoices-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.invoices-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para facturas */
+.invoices-table .text-left {
+  text-align: left;
+}
+
+.invoices-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales */
+.invoices-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: #28a745;
+  font-size: 1.05em;
+}
+
+/* Contenedor de acciones en tabla de facturas */
+.invoices-table .actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.invoices-table .actions-cell .dynamic-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.invoices-table .actions-cell .dynamic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para tabla de facturas */
+@media (max-width: 768px) {
+  .invoices-table th,
+  .invoices-table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+  
+  .invoices-table .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .invoices-table .actions-cell .dynamic-button {
+    font-size: 10px;
+    padding: 2px 6px;
   }
 }

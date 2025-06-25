@@ -624,3 +624,111 @@
     transform: scale(0.98);
   }
 }
+
+/* Estilos específicos para la tabla de facturas de usuario */
+.user-invoices-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.user-invoices-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.user-invoices-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.user-invoices-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.user-invoices-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.user-invoices-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.user-invoices-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.user-invoices-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para facturas de usuario */
+.user-invoices-table .text-left {
+  text-align: left;
+}
+
+.user-invoices-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales */
+.user-invoices-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: #28a745;
+  font-size: 1.05em;
+}
+
+/* Contenedor de acciones en tabla de facturas de usuario */
+.user-invoices-table .actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.user-invoices-table .actions-cell .dynamic-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.user-invoices-table .actions-cell .dynamic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para tabla de facturas de usuario */
+@media (max-width: 768px) {
+  .user-invoices-table th,
+  .user-invoices-table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+  
+  .user-invoices-table .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .user-invoices-table .actions-cell .dynamic-button {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}

@@ -187,6 +187,49 @@
   outline: none;
 }
 
+/* Estilos para campos con errores */
+.form-field input.error,
+.form-field select.error {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.form-field .error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Estilos para react-select con error */
+.form-field .css-control.error {
+  border-color: #dc3545;
+}
+
+.form-field .css-control.error .css-control {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+/* Enhanced error styling for react-select */
+.form-field .error .css-control,
+.form-field .error .css-13cymwt-control {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 1px #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+.form-field .error .css-control:hover,
+.form-field .error .css-13cymwt-control:hover {
+  border-color: #dc3545 !important;
+}
+
+.form-field .error .css-control:focus,
+.form-field .error .css-13cymwt-control:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 1px #dc3545 !important;
+}
+
 .password-field {
   display: flex;
   align-items: center;
@@ -217,7 +260,111 @@
   margin-top: 0.25rem;
 }
 
-/* Responsive design */
+/* Estilos específicos para la tabla de usuarios manual */
+.users-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.users-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.users-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.users-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.users-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.users-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.users-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para usuarios */
+.users-table .text-left {
+  text-align: left;
+}
+
+.users-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales */
+.users-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Contenedor de acciones en tabla de usuarios */
+.users-table .actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.users-table .actions-cell .dynamic-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.users-table .actions-cell .dynamic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para tabla de usuarios */
+@media (max-width: 768px) {
+  .users-table th,
+  .users-table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+  
+  .users-table .actions-cell {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .users-table .actions-cell .dynamic-button {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
 @media (max-width: 1200px) {
   .crud-dashboard {
     margin-left: 260px;

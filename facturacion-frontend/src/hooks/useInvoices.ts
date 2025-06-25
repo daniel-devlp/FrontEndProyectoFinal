@@ -1,5 +1,66 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 🧾 HOOK PERSONALIZADO PARA GESTIÓN DE FACTURAS
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 
+ * Este hook centraliza toda la lógica relacionada con la gestión de facturas
+ * del sistema, incluyendo operaciones CRUD, validaciones, paginación y búsqueda.
+ * 
+ * 🎯 FUNCIONALIDADES PRINCIPALES:
+ * • Operaciones CRUD completas (Create, Read, Update, Delete)
+ * • Sistema de paginación automática para grandes volúmenes de facturas
+ * • Búsqueda en tiempo real con debounce por número, cliente o fecha
+ * • Manejo inteligente de estados de carga separados (inicial vs búsqueda)
+ * • Integración con sistema de notificaciones moderno
+ * • Cálculos automáticos de totales y subtotales
+ * • Validación de datos de facturación
+ * 
+ * 🔧 CARACTERÍSTICAS EMPRESARIALES:
+ * • Numeración automática de facturas
+ * • Cálculo de impuestos según configuración regional
+ * • Gestión de estados de factura (borrador, enviada, pagada, anulada)
+ * • Integración con datos de clientes y productos
+ * • Validaciones de integridad de datos financieros
+ * • Manejo de múltiples items por factura
+ * 
+ * 🚀 MEJORAS FUTURAS SUGERIDAS:
+ * • Generación automática de PDF con diseño personalizable
+ * • Envío automático por email al cliente
+ * • Sistema de recordatorios de pago automatizado
+ * • Integración con sistemas de pago online
+ * • Facturación recurrente/suscripciones
+ * • Multi-moneda con conversión automática
+ * • Notas de crédito y débito
+ * • Reportes financieros avanzados (ventas, impuestos, ganancias)
+ * • Integración con sistemas contables (QuickBooks, SAP)
+ * • Workflow de aprobación para facturas grandes
+ * • Historial de cambios y auditoría
+ * • Plantillas de facturas personalizables
+ * • Sistema de descuentos y promociones aplicables
+ * • Gestión de inventario integrada
+ * • Análisis de patrones de facturación
+ * 
+ * 💡 EJEMPLO DE USO:
+ * ```typescript
+ * const { 
+ *   invoices, 
+ *   loading, 
+ *   searching,
+ *   totalItems,
+ *   createInvoice, 
+ *   updateInvoice, 
+ *   deleteInvoice 
+ * } = useInvoices({ 
+ *   pageNumber: 1, 
+ *   pageSize: 10, 
+ *   searchTerm: 'INV-2024' 
+ * });
+ * ```
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
 import { useState, useEffect, useRef } from 'react';
-import { toast } from 'react-toastify';
+import { notifications } from '../utils/notifications';
 import { invoiceService } from '../services/invoiceService';
 import type {
   InvoiceDto,
@@ -44,7 +105,7 @@ export const useInvoices = ({
         setInvoices(response.data);
         setTotalItems(response.totalItems);      } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
-        toast.error('Error al cargar facturas: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+        notifications.error('Error al cargar facturas: ' + (err instanceof Error ? err.message : 'Error desconocido'));
       } finally {
         setLoading(false);
         setSearching(false);
@@ -103,10 +164,10 @@ export const useInvoices = ({
           ),
         } as InvoiceDto,
       ]);
-      toast.success('Factura creada exitosamente');
+      notifications.success('Factura creada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error('Error al crear factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      notifications.error('Error al crear factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 
@@ -132,22 +193,25 @@ export const useInvoices = ({
               }            : invoice
         )
       );
-      toast.success('Factura actualizada exitosamente');
+      notifications.success('Factura actualizada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error('Error al actualizar factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      notifications.error('Error al actualizar factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
   const deleteInvoice = async (id: number) => {
     try {
       await invoiceService.deleteInvoice(id);
       setInvoices((prev) => prev.filter((invoice) => invoice.invoiceId !== id));
-      toast.success('Factura eliminada exitosamente');
+      notifications.success('Factura eliminada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error('Error al eliminar factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      notifications.error('Error al eliminar factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 
   return { invoices, totalItems, loading, searching, error, createInvoice, updateInvoice, deleteInvoice };
 };
+
+
+

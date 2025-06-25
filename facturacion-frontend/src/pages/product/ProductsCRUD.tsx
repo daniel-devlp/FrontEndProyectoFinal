@@ -4,10 +4,8 @@ import { useProducts } from '../../hooks/useProducts';
 import type { ProductDto } from '../../@types/products';
 import '../../assets/styles/ProductsCRUD.css';
 import Modal from '../../components/common/Modal';
-import Table from '../../components/common/Table';
 import DynamicButton from '../../components/common/DynamicButton';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { notifications, confirmAction, confirmDestructiveAction, confirmUpdateAction, withLoadingToast } from '../../utils/notifications';
 import SearchBar from '../../components/common/SearchBar';
 
 const ProductsCRUD: React.FC = () => {
@@ -78,72 +76,81 @@ const ProductsCRUD: React.FC = () => {
     }
 
     return newErrors;
-  };
-  const handleEdit = async () => {
+  };  const handleEdit = async () => {
+    // Confirmación antes de actualizar
+    const confirmed = await confirmUpdateAction(
+      '¿Estás seguro de que deseas actualizar este producto?',
+      'Confirmar Actualización de Producto'
+    );
+    if (!confirmed) return;
+
     const validationErrors = validateProductForm(selectedProduct);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       const firstErrorField = Object.keys(validationErrors)[0];
       document.getElementById(firstErrorField)?.focus();
+      notifications.error('Por favor, corrija los errores en el formulario');
       return;
     }
 
     try {
-      await updateProduct(selectedProduct.productId, selectedProduct);
+      await withLoadingToast(
+        () => updateProduct(selectedProduct.productId, selectedProduct),
+        'Actualizando producto...',
+        'Producto actualizado exitosamente'
+      );
       handleEditModalClose();
       setErrors({});
     } catch (error) {
       // El toast ya se muestra en el hook useProducts, no necesitamos duplicarlo aquí
       console.error('Error al actualizar producto:', error);
-    }
-  };
-  const handleDelete = async (productId: number) => {
-    toast.info(
-      <div>
-        <p>¿Estás seguro de que deseas eliminar este producto?</p>
-        <button
-          onClick={async () => {
-            toast.dismiss();
-            toast.info(
-              <div>
-                <p>Esta acción es irreversible. ¿Deseas continuar?</p>
-                <button
-                  onClick={async () => {
-                    toast.dismiss();
-                    try {
-                      await deleteProduct(productId);
-                      // El toast de éxito ya se muestra en el hook
-                    } catch (error) {
-                      // El toast de error ya se muestra en el hook
-                      console.error('Error al eliminar producto:', error);
-                    }
-                  }}
-                >
-                  Sí
-                </button>
-                <button onClick={() => toast.dismiss()}>No</button>
-              </div>
-            );
-          }}
-        >
-          Sí
-        </button>
-        <button onClick={() => toast.dismiss()}>No</button>
-      </div>
+    }  };  const handleDelete = async (productId: number) => {
+    const product = products.find(p => p.productId === productId);
+    const productName = product ? product.name : 'este producto';
+    
+    const confirmed = await confirmDestructiveAction(
+      `¿Estás seguro de que deseas eliminar ${productName}? Esta acción no se puede deshacer.`,
+      'Confirmar Eliminación de Producto',
+      'Sí, eliminar producto'
     );
-  };
-  const handleCreate = async (e: React.FormEvent) => {
+    
+    if (confirmed) {
+      try {
+        await withLoadingToast(
+          () => deleteProduct(productId),
+          'Eliminando producto...',
+          'Producto eliminado exitosamente'
+        );
+      } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        notifications.error('Error al eliminar producto');
+      }
+    }
+  };  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Confirmación antes de crear
+    const confirmed = await confirmAction(
+      '¿Estás seguro de que deseas crear este producto?',
+      'Confirmar Creación de Producto'
+    );
+    if (!confirmed) return;
+
     const validationErrors = validateProductForm(newProduct);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       const firstErrorField = Object.keys(validationErrors)[0];
       document.getElementById(firstErrorField)?.focus();
+      notifications.error('Por favor, corrija los errores en el formulario');
       return;
     }
 
     try {
-      await createProduct(newProduct);
+      await withLoadingToast(
+        () => createProduct(newProduct),
+        'Creando producto...',
+        'Producto creado exitosamente'
+      );
       setModalOpen(false);
       setNewProduct({
         code: '',
@@ -192,35 +199,51 @@ const ProductsCRUD: React.FC = () => {
               Buscando...
             </div>
           )}
-        </div>
-        <div className="table-container">
-          <Table
-            columns={[
-              { key: 'code', header: 'Código' },
-              { key: 'name', header: 'Nombre' },
-              { key: 'description', header: 'Descripción' },
-              { key: 'price', header: 'Precio' },
-              { key: 'stock', header: 'Stock' },
-            ]}
-            data={products}
-            renderActions={(product) => (
-              <>
-                <DynamicButton
-                  type="edit"
-                  onClick={() => {
-                    setSelectedProduct(product);
-                    setEditModalOpen(true);
-                  }}
-                  label="Editar"
-                />
-                <DynamicButton
-                  type="delete"
-                  onClick={() => handleDelete(product.productId)}
-                  label="Eliminar"
-                />
-              </>
-            )}
-          />
+        </div>        <div className="table-container">
+          <div className="products-table-container">
+            <table className="products-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Precio</th>
+                  <th>Stock</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.productId}>
+                    <td className="text-right">{product.productId}</td>
+                    <td className="text-left">{product.code}</td>
+                    <td className="text-left">{product.name}</td>
+                    <td className="text-left">{product.description}</td>
+                    <td className="text-right number-format">${product.price.toFixed(2)}</td>
+                    <td className="text-right">{product.stock}</td>
+                    <td className="text-left">
+                      <div className="actions-cell">
+                        <DynamicButton
+                          type="edit"
+                          onClick={() => {
+                            setSelectedProduct(product);
+                            setEditModalOpen(true);
+                          }}
+                          label="Editar"
+                        />
+                        <DynamicButton
+                          type="delete"
+                          onClick={() => handleDelete(product.productId)}
+                          label="Eliminar"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className="pagination-controls">
             <button
               disabled={currentPage === 1 || loading}
@@ -386,3 +409,6 @@ const ProductsCRUD: React.FC = () => {
 };
 
 export default ProductsCRUD;
+
+
+

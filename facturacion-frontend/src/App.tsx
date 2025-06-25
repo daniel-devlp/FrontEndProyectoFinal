@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import LoginPage from './pages/auth/LoginPage';
@@ -25,9 +24,8 @@ import './assets/styles/InvoiceCreate.css';
 import './assets/styles/UsersCRUD.css';
 import './assets/styles/RolesCRUD.css';
 import './assets/styles/ProductsCRUD.css';
-import './assets/styles/Toast.css';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, isInitialized, loading, selectedRole } = useAuth();
@@ -60,15 +58,7 @@ const AppContent: React.FC = () => {
 
   return (
     <BrowserRouter>
-     <ToastContainer
-  position="top-center"
-  autoClose={5000}        // ✅ 5 segundos automático
-  hideProgressBar={false} // ✅ Muestra barra de progreso
-  closeOnClick={true}     // ✅ Cierre manual con clic
-  pauseOnHover={true}     // ✅ Pausa al hacer hover
-  draggable={true}        // ✅ Arrastrable
-  theme="colored"         // ✅ Tema con colores
-/>
+     
       <Routes>
         <Route 
           path="/login" 
@@ -215,7 +205,9 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  return <AppContent />;
+  return (
+    <AppContent />
+  );
 };
 
 export default App;

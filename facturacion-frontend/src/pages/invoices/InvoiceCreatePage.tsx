@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
-import Table from '../../components/common/Table';
 import SearchBar from '../../components/common/SearchBar';
 import Modal from '../../components/common/Modal';
 import DynamicButton from '../../components/common/DynamicButton';
 import { invoiceService } from '../../services/invoiceService';
-import { toast } from 'react-toastify';
+import { notifications, confirmAction, withLoadingToast } from '../../utils/notifications';
 import type { InvoiceCreateDto, ClientDto, ProductDto, InvoiceDetailDto } from '../../@types/invoices';
 import { useClients } from '../../hooks/useClients';
 import { useProducts } from '../../hooks/useProducts';
@@ -18,6 +17,7 @@ const InvoiceCreatePage = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [productSearchTerm, setProductSearchTerm] = useState<string>('');
   const [isClientModalOpen, setClientModalOpen] = useState<boolean>(false);
   const [isProductModalOpen, setProductModalOpen] = useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<ClientDto | null>(null);
@@ -30,11 +30,15 @@ const InvoiceCreatePage = () => {
     observations: '',
     invoiceDetails: [],
   });
-  const itemsPerPage = 10;
-  // Función para manejar el cambio de búsqueda y resetear la página
+  const itemsPerPage = 10;  // Función para manejar el cambio de búsqueda y resetear la página
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Resetear siempre a la página 1 cuando se busque
+  };
+
+  // Función para manejar el cambio de búsqueda de productos
+  const handleProductSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProductSearchTerm(e.target.value);
   };
 
   // Funciones para abrir modales y resetear búsqueda
@@ -45,8 +49,7 @@ const InvoiceCreatePage = () => {
   };
 
   const openProductModal = () => {
-    setSearchTerm(''); // Limpiar búsqueda anterior
-    setCurrentPage(1); // Resetear página
+    setProductSearchTerm(''); // Limpiar búsqueda anterior
     setProductModalOpen(true);
   };
 
@@ -57,22 +60,33 @@ const InvoiceCreatePage = () => {
   };
 
   const closeProductModal = () => {
-    setSearchTerm(''); // Limpiar búsqueda al cerrar
-    setCurrentPage(1); // Resetear página
+    setProductSearchTerm(''); // Limpiar búsqueda al cerrar
     setProductModalOpen(false);
   };
-
   const { clients, totalItems: totalClients, loading: loadingClients, error: errorClients } = useClients({
     pageNumber: currentPage,
     pageSize: itemsPerPage,
     searchTerm,
+  });  // Hook para productos - obtener TODOS los productos de una vez
+  const { products: allProducts, totalItems: totalProducts, loading: loadingProducts, error: errorProducts } = useProducts({
+    pageNumber: 1,
+    pageSize: 1000, // Obtener muchos productos de una vez
+    searchTerm: '', // Sin filtro para obtener todos los productos
   });
 
-  const { products, totalItems: totalProducts, loading: loadingProducts, error: errorProducts } = useProducts({
-    pageNumber: currentPage,
-    pageSize: itemsPerPage,
-    searchTerm,
-  });
+  // Filtrar productos localmente para la búsqueda
+  // MOSTRAR TODOS los productos con stock > 0 (sin paginación en el modal)
+  const displayProducts = productSearchTerm 
+    ? allProducts.filter(product =>
+        product.stock > 0 && // ✅ Solo productos con stock disponible
+        (product.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+        product.code.toLowerCase().includes(productSearchTerm.toLowerCase()))
+      )
+    : allProducts.filter(product => product.stock > 0); // ✅ TODOS los productos con stock disponible
+
+  // No necesitamos paginación para productos ya que mostramos todos
+  const effectiveTotalProducts = displayProducts.length;
+  const effectiveTotalPages = 1; // Solo una página porque mostramos todos
 
   const { currentUserId } = useUsers();
 
@@ -84,16 +98,27 @@ const InvoiceCreatePage = () => {
   const handleSelectClient = (client: ClientDto) => {
     setSelectedClient(client);
     setNewInvoice((prev) => ({ ...prev, clientId: client.clientId }));
-    toast.success(`Cliente seleccionado: ${client.firstName} ${client.lastName}`);
+    notifications.success(`Cliente seleccionado: ${client.firstName} ${client.lastName}`);
     closeClientModal();
-  };
-  const handleSelectProduct = (product: ProductDto) => {
+  };  const handleSelectProduct = (product: ProductDto) => {
+    // Verificar si el producto tiene stock disponible
+    if (product.stock <= 0) {
+      notifications.error(`El producto ${product.name} no tiene stock disponible`);
+      return;
+    }
+
     // Verificar si el producto ya está en la lista
     const existingProduct = selectedProducts.find((p) => p.productId === product.productId);
     if (existingProduct) {
-      toast.error(`El producto ${product.name} ya está agregado a la factura`);
+      notifications.error(`El producto ${product.name} ya está agregado a la factura`);
       return;
     }
+
+    // Crear una copia completa del producto sin modificar el stock original
+    const productCopy: ProductDto & { quantity: number } = {
+      ...product, // Mantener todos los datos originales del producto, incluyendo el stock completo
+      quantity: 1 // Solo agregar la propiedad quantity
+    };
 
     // Agregar producto con cantidad inicial de 1
     const productDetail: InvoiceDetailDto = {
@@ -102,12 +127,12 @@ const InvoiceCreatePage = () => {
       unitPrice: product.price,
     };
 
-    setSelectedProducts((prev) => [...prev, { ...product, quantity: 1 }]);
+    setSelectedProducts((prev) => [...prev, productCopy]);
     setNewInvoice((prev) => ({
       ...prev,
       invoiceDetails: [...prev.invoiceDetails, productDetail],
     }));    
-    toast.success(`Producto agregado: ${product.name}`);
+    notifications.success(`Producto agregado: ${product.name}`);
     closeProductModal();
   };
 
@@ -142,7 +167,7 @@ const InvoiceCreatePage = () => {
       return formattedInvoiceNumber;
     } catch (error) {
       console.error('Error al generar el número de factura:', error);
-      toast.error('Error al generar el número de factura');
+      notifications.error('Error al generar el número de factura');
       return '00000001'; // Fallback en caso de error
     }
   };
@@ -159,27 +184,36 @@ const InvoiceCreatePage = () => {
 
     initializeInvoiceNumber();
   }, []);
-
   const handleSaveInvoice = async () => {
+    // Confirmación antes de guardar
+    const confirmed = await confirmAction(
+      '¿Estás seguro de que deseas guardar esta factura?',
+      'Confirmar Creación de Factura'
+    );
+    if (!confirmed) return;
+
     if (!newInvoice.invoiceNumber) {
       const generatedInvoiceNumber = await generateUniqueInvoiceNumber();
       setNewInvoice((prev) => ({ ...prev, invoiceNumber: generatedInvoiceNumber }));
     }
 
     if (!newInvoice.userId) {
-      toast.error('El ID del usuario es obligatorio. Intente nuevamente.');
+      notifications.error('El ID del usuario es obligatorio. Intente nuevamente.');
       return;
     }
 
     const validationError = validateInvoice(newInvoice);
     if (validationError) {
-      toast.error(validationError);
+      notifications.error(validationError);
       return;
     }
 
     try {
-      await invoiceService.createInvoice(newInvoice);
-      toast.success('Factura creada exitosamente');
+      await withLoadingToast(
+        () => invoiceService.createInvoice(newInvoice),
+        'Creando factura...',
+        'Factura creada exitosamente'
+      );
 
       // Clear all data except the invoice number
       setNewInvoice((prev) => ({
@@ -196,18 +230,28 @@ const InvoiceCreatePage = () => {
       if (axios.isAxiosError(error) && error.response) {
         const serverMessage = error.response.data?.message || 'Error desconocido en el servidor';
         console.error('Detalles del error:', error.response.data);
-        toast.error(`Error al crear la factura: ${serverMessage}`);
+        notifications.error(`Error al crear la factura: ${serverMessage}`);
       } else {
-        toast.error('Error inesperado al crear la factura');
+        notifications.error('Error inesperado al crear la factura');
       }
-    }  };
+    }
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDownloadInvoice = () => {
     if (!selectedClient) {
-      toast.error('Debe seleccionar un cliente antes de descargar la factura');
+      notifications.error('Debe seleccionar un cliente antes de descargar la factura');
       return;
     }
+
+    // Enrich invoice details with product names and codes
+    const enrichedDetails = newInvoice.invoiceDetails.map(detail => {
+      const product = allProducts.find(p => p.productId === detail.productId);
+      return {
+        ...detail,
+        productName: product?.name || `Producto ID: ${detail.productId}`,
+        productCode: product?.code || detail.productId.toString()
+      };
+    });
 
     invoiceService.generateInvoicePDF(
       {
@@ -215,21 +259,19 @@ const InvoiceCreatePage = () => {
         email: selectedClient.email || '',
         phone: selectedClient.phone || '',
       },
-      newInvoice.invoiceDetails,
+      enrichedDetails,
       newInvoice.invoiceDetails.reduce((total, detail) => total + detail.unitPrice * detail.quantity, 0)
     );
   };  const handleQuantityChange = (productId: number, newQuantity: number) => {
     // Validaciones solo para cantidades mayores a 0
     if (newQuantity > 0) {
       if (newQuantity < 1) {
-        toast.error('La cantidad debe ser al menos 1');
+        notifications.error('La cantidad debe ser al menos 1');
         return;
-      }
-
-      // Obtener el stock del producto
-      const product = products.find(p => p.productId === productId);
+      }      // Obtener el stock del producto
+      const product = allProducts.find(p => p.productId === productId);
       if (product && newQuantity > product.stock) {
-        toast.error(`La cantidad no puede exceder el stock disponible (${product.stock})`);
+        notifications.error(`La cantidad no puede exceder el stock disponible (${product.stock})`);
         return;
       }
     }
@@ -273,11 +315,10 @@ const InvoiceCreatePage = () => {
     setNewInvoice((prev) => ({
       ...prev,
       invoiceDetails: prev.invoiceDetails.filter((detail) => detail.productId !== productId),
-    }));
-    
-    const product = products.find(p => p.productId === productId);
+    }));    
+    const product = allProducts.find(p => p.productId === productId);
     if (product) {
-      toast.success(`Producto removido: ${product.name}`);
+      notifications.success(`Producto removido: ${product.name}`);
     }
   };
   const calculateSubtotal = () => {
@@ -391,23 +432,35 @@ const InvoiceCreatePage = () => {
             {loadingClients ? (
               <p>Cargando clientes...</p>
             ) : errorClients ? (
-              <p>Error: {errorClients}</p>
-            ) : (
-              <Table
-                columns={[
-                  { key: 'identificationNumber', header: 'Cédula' },
-                  { key: 'fullName', header: 'Nombre Completo' },
-                  { key: 'phone', header: 'Teléfono' },
-                ]}
-                data={clientsWithFullDetails}
-                renderActions={(client) => (
-                  <DynamicButton
-                    type="save"
-                    onClick={() => handleSelectClient(client)}
-                    label="Seleccionar"
-                  />
-                )}
-              />
+              <p>Error: {errorClients}</p>            ) : (
+              <div className="clients-select-table-container">
+                <table className="clients-select-table">
+                  <thead>
+                    <tr>
+                      <th>Cédula</th>
+                      <th>Nombre Completo</th>
+                      <th>Teléfono</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {clientsWithFullDetails.map((client) => (
+                      <tr key={client.clientId}>
+                        <td className="text-left">{client.identificationNumber}</td>
+                        <td className="text-left">{client.fullName}</td>
+                        <td className="text-left">{client.phone}</td>
+                        <td className="text-left">
+                          <DynamicButton
+                            type="save"
+                            onClick={() => handleSelectClient(client)}
+                            label="Seleccionar"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
             <div className="pagination-controls">
               <button
@@ -428,29 +481,53 @@ const InvoiceCreatePage = () => {
         </Modal>
 
           {/* Selección de Productos */}
-          <div className="section">          <h2>Productos</h2>          {selectedProducts.length > 0 ? (
+          <div className="section">          
+            <h2>Productos</h2>          
+            {selectedProducts.length > 0 && (
+              <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '10px', fontStyle: 'italic' }}>
+                💡 Doble clic en una fila para eliminar el producto
+              </p>
+            )}
+            {selectedProducts.length > 0 ? (
             <div className="table-container">
               <div className="table-wrapper">
                 <table className="invoice-table">
                 <thead>
                   <tr>
-                    <th style={{ width: '30%' }}>Nombre</th>
+                    <th className="text-left" style={{ width: '15%' }}>Código</th>
+                    <th className="text-left" style={{ width: '30%' }}>Nombre</th>
                     <th className="text-center" style={{ width: '12%' }}>Cant.</th>
-                    <th className="text-right" style={{ width: '15%' }}>Stock</th>
-                    <th className="text-right" style={{ width: '18%' }}>Precio Unit.</th>
+                    <th className="text-right" style={{ width: '13%' }}>Stock</th>
+                    <th className="text-right" style={{ width: '15%' }}>Precio Unit.</th>
                     <th className="text-right" style={{ width: '15%' }}>Subtotal</th>
-                    <th className="text-center" style={{ width: '10%' }}>Acc.</th>
                   </tr>
                 </thead>                <tbody>
                   {selectedProducts.map((product) => {
-                    const stockDisponible = products.find(p => p.productId === product.productId)?.stock || 0;
+                    // Obtener el stock real del producto desde allProducts (sin modificar)
+                    const stockReal = allProducts.find(p => p.productId === product.productId)?.stock || product.stock || 0;
+                    // Obtener el código del producto
+                    const productCode = allProducts.find(p => p.productId === product.productId)?.code || (product as any).code || '';
                     return (
-                      <tr key={product.productId}>
-                        <td style={{ width: '30%' }} title={product.name}>{product.name}</td>
+                      <tr 
+                        key={product.productId}
+                        onDoubleClick={async () => {
+                          const confirmed = await confirmAction(
+                            `¿Estás seguro de que deseas eliminar ${product.name} de la factura?`,
+                            'Confirmar Eliminación de Producto'
+                          );
+                          if (confirmed) {
+                            handleRemoveProduct(product.productId);
+                          }
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        title="Doble clic para eliminar este producto"
+                      >
+                        <td className="text-left" style={{ width: '15%' }}>{productCode}</td>
+                        <td className="text-left" style={{ width: '30%' }} title={product.name}>{product.name}</td>
                         <td className="text-center" style={{ width: '12%' }}>                          <input
                             type="number"
                             min="1"
-                            max={stockDisponible}
+                            max={stockReal}
                             value={product.quantity === 0 ? '' : product.quantity}
                             onChange={(e) => {
                               const inputValue = e.target.value;
@@ -474,13 +551,13 @@ const InvoiceCreatePage = () => {
                               }
                               
                               // Validar rango y actualizar
-                              if (newQuantity >= 1 && newQuantity <= stockDisponible) {
+                              if (newQuantity >= 1 && newQuantity <= stockReal) {
                                 handleQuantityChange(product.productId, newQuantity);
-                              } else if (newQuantity > stockDisponible) {
-                                toast.error(`La cantidad no puede exceder el stock disponible (${stockDisponible})`);
+                              } else if (newQuantity > stockReal) {
+                                notifications.error(`La cantidad no puede exceder el stock disponible (${stockReal})`);
                                 // No actualizar el valor si excede el stock
                               } else if (newQuantity < 1) {
-                                toast.error('La cantidad debe ser al menos 1');
+                                notifications.error('La cantidad debe ser al menos 1');
                                 // No actualizar el valor si es menor a 1
                               }
                             }}
@@ -489,7 +566,7 @@ const InvoiceCreatePage = () => {
                               const inputValue = e.target.value;
                               if (inputValue === '' || parseInt(inputValue) < 1 || isNaN(parseInt(inputValue))) {
                                 handleQuantityChange(product.productId, 1);
-                                toast.info('Cantidad ajustada a 1 (mínimo permitido)');
+                                notifications.info('Cantidad ajustada a 1 (mínimo permitido)');
                               }
                             }}
                             onKeyDown={(e) => {
@@ -524,16 +601,9 @@ const InvoiceCreatePage = () => {
                             placeholder="1"
                           />
                         </td>
-                        <td className="text-right" style={{ width: '15%' }}>{stockDisponible}</td>
-                        <td className="text-right" style={{ width: '18%' }}>${product.price.toFixed(2)}</td>
+                        <td className="text-right" style={{ width: '13%' }}>{stockReal}</td>
+                        <td className="text-right" style={{ width: '15%' }}>${product.price.toFixed(2)}</td>
                         <td className="text-right" style={{ width: '15%' }}>${product.quantity > 0 ? (product.price * product.quantity).toFixed(2) : '0.00'}</td>
-                        <td className="text-center" style={{ width: '10%' }}>
-                          <DynamicButton
-                            type="delete"
-                            onClick={() => handleRemoveProduct(product.productId)}
-                            label="×"
-                          />
-                        </td>
                       </tr>
                     );                  })}                </tbody></table>
               
@@ -592,47 +662,54 @@ const InvoiceCreatePage = () => {
             </button>            <h2>Seleccionar Producto</h2>
             <SearchBar
               placeholder="Buscar productos..."
-              value={searchTerm}
-              onChange={handleSearchChange}
+              value={productSearchTerm}
+              onChange={handleProductSearchChange}
             />
             {loadingProducts ? (
               <p>Cargando productos...</p>
             ) : errorProducts ? (
-              <p>Error: {errorProducts}</p>
-            ) : (              <Table
-                columns={[
-                  { key: 'name', header: 'Nombre' },
-                  { key: 'price', header: 'Precio' },
-                  { key: 'stock', header: 'Stock' },
-                ]}
-                data={products.filter(product => 
-                  product.stock > 0 && 
-                  !selectedProducts.some(selected => selected.productId === product.productId)
-                )}
-                renderActions={(product) => (
-                  <DynamicButton
-                    type="save"
-                    onClick={() => handleSelectProduct(product)}
-                    label="Seleccionar"
-                  />
-                )}
-              />
+              <p>Error: {errorProducts}</p>            ) : (
+              <div className="products-select-table-container">
+                <table className="products-select-table">
+                  <thead>
+                    <tr>
+                      <th>Código</th>
+                      <th>Nombre</th>
+                      <th>Precio</th>
+                      <th>Stock</th>
+                      <th>Acciones</th>
+                    </tr>                  </thead>                  <tbody>
+                    {displayProducts.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="text-center" style={{ padding: '20px', fontStyle: 'italic', color: '#666' }}>
+                          {productSearchTerm ? 'No se encontraron productos que coincidan con la búsqueda' : 'No hay productos disponibles'}
+                        </td>
+                      </tr>
+                    ) : (
+                      displayProducts.map((product) => (
+                        <tr key={product.productId}>
+                          <td className="text-left">{product.code}</td>
+                          <td className="text-left">{product.name}</td>
+                          <td className="text-right number-format">${product.price.toFixed(2)}</td>
+                          <td className="text-right">{product.stock}</td>
+                          <td className="text-left">
+                            {selectedProducts.some(selected => selected.productId === product.productId) ? (
+                              <span className="product-added">✓ Agregado</span>
+                            ) : (
+                              <DynamicButton
+                                type="save"
+                                onClick={() => handleSelectProduct(product)}
+                                label="Seleccionar"
+                              />
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             )}
-            <div className="pagination-controls">
-              <button
-                disabled={currentPage === 1 || loadingProducts}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-              >
-                Anterior
-              </button>
-              <span>Página {currentPage} de {Math.ceil(totalProducts / itemsPerPage)}</span>
-              <button
-                disabled={currentPage === Math.ceil(totalProducts / itemsPerPage) || loadingProducts}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-              >
-                Siguiente
-              </button>
-            </div>
           </div>        </Modal>
 
         {/* Acciones finales */}
@@ -643,11 +720,7 @@ const InvoiceCreatePage = () => {
               onClick={handleSaveInvoice}
               label="Guardar Factura"
             />
-            {/* <DynamicButton
-              type="save"
-              onClick={handleDownloadInvoice}
-              label="Descargar Factura"
-            /> */}
+           
           </div>
         </div>
       </div>    </div>
@@ -657,3 +730,5 @@ const InvoiceCreatePage = () => {
 };
 
 export default InvoiceCreatePage;
+
+

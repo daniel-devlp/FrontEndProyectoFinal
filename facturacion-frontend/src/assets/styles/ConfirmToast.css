@@ -1,0 +1,352 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 🎨 ESTILOS DEL COMPONENTE CONFIRMTOAST
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 
+ * Estos estilos definen la apariencia del modal de confirmación personalizado
+ * que reemplaza window.confirm() en toda la aplicación.
+ * 
+ * 🎯 OBJETIVOS DE DISEÑO:
+ * • Apariencia moderna y profesional
+ * • Consistent con el design system de la aplicación
+ * • Responsive para todos los tamaños de pantalla
+ * • Animaciones suaves y no intrusivas
+ * • Accesibilidad mejorada con indicadores visuales claros
+ * • Diferenciación visual entre tipos de acciones
+ * 
+ * 🎨 PALETA DE COLORES:
+ * • Destructivo (Eliminar): #ef4444 (Rojo) - indica peligro
+ * • Constructivo (Crear/Guardar): #10b981 (Verde) - indica éxito
+ * • Precaución (Advertencia): #f59e0b (Ámbar) - indica cuidado
+ * • Neutral (Cancelar): #f3f4f6 (Gris) - acción segura
+ * 
+ * 🚀 MEJORAS FUTURAS:
+ * • Soporte para temas (dark mode)
+ * • Variantes de tamaño (small, medium, large)
+ * • Animaciones más sofisticadas
+ * • Soporte para iconos contextuales
+ * • Variables CSS para personalización fácil
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 🪟 CONTAINER PRINCIPAL DEL MODAL
+   ║ 
+   ║ Define la caja principal del modal con sombras, bordes y animación de entrada
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast {
+  /* 📏 Dimensiones responsivas */
+  min-width: 300px;      /* Ancho mínimo para móviles */
+  max-width: 400px;      /* Ancho máximo para desktop */
+  
+  /* 🎨 Apariencia visual */
+  background: white;               /* Fondo blanco limpio */
+  border-radius: 12px;            /* Bordes redondeados modernos */
+  border: 1px solid #e5e7eb;      /* Borde sutil para definición */
+  overflow: hidden;               /* Evita desbordamiento de contenido */
+  
+  /* 🌟 Sombras profesionales */
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),    /* Sombra principal suave */
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);   /* Sombra secundaria para profundidad */
+  
+  /* ⚡ Animación de entrada suave */
+  animation: confirmToastSlideIn 0.3s ease-out;
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 🎬 ANIMACIÓN DE ENTRADA
+   ║ 
+   ║ Animación suave que hace aparecer el modal desde arriba con scale
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes confirmToastSlideIn {
+  from {
+    opacity: 0;                               /* Comienza invisible */
+    transform: translateY(-20px) scale(0.95); /* Arriba y ligeramente pequeño */
+  }
+  to {
+    opacity: 1;                               /* Termina visible */
+    transform: translateY(0) scale(1);        /* Posición y tamaño final */
+  }
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 📦 ÁREA DE CONTENIDO
+   ║ 
+   ║ Container interno que maneja el espaciado del contenido
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-content {
+  padding: 24px;  /* Espaciado generoso para lectura cómoda */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 📝 TÍTULO DEL MODAL
+   ║ 
+   ║ Estilo para el título opcional del modal de confirmación
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-title {
+  /* 📏 Espaciado */
+  margin: 0 0 12px 0;     /* Solo margen inferior */
+  
+  /* 🔤 Tipografía prominente */
+  font-size: 18px;        /* Tamaño destacado para jerarquía */
+  font-weight: 600;       /* Semi-bold para importancia */
+  color: #1f2937;         /* Gris oscuro para legibilidad */
+  line-height: 1.3;       /* Altura de línea compacta */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 💬 MENSAJE PRINCIPAL
+   ║ 
+   ║ Estilo para el texto principal del mensaje de confirmación
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-message {
+  /* 📏 Espaciado */
+  margin: 0 0 20px 0;     /* Margen inferior para separar de botones */
+  
+  /* 🔤 Tipografía legible */
+  font-size: 14px;        /* Tamaño estándar para lectura */
+  color: #6b7280;         /* Gris medio para jerarquía visual */
+  line-height: 1.5;       /* Altura de línea cómoda para lectura */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 🔘 CONTENEDOR DE BOTONES
+   ║ 
+   ║ Layout flexbox para organizar botones horizontalmente
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-buttons {
+  display: flex;              /* Layout horizontal */
+  gap: 8px;                   /* Espaciado entre botones */
+  justify-content: flex-end;  /* Alineación a la derecha (estándar) */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 🎯 ESTILO BASE DE BOTONES
+   ║ 
+   ║ Propiedades comunes para todos los botones del modal
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-btn {
+  /* 📏 Dimensiones y espaciado */
+  padding: 8px 16px;      /* Espaciado interno cómodo */
+  min-width: 80px;        /* Ancho mínimo para consistencia */
+  
+  /* 🎨 Apariencia base */
+  border: none;           /* Sin borde por defecto (se define en variantes) */
+  border-radius: 8px;     /* Bordes redondeados consistentes */
+  
+  /* 🔤 Tipografía */
+  font-size: 14px;        /* Tamaño estándar */
+  font-weight: 500;       /* Peso medio para legibilidad */
+  
+  /* 🖱️ Interacción */
+  cursor: pointer;        /* Indica elemento clickeable */
+  
+  /* ⚡ Animaciones suaves */
+  transition: all 0.2s ease;  /* Transición suave para todas las propiedades */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 🎭 ESTADOS INTERACTIVOS DE BOTONES
+   ║ 
+   ║ Efectos visuales para hover y active states
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-btn:hover {
+  /* 📈 Efecto de elevación sutil */
+  transform: translateY(-1px);           /* Subir ligeramente */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Sombra más pronunciada */
+}
+
+.confirm-toast-btn:active {
+  /* 📉 Efecto de presión */
+  transform: translateY(0);  /* Volver a posición original */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ ❌ BOTÓN CANCELAR (ACCIÓN SEGURA)
+   ║ 
+   ║ Estilo neutral para la acción de cancelar
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-btn-cancel {
+  /* 🎨 Colores neutrales y seguros */
+  background: #f3f4f6;     /* Gris claro de fondo */
+  color: #374151;          /* Texto gris oscuro */
+  border: 1px solid #d1d5db;  /* Borde gris medio */
+}
+
+.confirm-toast-btn-cancel:hover {
+  /* 🎨 Estado hover más definido */
+  background: #e5e7eb;     /* Gris ligeramente más oscuro */
+  border-color: #9ca3af;   /* Borde más pronunciado */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ ⚠️ BOTÓN CONFIRMAR (DESTRUCTIVO POR DEFECTO)
+   ║ 
+   ║ Estilo rojo para acciones que requieren cuidado especial
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-btn-confirm {
+  /* 🔴 Colores de advertencia/peligro */
+  background: #ef4444;     /* Rojo principal */
+  color: white;            /* Texto blanco para contraste */
+  border: 1px solid #dc2626;  /* Borde rojo más oscuro */
+}
+
+.confirm-toast-btn-confirm:hover {
+  /* 🔴 Estado hover más intenso */
+  background: #dc2626;     /* Rojo más oscuro */
+  border-color: #b91c1c;   /* Borde aún más oscuro */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ ✅ VARIANTE ÉXITO (ACCIONES CONSTRUCTIVAS)
+   ║ 
+   ║ Para confirmaciones de creación, guardado, etc.
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-btn-confirm.success {
+  /* 🟢 Colores de éxito y construcción */
+  background: #10b981;     /* Verde principal */
+  border-color: #059669;   /* Borde verde más oscuro */
+}
+
+.confirm-toast-btn-confirm.success:hover {
+  /* 🟢 Estado hover verde intenso */
+  background: #059669;     /* Verde más oscuro */
+  border-color: #047857;   /* Borde verde muy oscuro */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ ⚠️ VARIANTE ADVERTENCIA (ACCIONES DE PRECAUCIÓN)
+   ║ 
+   ║ Para confirmaciones que requieren atención pero no son destructivas
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+.confirm-toast-btn-confirm.warning {
+  /* 🟡 Colores de advertencia y precaución */
+  background: #f59e0b;     /* Ámbar principal */
+  border-color: #d97706;   /* Borde ámbar más oscuro */
+}
+
+.confirm-toast-btn-confirm.warning:hover {
+  /* 🟡 Estado hover ámbar intenso */
+  background: #d97706;     /* Ámbar más oscuro */
+  border-color: #b45309;   /* Borde ámbar muy oscuro */
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 📱 RESPONSIVE DESIGN
+   ║ 
+   ║ Adaptaciones para diferentes tamaños de pantalla
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+/* Para tablets y móviles grandes */
+@media (max-width: 768px) {
+  .confirm-toast {
+    /* 📏 Ajustar dimensiones para pantallas medianas */
+    min-width: 280px;
+    max-width: 350px;
+  }
+  
+  .confirm-toast-content {
+    /* 📦 Reducir padding ligeramente */
+    padding: 20px;
+  }
+  
+  .confirm-toast-title {
+    /* 🔤 Ajustar tamaño de fuente */
+    font-size: 16px;
+  }
+}
+
+/* Para móviles pequeños */
+@media (max-width: 480px) {
+  .confirm-toast {
+    /* 📏 Optimización para móviles pequeños */
+    min-width: 260px;
+    max-width: 320px;
+  }
+  
+  .confirm-toast-content {
+    /* 📦 Padding más compacto */
+    padding: 16px;
+  }
+  
+  .confirm-toast-buttons {
+    /* 🔘 Stack vertical en móviles si es necesario */
+    flex-direction: column-reverse;  /* Confirmar arriba, cancelar abajo */
+    gap: 12px;
+  }
+  
+  .confirm-toast-btn {
+    /* 🎯 Botones más grandes para touch */
+    padding: 12px 16px;
+    min-width: 100%;  /* Ancho completo en móvil */
+  }
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════════
+   ║ 🎨 VARIABLES CSS PARA FUTURAS PERSONALIZACIONES
+   ║ 
+   ║ Variables que pueden usarse para temas o personalización empresarial
+   ╚═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colores del sistema de confirmación */
+  --confirm-toast-danger: #ef4444;
+  --confirm-toast-success: #10b981;
+  --confirm-toast-warning: #f59e0b;
+  --confirm-toast-neutral: #f3f4f6;
+  
+  /* Espaciado del sistema */
+  --confirm-toast-padding: 24px;
+  --confirm-toast-border-radius: 12px;
+  --confirm-toast-button-gap: 8px;
+  
+  /* Animaciones */
+  --confirm-toast-animation-duration: 0.3s;
+  --confirm-toast-transition-duration: 0.2s;
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 📚 GUÍA DE USO PARA DESARROLLADORES
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 
+ * 🎯 CLASES PRINCIPALES:
+ * • .confirm-toast - Container principal del modal
+ * • .confirm-toast-content - Área de contenido interno
+ * • .confirm-toast-title - Título opcional del modal
+ * • .confirm-toast-message - Mensaje principal
+ * • .confirm-toast-buttons - Container de botones
+ * • .confirm-toast-btn - Clase base para botones
+ * • .confirm-toast-btn-cancel - Botón cancelar (neutral)
+ * • .confirm-toast-btn-confirm - Botón confirmar (rojo por defecto)
+ * 
+ * 🎨 VARIANTES DE BOTÓN CONFIRMAR:
+ * • Sin clase adicional: Destructivo (rojo)
+ * • .success: Constructivo (verde)
+ * • .warning: Precaución (ámbar)
+ * 
+ * 🔧 PERSONALIZACIÓN:
+ * • Modificar variables CSS en :root para cambios globales
+ * • Crear nuevas variantes usando las clases base existentes
+ * • Ajustar responsive breakpoints según necesidades específicas
+ * 
+ * 🚀 EXTENSIONES FUTURAS:
+ * • Agregar más variantes de color
+ * • Implementar modo oscuro
+ * • Añadir animaciones más complejas
+ * • Soporte para iconos contextuales
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */

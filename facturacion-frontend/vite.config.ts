@@ -17,7 +17,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
-          ui: ['react-bootstrap', 'react-select', 'react-toastify']
+          ui: ['react-bootstrap', 'react-select', 'react-hot-toast']
         }
       }
     },

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
-import Table from '../../components/common/Table';
 import SearchBar from '../../components/common/SearchBar';
 import Modal from '../../components/common/Modal';
 import DynamicButton from '../../components/common/DynamicButton';
-import { toast } from 'react-toastify';
+import { notifications, confirmAction } from '../../utils/notifications';
 import { useInvoices } from '../../hooks/useInvoices';
 import { invoiceService } from '../../services/invoiceService';
 import { productService } from '../../services/productService';
@@ -22,7 +21,7 @@ const InvoicesCRUD: React.FC = () => {
   const [loadingPreview, setLoadingPreview] = useState(false);
   const itemsPerPage = 10;
 
-  const { invoices, totalItems, loading, searching, error, deleteInvoice } = useInvoices({
+  const { invoices, totalItems, loading, searching, error } = useInvoices({
     pageNumber: currentPage,
     pageSize: itemsPerPage,
     searchTerm,
@@ -89,39 +88,20 @@ const InvoicesCRUD: React.FC = () => {
         enrichedDetails,
         total
       );
-      toast.success('Factura descargada exitosamente');
+      notifications.success('Factura descargada exitosamente');
     } catch (err) {
-      toast.error('Error al descargar la factura');
+      notifications.error('Error al descargar la factura');
     }
   };
 
-  const handleDelete = async (invoiceId: number) => {
-    toast.info('¿Estás seguro de que deseas eliminar esta factura?', {
-      autoClose: false,
-      closeOnClick: false,
-      draggable: false,
-      position: "top-center",
-      onClose: async () => {
-        const confirmed = window.confirm('Confirma la eliminación de la factura.');        if (confirmed) {
-          try {
-            await deleteInvoice(invoiceId);
-            toast.success('Factura eliminada exitosamente');
-          } catch (err) {
-            toast.error('Error al eliminar la factura');
-          }
-        } else {
-          toast.info('Eliminación cancelada');
-        }
-      },
-    });
-  };  const handlePreviewInvoice = async (invoiceId: number) => {
+  const handlePreviewInvoice = async (invoiceId: number) => {
     try {
       setLoadingPreview(true);
       
       // Encontrar la factura en la lista actual para tener datos básicos
       const invoice = invoices.find(inv => inv.invoiceId === invoiceId);
       if (!invoice) {
-        toast.error('Factura no encontrada');
+        notifications.error('Factura no encontrada');
         return;
       }
       
@@ -242,7 +222,7 @@ const InvoicesCRUD: React.FC = () => {
       setInvoiceDetails(enrichedDetails);
       setPreviewModalOpen(true);
     } catch (err) {
-      toast.error('Error al cargar la previsualización de la factura');
+      notifications.error('Error al cargar la previsualización de la factura');
       console.error('Error:', err);
     } finally {
       setLoadingPreview(false);
@@ -272,36 +252,47 @@ const InvoicesCRUD: React.FC = () => {
         )}
       </div>
       {loading && invoices.length === 0 && <p>Cargando...</p>}
-      {error && <p>Error: {error}</p>}
-      <Table
-        columns={[
-          { key: 'invoiceNumber', header: 'Número de Factura' },
-          { key: 'clientName', header: 'Cliente' },
-          { key: 'issueDate', header: 'Fecha de Emisión' },
-          { key: 'total', header: 'Total' },
-        ]}
-        data={invoices.map((invoice) => ({
-          invoiceId: invoice.invoiceId,
-          invoiceNumber: invoice.invoiceNumber,
-          clientName: `${invoice.client.firstName} ${invoice.client.lastName}`,
-          issueDate: new Date(invoice.issueDate).toLocaleDateString(),
-          total: invoice.total.toFixed(2),
-        }))}        renderActions={(invoice) => (
-          <>
-            <DynamicButton
-              type="edit"
-              onClick={() => handlePreviewInvoice(invoice.invoiceId)}
-              label="Previsualizar"
-            />
-            
-            <DynamicButton
-              type="save" // Cambiado a un tipo válido
-              onClick={() => handleDownloadPDF(invoice.invoiceId)}
-              label="Descargar Factura"
-            />
-          </>
-        )}
-      />
+      {error && <p>Error: {error}</p>}      <div className="table-container">
+        <div className="invoices-table-container">
+          <table className="invoices-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Número de Factura</th>
+                <th>Cliente</th>
+                <th>Fecha de Emisión</th>
+                <th>Total</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices.map((invoice) => (
+                <tr key={invoice.invoiceId}>
+                  <td className="text-right">{invoice.invoiceId}</td>
+                  <td className="text-left">{invoice.invoiceNumber}</td>
+                  <td className="text-left">{`${invoice.client.firstName} ${invoice.client.lastName}`}</td>
+                  <td className="text-left">{new Date(invoice.issueDate).toLocaleDateString()}</td>
+                  <td className="text-right number-format">${invoice.total.toFixed(2)}</td>
+                  <td className="text-left">
+                    <div className="actions-cell">
+                      <DynamicButton
+                        type="edit"
+                        onClick={() => handlePreviewInvoice(invoice.invoiceId)}
+                        label="Previsualizar"
+                      />
+                      <DynamicButton
+                        type="save"
+                        onClick={() => handleDownloadPDF(invoice.invoiceId)}
+                        label="Descargar Factura"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div className="pagination-controls">
         <button
           disabled={currentPage === 1 || loading}
@@ -409,10 +400,11 @@ const InvoicesCRUD: React.FC = () => {
                 <table className="products-table">
                   <thead>
                     <tr>
-                      <th>Producto</th>
-                      <th className="product-quantity">Cantidad</th>
-                      <th className="product-price">Precio Unit.</th>
-                      <th className="product-subtotal">Subtotal</th>
+                      <th className="text-left">Producto</th>
+                      <th className="text-left">Código</th>
+                      <th className="text-right">Cantidad</th>
+                      <th className="text-right">Precio Unit.</th>
+                      <th className="text-right">Subtotal</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -421,18 +413,23 @@ const InvoicesCRUD: React.FC = () => {
                       (invoiceDetails.invoiceDetails && Array.isArray(invoiceDetails.invoiceDetails)) ? (
                         invoiceDetails.invoiceDetails.map((detail: any, index: number) => (
                           <tr key={index}>
-                            <td className="product-name">
+                            <td className="text-left">
                               {detail.product?.name || detail.productName || 
                                detail.Product?.name || detail.productDetails?.name || 
                                `Producto ID: ${detail.productId || detail.ProductId || 'N/A'}`}
                             </td>
-                            <td className="product-quantity">
+                            <td className="text-left">
+                              {detail.product?.code || detail.productCode || 
+                               detail.Product?.code || detail.productDetails?.code || 
+                               detail.productId || detail.ProductId || 'N/A'}
+                            </td>
+                            <td className="text-right">
                               {detail.quantity || detail.Quantity || 0}
                             </td>
-                            <td className="product-price">
+                            <td className="text-right">
                               ${(detail.unitPrice || detail.UnitPrice || 0).toFixed(2)}
                             </td>
-                            <td className="product-subtotal">
+                            <td className="text-right">
                               ${((detail.quantity || detail.Quantity || 0) * (detail.unitPrice || detail.UnitPrice || 0)).toFixed(2)}
                             </td>
                           </tr>
@@ -442,25 +439,30 @@ const InvoicesCRUD: React.FC = () => {
                       Array.isArray(invoiceDetails) && invoiceDetails.length > 0 ? (
                         invoiceDetails.map((detail: any, index: number) => (
                           <tr key={index}>
-                            <td className="product-name">
+                            <td className="text-left">
                               {detail.product?.name || detail.productName || 
                                detail.Product?.name || detail.productDetails?.name || 
                                `Producto ID: ${detail.productId || detail.ProductId || 'N/A'}`}
                             </td>
-                            <td className="product-quantity">
+                            <td className="text-left">
+                              {detail.product?.code || detail.productCode || 
+                               detail.Product?.code || detail.productDetails?.code || 
+                               detail.productId || detail.ProductId || 'N/A'}
+                            </td>
+                            <td className="text-right">
                               {detail.quantity || detail.Quantity || 0}
                             </td>
-                            <td className="product-price">
+                            <td className="text-right">
                               ${(detail.unitPrice || detail.UnitPrice || 0).toFixed(2)}
                             </td>
-                            <td className="product-subtotal">
+                            <td className="text-right">
                               ${((detail.quantity || detail.Quantity || 0) * (detail.unitPrice || detail.UnitPrice || 0)).toFixed(2)}
                             </td>
                           </tr>
                         ))
                       ) : (
                         <tr>
-                          <td colSpan={4} style={{ textAlign: 'center', fontStyle: 'italic', padding: '20px' }}>
+                          <td colSpan={5} style={{ textAlign: 'center', fontStyle: 'italic', padding: '20px' }}>
                             No se encontraron detalles de productos para esta factura
                           </td>
                         </tr>
@@ -494,3 +496,6 @@ const InvoicesCRUD: React.FC = () => {
 };
 
 export default InvoicesCRUD;
+
+
+

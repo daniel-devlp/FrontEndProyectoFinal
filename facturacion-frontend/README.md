@@ -1,54 +1,82 @@
-# React + TypeScript + Vite
+# 📋 Sistema de Facturación - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema moderno de facturación desarrollado con **React + TypeScript + Vite**, que incluye gestión completa de clientes, productos, facturas y usuarios con un sistema de notificaciones avanzado.
 
-Currently, two official plugins are available:
+## 🚀 Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **🔐 Autenticación**: Sistema JWT con roles múltiples por usuario
+- **👥 Gestión de Clientes**: CRUD completo con validación de cédulas ecuatorianas
+- **📦 Gestión de Productos**: Control de inventario y stock
+- **🧾 Sistema de Facturas**: Creación, edición y visualización de facturas
+- **👤 Administración de Usuarios**: Gestión de usuarios y roles (Admin)
+- **🔔 Notificaciones Modernas**: Sistema basado en react-hot-toast
+- **✅ Validaciones Robustas**: Algoritmo oficial de cédulas ecuatorianas
+- **📱 Responsive Design**: Optimizado para todos los dispositivos
 
-## Expanding the ESLint configuration
+## 📚 Documentación Completa
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+📖 **Para obtener la documentación técnica completa del sistema, consulta:**
+**[DOCUMENTACION_SISTEMA.md](./DOCUMENTACION_SISTEMA.md)**
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Este archivo contiene:
+- 🏗️ Arquitectura completa del proyecto
+- 🔔 Sistema de notificaciones moderno
+- 🔐 Flujos de autenticación y seguridad
+- 📊 Documentación de todos los hooks personalizados
+- 🎨 Componentes reutilizables
+- 🚀 Patrones de desarrollo
+- 🛡️ Mejores prácticas implementadas
+- 📈 Roadmap de mejoras futuras
+- 📊 Estadísticas del proyecto
+
+## ⚡ Inicio Rápido
+
+### Prerrequisitos
+- Node.js 18+ 
+- npm o yarn
+
+### Instalación
+
+```bash
+# Clonar el repositorio
+git clone [url-del-repositorio]
+
+# Instalar dependencias
+npm install
+
+# Iniciar en modo desarrollo
+npm run dev
+
+# Construir para producción
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠️ Tecnologías Utilizadas
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Frontend**: React 18, TypeScript, Vite
+- **UI/UX**: CSS3, React Hot Toast, Componentes personalizados
+- **Estado**: React Context API, Hooks personalizados
+- **Autenticación**: JWT, LocalStorage
+- **Validaciones**: Algoritmos personalizados (cédula ecuatoriana)
+- **Herramientas**: ESLint, TypeScript, Netlify
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 🎯 Estado del Proyecto
+
+✅ **100% COMPLETADO Y LISTO PARA PRODUCCIÓN**
+
+- ✅ Migración completa a react-hot-toast
+- ✅ Documentación exhaustiva (2,500+ líneas)
+- ✅ Traducción al español (100%)
+- ✅ Sistema de validaciones implementado
+- ✅ Correcciones de usuario completadas
+- ✅ Unificación de documentación
+
+## 📞 Soporte
+
+Para obtener información técnica detallada, consulta la [Documentación Completa](./DOCUMENTACION_SISTEMA.md).
+
+---
+
+**📅 Última Actualización**: 25 de junio de 2025  
+**👨‍💻 Estado**: ✅ Sistema 100% Completado  
+**🔄 Versión**: 1.0.0 - Producción Lista

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { notifications } from '../../utils/notifications';
 import { useAuth } from '../../hooks/useAuth';
 import { AuthLayout } from '../../components/auth/AuthLayout';
 import { LoginForm } from '../../components/auth/LoginFrom';
@@ -17,10 +17,9 @@ export default function LoginPage() {
     selectRole 
   } = useAuth();
   const [attempts, setAttempts] = useState(0);
-
   const handleLogin = async (email: string, password: string) => {
     if (attempts >= 3) {
-      toast.error('Demasiados intentos fallidos. Por favor espera un momento.');
+      notifications.error('Demasiados intentos fallidos. Por favor espera un momento.');
       setAttempts(0);
       return;
     }
@@ -30,7 +29,7 @@ export default function LoginPage() {
       
       if (result && !result.requiresRoleSelection) {
         // Usuario tiene un solo rol, redirigir directamente
-        toast.success('¡Bienvenido! Redirigiendo...');
+        notifications.success('¡Bienvenido! Redirigiendo...');
         setTimeout(() => {
           const redirectPath = result.selectedRole === 'Administrator' ? '/admin' : '/user/dashboard';
           window.location.href = redirectPath;
@@ -44,26 +43,25 @@ export default function LoginPage() {
       if (errorCode) {
         switch (errorCode) {
           case 'INVALID_CREDENTIALS':
-            toast.error('El usuario no existe');
+            notifications.error('El usuario no existe');
             break;
           case 'USER_BLOCKED':
-            toast.error('Usuario bloqueado. Contacta al administrador');
+            notifications.error('Usuario bloqueado. Contacta al administrador');
             break;
           case 'NETWORK_ERROR':
-            toast.error('Error de conexión. Verifica tu internet');
+            notifications.error('Error de conexión. Verifica tu internet');
             break;
           default:
-            toast.error(technicalMessage || 'Error al iniciar sesión');
+            notifications.error(technicalMessage || 'Error al iniciar sesión');
         }
       } else {
-        toast.error('Error al iniciar sesión. Verifica tus credenciales');
+        notifications.error('Error al iniciar sesión. Verifica tus credenciales');
       }
     }
   };
-
   const handleRoleSelection = (role: string) => {
     selectRole(role);
-    toast.success(`¡Bienvenido como ${role === 'Administrator' ? 'Administrador' : 'Usuario'}! Redirigiendo...`);
+    notifications.success(`¡Bienvenido como ${role === 'Administrator' ? 'Administrador' : 'Usuario'}! Redirigiendo...`);
     
     setTimeout(() => {
       const redirectPath = role === 'Administrator' ? '/admin/dashboard' : '/user/dashboard';

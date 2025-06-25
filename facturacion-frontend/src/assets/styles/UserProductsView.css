@@ -107,6 +107,92 @@
   color: #0c5460;
 }
 
+/* Estilos específicos para la tabla de productos de usuario */
+.user-products-table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.user-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.user-products-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.user-products-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.user-products-table td {
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.user-products-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.user-products-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.user-products-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Alineación específica para productos de usuario */
+.user-products-table .text-left {
+  text-align: left;
+}
+
+.user-products-table .text-right {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+/* Formateo para números con decimales */
+.user-products-table .number-format {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #28a745;
+}
+
+/* Estados de disponibilidad */
+.user-products-table .status-available {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.user-products-table .status-unavailable {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Responsive para tabla de productos de usuario */
+@media (max-width: 768px) {
+  .user-products-table th,
+  .user-products-table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .user-products-dashboard {

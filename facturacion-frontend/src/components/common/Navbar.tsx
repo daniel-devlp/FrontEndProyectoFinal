@@ -1,25 +1,109 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 🧭 COMPONENTE DE NAVEGACIÓN PRINCIPAL
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 
+ * Este componente implementa la barra de navegación principal de la aplicación,
+ * proporcionando acceso a todas las secciones según el rol del usuario.
+ * 
+ * 🎯 FUNCIONALIDADES PRINCIPALES:
+ * • Navegación adaptativa según roles y permisos del usuario
+ * • Menú responsive para dispositivos móviles y desktop
+ * • Indicador de estado de conexión online/offline
+ * • Información del usuario autenticado en tiempo real
+ * • Logout seguro con limpieza de sesión
+ * • Manejo de teclado para accesibilidad (ESC para cerrar menú)
+ * • Cierre automático de menú al cambiar de ruta
+ * 
+ * 🔧 CARACTERÍSTICAS TÉCNICAS:
+ * • Integración con sistema de autenticación y autorización
+ * • Manejo de eventos de conectividad del navegador
+ * • Responsive design con breakpoints para móviles
+ * • Animaciones CSS para mejor experiencia de usuario
+ * • Event listeners optimizados con cleanup automático
+ * • Integración con React Router para navegación SPA
+ * 
+ * 🚀 MEJORAS FUTURAS SUGERIDAS:
+ * • Notificaciones en tiempo real integradas en la navbar
+ * • Avatar personalizable del usuario con foto de perfil
+ * • Breadcrumbs dinámicos según la ruta actual
+ * • Búsqueda global con autocompletado
+ * • Accesos directos configurables por usuario
+ * • Modo oscuro/claro con toggle
+ * • Indicadores de badges para notificaciones pendientes
+ * • Menú contextual con acciones rápidas
+ * • Integración con sistemas de help desk
+ * • Shortcuts de teclado personalizables
+ * • Multi-idioma con selector de idioma
+ * • Integración con sistemas de chat interno
+ * 
+ * 💡 ESTRUCTURA DEL MENÚ:
+ * ```
+ * Admin: Dashboard → Users → Roles → Clients → Products → Invoices
+ * User:  Dashboard → Clients → Products → Invoices
+ * ```
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { notifications } from '../../utils/notifications';
 import './../../assets/styles/Navbar.css';
 import { authService } from '../../services/authService';
 import { useAuth } from '../../hooks/useAuth';
 
+ /**
+ * 🧭 COMPONENTE PRINCIPAL DE NAVEGACIÓN
+ * 
+ * Renderiza la barra de navegación principal con menús adaptativos,
+ * información del usuario y controles de sesión.
+ * 
+ * @returns {JSX.Element} Elemento JSX de la barra de navegación
+ */
 const Navbar: React.FC = () => {
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 📊 ESTADOS DEL COMPONENTE
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /** 👤 Nombre del usuario autenticado */
   const [username, setUsername] = useState('Usuario');
+  
+  /** 📱 Estado del menú móvil (abierto/cerrado) */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  /** 🌐 Estado de conectividad a internet */
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  
+  /** 🎭 Datos de autenticación y permisos del usuario actual */
   const { selectedRole, canAccess } = useAuth();
+  
+  /** 📍 Ubicación actual en la aplicación */
   const location = useLocation();
 
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // 🚀 EFECTOS Y INICIALIZACIÓN
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * 👤 EFECTO PARA CARGAR INFORMACIÓN DEL USUARIO
+   * 
+   * Se ejecuta una vez al montar el componente para obtener el nombre
+   * del usuario autenticado desde el servicio de autenticación.
+   */
   useEffect(() => {
+    /**
+     * 🔄 Función asíncrona para obtener datos del usuario
+     * Maneja errores de forma elegante y proporciona fallbacks
+     */
     const fetchUsername = async () => {
       try {
         const data = await authService.getCurrentUser();
         setUsername(data.userName || 'Usuario');
-      } catch (error) {        console.error('Error fetching username:', error);
-        toast.error('Error al obtener información del usuario');
-        setUsername('Usuario');
+      } catch (error) {
+        // 🔍 Log para debugging sin exponer información sensible
+        console.error('Error fetching username:', error);
+        notifications.error('Error al obtener información del usuario');
+        setUsername('Usuario'); // 🔄 Fallback en caso de error
       }
     };
 
@@ -59,11 +143,11 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await authService.logout();
-      toast.success('Sesión cerrada exitosamente');
+      notifications.success('Sesión cerrada exitosamente');
       window.location.href = "/";
     } catch (error) {
       console.error("Error during logout:", error);
-      toast.error('Error al cerrar sesión');
+      notifications.error('Error al cerrar sesión');
     }
   };
 
@@ -223,3 +307,6 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
+
+

@@ -4,9 +4,8 @@ import { useClients, validateClientFields, validateClientFieldsUpdate } from '..
 import type { ClientDto } from '../../@types/clients';
 import '../../assets/styles/ClientsCRUD.css';
 import Modal from '../../components/common/Modal';
-import Table from '../../components/common/Table';
 import DynamicButton from '../../components/common/DynamicButton';
-import { toast } from 'react-toastify';
+import { notifications, confirmAction, confirmDestructiveAction, confirmUpdateAction, withLoadingToast } from '../../utils/notifications';
 import SearchBar from '../../components/common/SearchBar';
 
 const ClientsCRUD = () => {
@@ -24,9 +23,15 @@ const ClientsCRUD = () => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   
-
   const handleAdd = async () => {
     if (!selectedClient) return;
+
+    // Confirmación antes de crear
+    const confirmed = await confirmAction(
+      '¿Estás seguro de que deseas crear este cliente?',
+      'Confirmar Creación de Cliente'
+    );
+    if (!confirmed) return;
 
     const clientToAdd = {
       ...selectedClient,
@@ -36,24 +41,33 @@ const ClientsCRUD = () => {
     const errors = validateClientFields(clientToAdd, clients);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      toast.error('Error en los datos del cliente. Por favor, revise los campos marcados en rojo.');
+      notifications.error('Error en los datos del cliente. Por favor, revise los campos marcados en rojo.');
       return;
     }
 
     try {
-      await createClient(clientToAdd);
-      toast.success('Cliente creado exitosamente.');
+      await withLoadingToast(
+        () => createClient(clientToAdd),
+        'Creando cliente...',
+        'Cliente creado exitosamente'
+      );
       handleModalClose(); // Cerrar el modal automáticamente
     } catch (error) {
-      toast.error('Error al crear cliente. Por favor, intente nuevamente.');
+      notifications.error('Error al crear cliente. Por favor, intente nuevamente.');
     }
   };
-
   // Asegurar que el evento onSubmit no se propague más allá del formulario
   const handleEdit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault(); // Detener el comportamiento predeterminado del formulario
 
     if (!selectedClient) return;
+
+    // Confirmación antes de actualizar
+    const confirmed = await confirmUpdateAction(
+      '¿Estás seguro de que deseas actualizar este cliente?',
+      'Confirmar Actualización de Cliente'
+    );
+    if (!confirmed) return;
 
     // Asegurar que identificationType tenga un valor predeterminado directamente
     const clientToUpdate = {
@@ -64,53 +78,44 @@ const ClientsCRUD = () => {
     const errors = validateClientFieldsUpdate(clientToUpdate, clients);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      toast.error('Error en los datos del cliente. Por favor, revise los campos marcados en rojo.');
+      notifications.error('Error en los datos del cliente. Por favor, revise los campos marcados en rojo.');
       return;
     }
 
     try {
-      await updateClient(clientToUpdate.clientId, clientToUpdate);
-      toast.success('Cliente actualizado exitosamente.');
+      await withLoadingToast(
+        () => updateClient(clientToUpdate.clientId, clientToUpdate),
+        'Actualizando cliente...',
+        'Cliente actualizado exitosamente'
+      );
       handleModalClose(); // Cerrar el modal automáticamente
     } catch (error) {
-      toast.error('Error al actualizar cliente. Por favor, intente nuevamente.');
+      notifications.error('Error al actualizar cliente. Por favor, intente nuevamente.');
     }
   };
 
   const handleDelete = async (clientId: number) => {
-    toast.warn(
-      <div>
-        <p>¿Estás seguro de que deseas eliminar este cliente?</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
-          <button
-            style={{ backgroundColor: '#ef4444', color: '#fff', padding: '0.5rem 1rem', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-            onClick={async () => {
-              try {
-                await deleteClient(clientId);
-                toast.dismiss(); // Cerrar la notificación
-                toast.success('Cliente eliminado exitosamente.');
-              } catch (error) {
-                toast.error('Error al eliminar cliente. Por favor, intente nuevamente.');
-              }
-            }}
-          >
-            Sí
-          </button>
-          <button
-            style={{ backgroundColor: '#64748b', color: '#fff', padding: '0.5rem 1rem', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-            onClick={() => toast.dismiss()}
-          >
-            No
-          </button>
-        </div>
-      </div>,
-      {
-        autoClose: false,
-        closeOnClick: false,
-        draggable: false,
-        position: 'top-center',
-      }
+    const client = clients.find(c => c.clientId === clientId);
+    const clientName = client ? `${client.firstName} ${client.lastName}` : 'este cliente';
+    
+    const confirmed = await confirmDestructiveAction(
+      `¿Estás seguro de que deseas eliminar ${clientName}? Esta acción no se puede deshacer.`,
+      'Confirmar Eliminación de Cliente',
+      'Sí, eliminar cliente'
     );
+    
+    if (confirmed) {
+      try {
+        await withLoadingToast(
+          () => deleteClient(clientId),
+          'Eliminando cliente...',
+          'Cliente eliminado exitosamente'
+        );
+      } catch (error) {
+        notifications.error('Error al eliminar cliente. Por favor, intente nuevamente.');
+        console.error('Error al eliminar cliente:', error);
+      }
+    }
   };
 
   const handleModalClose = () => {
@@ -180,35 +185,50 @@ const ClientsCRUD = () => {
               Buscando...
             </div>
           )}
-        </div>
-        <div className="table-container">
-          <Table
-            columns={[
-              { key: 'identificationNumber', header: 'Número de Identificación' },
-              { key: 'fullName', header: 'Nombre' },
-              { key: 'email', header: 'Correo Electrónico' },
-              { key: 'phone', header: 'Teléfono' },
-              { key: 'address', header: 'Dirección' },
-            ]}
-            data={clients.map((client) => ({
-              ...client,
-              fullName: `${client.firstName} ${client.lastName}`,
-            }))}
-            renderActions={(client) => (
-              <>
-                <DynamicButton
-                  type="edit"
-                  onClick={() => handleOpenModal('update', client)}
-                  label="Editar"
-                />
-                <DynamicButton
-                  type="delete"
-                  onClick={() => handleDelete(client.clientId)}
-                  label="Eliminar"
-                />
-              </>
-            )}
-          />
+        </div>        <div className="table-container">
+          <div className="clients-table-container">
+            <table className="clients-table">
+              <thead>
+                <tr>
+                  
+                  <th>Número de Identificación</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Dirección</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {clients.map((client) => (
+                  <tr key={client.clientId}>
+                    
+                    <td className="text-left">{client.identificationNumber}</td>
+                    <td className="text-left">{client.firstName}</td>
+                    <td className="text-left">{client.lastName}</td>
+                    <td className="text-left">{client.email}</td>
+                    <td className="text-left">{client.phone}</td>
+                    <td className="text-left">{client.address}</td>
+                    <td className="text-left">
+                      <div className="actions-cell">
+                        <DynamicButton
+                          type="edit"
+                          onClick={() => handleOpenModal('update', client)}
+                          label="Editar"
+                        />
+                        <DynamicButton
+                          type="delete"
+                          onClick={() => handleDelete(client.clientId)}
+                          label="Eliminar"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className="pagination-controls">
             <button
               disabled={currentPage === 1 || loading}
@@ -333,3 +353,6 @@ const ClientsCRUD = () => {
 };
 
 export default ClientsCRUD;
+
+
+
