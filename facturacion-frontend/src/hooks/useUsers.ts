@@ -226,7 +226,7 @@ export const useUsers = () => {
       // Actualizar el estado local con el nuevo usuario
       setUsers((prev) => [...prev, newUser]);
       
-      notifications.success('Usuario creado exitosamente.');
+    //  notifications.success('Usuario creado exitosamente.');
     } catch (err: any) {
       console.error('Error al crear usuario:', err.message || err);
       notifications.error('Error al crear usuario: ' + (err.message || 'Intente nuevamente.'));
@@ -289,7 +289,7 @@ export const useUsers = () => {
           : user
       ));
       
-      notifications.success('Usuario actualizado exitosamente.');
+     // notifications.success('Usuario actualizado exitosamente.');
     } catch (err: any) {
       console.error('Error al actualizar usuario:', err);
       notifications.error('Error al actualizar usuario: ' + (err.message || 'Intente nuevamente.'));
@@ -312,7 +312,7 @@ export const useUsers = () => {
     try {
       await usersService.deleteUser(userId);
       setUsers((prev) => prev.filter((user) => user.id !== userId));
-      notifications.success('Usuario eliminado exitosamente.');
+     // notifications.success('Usuario eliminado exitosamente.');
     } catch (err: any) {
       notifications.error('Error al eliminar usuario: ' + (err.message || 'Intente nuevamente.'));
       throw new Error(err.message || 'Error al eliminar usuario.');

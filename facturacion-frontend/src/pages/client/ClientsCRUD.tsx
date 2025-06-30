@@ -49,11 +49,60 @@ const ClientsCRUD = () => {
       await withLoadingToast(
         () => createClient(clientToAdd),
         'Creando cliente...',
-        'Cliente creado exitosamente'
+        'Cliente creado exitosamente',
+        undefined,
+        false // No mostrar error toast desde withLoadingToast
       );
-      handleModalClose(); // Cerrar el modal automáticamente
+      // Solo cerrar el modal si la creación fue exitosa
+      handleModalClose();
     } catch (error) {
-      notifications.error('Error al crear cliente. Por favor, intente nuevamente.');
+      // Extraer mensaje específico del error del backend
+      let errorMessage = 'Error al crear cliente. Por favor, intente nuevamente.';
+      
+      // Manejar errores de axios (respuestas HTTP)
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as any;
+        
+        if (axiosError.response?.data) {
+          // Intentar extraer el mensaje del backend
+          if (typeof axiosError.response.data === 'string') {
+            errorMessage = axiosError.response.data;
+          } else if (axiosError.response.data.message) {
+            errorMessage = axiosError.response.data.message;
+          } else if (axiosError.response.data.error) {
+            errorMessage = axiosError.response.data.error;
+          } else if (axiosError.response.data.title) {
+            errorMessage = axiosError.response.data.title;
+          }
+        }
+        
+        // Mensajes específicos por código de estado HTTP
+        if (!axiosError.response?.data || errorMessage === 'Error al crear cliente. Por favor, intente nuevamente.') {
+          switch (axiosError.response?.status) {
+            case 400:
+              errorMessage = 'Datos inválidos. Verifique la información e intente nuevamente.';
+              break;
+            case 409:
+              errorMessage = 'Ya existe un cliente con esta cédula o correo electrónico.';
+              break;
+            case 500:
+              errorMessage = 'Error interno del servidor. Por favor, contacte al administrador.';
+              break;
+            case 422:
+              errorMessage = 'Los datos proporcionados no cumplen con los requisitos del sistema.';
+              break;
+            default:
+              errorMessage = `Error del servidor (${axiosError.response?.status}). Intente nuevamente.`;
+          }
+        }
+      } 
+      // Manejar errores de JavaScript/validación
+      else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      notifications.error(errorMessage);
+      // NO cerrar el modal en caso de error para que el usuario pueda corregir
     }
   };
   // Asegurar que el evento onSubmit no se propague más allá del formulario
@@ -185,7 +234,8 @@ const ClientsCRUD = () => {
               Buscando...
             </div>
           )}
-        </div>        <div className="table-container">
+        </div>    
+          <div className="table-container">
           <div className="clients-table-container">
             <table className="clients-table">
               <thead>

@@ -64,7 +64,7 @@ export default function LoginPage() {
     notifications.success(`¡Bienvenido como ${role === 'Administrator' ? 'Administrador' : 'Usuario'}! Redirigiendo...`);
     
     setTimeout(() => {
-      const redirectPath = role === 'Administrator' ? '/admin/dashboard' : '/user/dashboard';
+      const redirectPath = role === 'Administrator' ? '/admin' : '/user/dashboard';
       window.location.href = redirectPath;
     }, 1500);
   };

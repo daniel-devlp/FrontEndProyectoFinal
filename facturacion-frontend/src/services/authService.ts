@@ -75,13 +75,13 @@ export const authService = {
    * @throws {object} Authentication error with errorCode and message
    */
   login: async (email: string, password: string) => {
-    const apiEndpoint = 'https://localhost:44306/api/Auth/login';
+    const apiEndpoint = 'https://91c2-45-173-230-87.ngrok-free.app/api/Auth/login';
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     };
-
+    
     const response = await fetch(apiEndpoint, requestOptions);
     const data = await response.json();
 
@@ -158,7 +158,7 @@ export const authService = {
    */
   getCurrentUser: async () => {
     const token = localStorage.getItem('authToken');
-    const apiEndpoint = 'https://localhost:44306/api/Users/me';
+    const apiEndpoint = 'https://91c2-45-173-230-87.ngrok-free.app/api/Users/me';
     const requestOptions = {
       method: 'GET',
       headers: {

@@ -294,8 +294,7 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
   const createClient = async (client: ClientDto) => {
     const errors = validateClientFields(client, clients);
     if (Object.keys(errors).length > 0) {
-      notifications.error('Error en los datos del cliente. Por favor, revise los campos.');
-      return;
+      throw new Error('Error en los datos del cliente. Por favor, revise los campos.');
     }
 
     try {
@@ -303,7 +302,8 @@ export const useClients = ({ pageNumber, pageSize, searchTerm }: { pageNumber: n
       setClients((prev) => [...prev, client]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      notifications.error('Error al crear cliente. Por favor, intente nuevamente.');
+      // Re-lanzar el error para que sea manejado por el componente
+      throw err;
     }
   };
 

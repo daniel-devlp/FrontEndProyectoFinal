@@ -183,7 +183,8 @@ const ProductsCRUD: React.FC = () => {
     <div className="products-crud">
       <Navbar />
       <div className="crud-dashboard">
-        <h1>Gestión de Productos</h1>        <p>Total de productos: {totalItems}</p>        <div className="search-bar">
+        <h1>Gestión de Productos</h1>
+                <p>Total de productos: {totalItems}</p>        <div className="search-bar">
           <SearchBar
             placeholder="Buscar productos..."
             value={searchTerm}
@@ -199,7 +200,8 @@ const ProductsCRUD: React.FC = () => {
               Buscando...
             </div>
           )}
-        </div>        <div className="table-container">
+        </div>        
+        <div className="table-container">
           <div className="products-table-container">
             <table className="products-table">
               <thead>

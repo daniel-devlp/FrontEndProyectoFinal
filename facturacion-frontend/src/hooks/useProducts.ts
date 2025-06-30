@@ -160,7 +160,7 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
     try {
       await productService.createProduct(dto);
       setProducts((prev) => [...prev, { ...dto, productId: Date.now() }]);
-      notifications.success('Producto creado exitosamente');
+     // notifications.success('Producto creado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
       notifications.error('Error al crear producto: ' + (err instanceof Error ? err.message : 'Error desconocido'));
@@ -179,7 +179,7 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
     try {
       await productService.updateProduct(id, dto);
       setProducts((prev) => prev.map((product) => (product.productId === id ? { ...product, ...dto } : product)));
-      notifications.success('Producto actualizado exitosamente');
+      //notifications.success('Producto actualizado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
       notifications.error('Error al actualizar producto: ' + (err instanceof Error ? err.message : 'Error desconocido'));
@@ -189,7 +189,7 @@ export const useProducts = ({ pageNumber, pageSize, searchTerm }: { pageNumber: 
     try {
       await productService.deleteProduct(id);
       setProducts((prev) => prev.filter((product) => product.productId !== id));
-      notifications.success('Producto eliminado exitosamente');
+      //notifications.success('Producto eliminado exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
       notifications.error('Error al eliminar producto: ' + (err instanceof Error ? err.message : 'Error desconocido'));

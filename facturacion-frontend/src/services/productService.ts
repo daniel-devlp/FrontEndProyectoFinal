@@ -52,7 +52,7 @@ import type { ProductDto, ProductCreateDto, ProductUpdateDto } from '../@types/p
 import { getToken } from './authService';
 
 /** 🌐 URL base de la API de productos */
-const API_URL = 'https://localhost:44306/api/Product';
+const API_URL = 'https://91c2-45-173-230-87.ngrok-free.app/api/Product';
 
 /**
  * 🔐 Genera headers de autenticación para peticiones HTTP

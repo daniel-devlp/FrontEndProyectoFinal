@@ -87,7 +87,7 @@ const UserDashboard: React.FC = () => {
   const dashboardCards = [
     {
       title: 'Gestión de Clientes',
-      description: 'Crear, editar y gestionar información de clientes',
+      description: 'Visualizar catálogo de clientes disponibles',
       icon: '👥',
       path: '/user/clients',
       color: '#3498db'

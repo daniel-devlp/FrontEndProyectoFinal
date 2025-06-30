@@ -57,8 +57,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <BrowserRouter>
-     
+    <BrowserRouter> 
       <Routes>
         <Route 
           path="/login" 

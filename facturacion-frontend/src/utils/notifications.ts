@@ -478,7 +478,8 @@ export const withLoadingToast = async <T>(
   asyncFn: () => Promise<T>,
   loadingMessage: string,
   successMessage: string,
-  errorMessage?: string
+  errorMessage?: string,
+  showErrorToast: boolean = true
 ): Promise<T> => {
   const toastId = notifications.loading(loadingMessage);
   
@@ -489,8 +490,10 @@ export const withLoadingToast = async <T>(
     return result;
   } catch (error) {
     notifications.dismiss(toastId);
-    const errorMsg = errorMessage || 'Ha ocurrido un error inesperado';
-    notifications.error(errorMsg);
+    if (showErrorToast) {
+      const errorMsg = errorMessage || 'Ha ocurrido un error inesperado';
+      notifications.error(errorMsg);
+    }
     throw error; // Re-lanza para que el código llamador pueda manejar específicamente
   }
 };

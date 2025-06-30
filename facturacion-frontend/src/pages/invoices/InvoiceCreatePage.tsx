@@ -198,7 +198,7 @@ const InvoiceCreatePage = () => {
     }
 
     if (!newInvoice.userId) {
-      notifications.error('El ID del usuario es obligatorio. Intente nuevamente.');
+      notifications.error('Debe seleccionar un cliente . Intente nuevamente.');
       return;
     }
 
@@ -413,7 +413,8 @@ const InvoiceCreatePage = () => {
               onClick={closeClientModal}
             >
               X
-            </button>            <h2>Seleccionar Cliente</h2>
+            </button>            
+            <h2>Seleccionar Cliente</h2>
             <div style={{ marginBottom: '15px', display: 'flex', gap: '10px', alignItems: 'center' }}>
               <div style={{ flex: 1 }}>
                 <SearchBar

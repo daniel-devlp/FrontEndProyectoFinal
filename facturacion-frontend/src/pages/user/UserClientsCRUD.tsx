@@ -389,7 +389,7 @@ const UserClientsCRUD: React.FC = () => {
           fontSize: '1.1rem',
           fontStyle: 'italic'
         }}>
-          Panel de usuario - Crear, editar y consultar clientes
+          Panel de usuario - Consultar clientes
         </p>
       <div className="search-bar">
         <SearchBar
@@ -421,7 +421,6 @@ const UserClientsCRUD: React.FC = () => {
                 <th>Teléfono</th>
                 <th>Email</th>
                 <th>Dirección</th>
-                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -434,29 +433,14 @@ const UserClientsCRUD: React.FC = () => {
                   <td className="text-left">{client.phone}</td>
                   <td className="text-left">{client.email}</td>
                   <td className="text-left">{client.address}</td>
-                  <td className="text-center">
-                    <Button
-                      onClick={() => handleEdit(client)}
-                      variant="secondary"
-                      className="btn-sm"
-                    >
-                      Editar
-                    </Button>
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-      <div className="actions-section">
-        <Button
-          onClick={() => setAddModalOpen(true)}
-          variant="primary"
-        >
-          Agregar Cliente
-        </Button>
-      </div>
+      
+      
 
       <div className="pagination-controls">
         <button
@@ -473,224 +457,28 @@ const UserClientsCRUD: React.FC = () => {
           Siguiente
         </button>
       </div>
-
-      {/* Modal para agregar cliente */}
-      <Modal
-        isOpen={isAddModalOpen}
-        onClose={handleAddModalClose}
-        title="Agregar Cliente"
-      >
-        <div className="client-form">
-          <div className="form-group">
-            <label htmlFor="identificationType">Tipo de Identificación:</label>
-            <select
-              id="identificationType"
-              name="identificationType"
-              value={selectedClient.identificationType}
-              onChange={handleInputChange}
-            >
-              <option value="cedula">Cédula</option>
-              <option value="pasaporte">Pasaporte</option>
-              <option value="extranjeria">Extranjería</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="identificationNumber">Número de Identificación:</label>
-            <input
-              type="text"
-              id="identificationNumber"
-              name="identificationNumber"
-              value={selectedClient.identificationNumber}
-              onChange={handleInputChange}
-              placeholder="Ingrese el número de identificación"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="firstName">Nombre:</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={selectedClient.firstName}
-              onChange={handleInputChange}
-              placeholder="Ingrese el nombre"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Apellido:</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={selectedClient.lastName}
-              onChange={handleInputChange}
-              placeholder="Ingrese el apellido"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={selectedClient.email}
-              onChange={handleInputChange}
-              placeholder="Ingrese el email"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Teléfono:</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              value={selectedClient.phone}
-              onChange={handleInputChange}
-              placeholder="Ingrese el teléfono"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="address">Dirección:</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={selectedClient.address}
-              onChange={handleInputChange}
-              placeholder="Ingrese la dirección"
-              required
-            />
-          </div>
-          <div className="modal-actions">
-            <Button
-              onClick={handleSave}
-              variant="primary"
-            >
-              Guardar
-            </Button>
-            <Button
-              onClick={handleAddModalClose}
-              variant="secondary"
-            >
-              Cancelar
-            </Button>
+              <div className="info-card" style={{
+          backgroundColor: '#e8f4f8',
+          border: '1px solid #bee5eb',
+          borderRadius: '8px',
+          padding: '1.5rem',
+          marginTop: '2rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem'
+        }}>
+          <div style={{ fontSize: '2rem' }}>ℹ️</div>
+          <div>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#0c5460' }}>
+              Información para Usuarios
+            </h4>
+            <p style={{ margin: 0, color: '#0c5460' }}>
+              Como usuario, puedes consultar el catálogo de clientes para crear facturas, 
+              pero no tienes permisos para crear, editar o eliminar clientes.
+            </p>
           </div>
         </div>
-      </Modal>
-
-      {/* Modal para editar cliente */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={handleEditModalClose}
-        title="Editar Cliente"
-      >
-        <div className="client-form">
-          <div className="form-group">
-            <label htmlFor="identificationType">Tipo de Identificación:</label>
-            <select
-              id="identificationType"
-              name="identificationType"
-              value={selectedClient.identificationType}
-              onChange={handleInputChange}
-            >
-              <option value="cedula">Cédula</option>
-              <option value="pasaporte">Pasaporte</option>
-              <option value="extranjeria">Extranjería</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="identificationNumber">Número de Identificación:</label>
-            <input
-              type="text"
-              id="identificationNumber"
-              name="identificationNumber"
-              value={selectedClient.identificationNumber}
-              onChange={handleInputChange}
-              placeholder="Ingrese el número de identificación"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="firstName">Nombre:</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={selectedClient.firstName}
-              onChange={handleInputChange}
-              placeholder="Ingrese el nombre"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Apellido:</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={selectedClient.lastName}
-              onChange={handleInputChange}
-              placeholder="Ingrese el apellido"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={selectedClient.email}
-              onChange={handleInputChange}
-              placeholder="Ingrese el email"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Teléfono:</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              value={selectedClient.phone}
-              onChange={handleInputChange}
-              placeholder="Ingrese el teléfono"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="address">Dirección:</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={selectedClient.address}
-              onChange={handleInputChange}
-              placeholder="Ingrese la dirección"
-              required
-            />
-          </div>
-          <div className="modal-actions">
-            <Button
-              onClick={handleSave}
-              variant="primary"
-            >
-              Actualizar
-            </Button>
-            <Button
-              onClick={handleEditModalClose}
-              variant="secondary"
-            >
-              Cancelar
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      
       </div>
     </div>
   );

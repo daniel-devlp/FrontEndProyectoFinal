@@ -52,7 +52,7 @@ import type { UserDto, UserCreateDto, UserUpdateDto } from '../@types/users';
 import axios from 'axios';
 
 /** 🌐 URL base de la API de usuarios */
-const API_URL = 'https://localhost:44306/api/Users';
+const API_URL = 'https://91c2-45-173-230-87.ngrok-free.app/api/Users';
 
 /**
  * 🔐 Genera headers de autenticación para peticiones HTTP

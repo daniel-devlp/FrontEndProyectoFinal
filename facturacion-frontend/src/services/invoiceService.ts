@@ -83,7 +83,7 @@ interface EnrichedInvoiceDetailDto extends InvoiceDetailDto {
 }
 
 /** 🌐 URL base de la API de facturas */
-const API_URL = 'https://localhost:44306/api/Invoice';
+const API_URL = 'https://91c2-45-173-230-87.ngrok-free.app/api/Invoice';
 
 /**
  * 🔐 GENERADOR DE HEADERS DE AUTENTICACIÓN

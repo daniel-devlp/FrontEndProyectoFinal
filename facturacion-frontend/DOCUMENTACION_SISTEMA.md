@@ -718,6 +718,145 @@ El proyecto está completamente preparado para:
 
 ### 🔧 Estructura de Soporte
 
+---
+
+## 🚨 MANEJO AVANZADO DE ERRORES EN CRUDS
+
+### 📋 Mejoras en ClientsCRUD
+
+**Problema Resuelto**: El modal se cerraba automáticamente incluso cuando había errores del backend (ej: error 500), impidiendo al usuario corregir los datos.
+
+#### ✅ Solución Implementada
+
+**Comportamiento Correcto**:
+- ✅ Modal se mantiene abierto en caso de error
+- ✅ Mensaje específico del backend se muestra al usuario
+- ✅ Modal solo se cierra cuando la operación es exitosa
+- ✅ Diferentes mensajes según el código HTTP de error
+
+#### 🔧 Implementación Técnica
+
+**1. Función handleAdd Mejorada**:
+```typescript
+const handleAdd = async () => {
+  // ... validaciones previas ...
+  
+  try {
+    await withLoadingToast(
+      () => createClient(clientToAdd),
+      'Creando cliente...',
+      'Cliente creado exitosamente',
+      undefined,
+      false // No mostrar error toast desde withLoadingToast
+    );
+    // ✅ Solo cerrar modal si es exitoso
+    handleModalClose();
+  } catch (error) {
+    // 🎯 Extraer mensaje específico del backend
+    let errorMessage = 'Error al crear cliente. Por favor, intente nuevamente.';
+    
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as any;
+      
+      // Extraer mensaje del response
+      if (axiosError.response?.data) {
+        if (typeof axiosError.response.data === 'string') {
+          errorMessage = axiosError.response.data;
+        } else if (axiosError.response.data.message) {
+          errorMessage = axiosError.response.data.message;
+        } else if (axiosError.response.data.error) {
+          errorMessage = axiosError.response.data.error;
+        }
+      }
+      
+      // Mensajes por código HTTP
+      switch (axiosError.response?.status) {
+        case 400: errorMessage = 'Datos inválidos...'; break;
+        case 409: errorMessage = 'Ya existe un cliente...'; break;
+        case 500: errorMessage = 'Error interno del servidor...'; break;
+        case 422: errorMessage = 'Datos no cumplen requisitos...'; break;
+      }
+    }
+    
+    notifications.error(errorMessage);
+    // 🚫 NO cerrar modal para permitir corrección
+  }
+};
+```
+
+**2. Hook useClients Optimizado**:
+```typescript
+const createClient = async (client: ClientDto) => {
+  const errors = validateClientFields(client, clients);
+  if (Object.keys(errors).length > 0) {
+    throw new Error('Error en los datos del cliente...');
+  }
+
+  try {
+    await clientService.createClient(client);
+    setClients((prev) => [...prev, client]);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Error desconocido');
+    // ⚡ Re-lanzar error para manejo específico
+    throw err;
+  }
+};
+```
+
+**3. withLoadingToast Extendido**:
+```typescript
+export const withLoadingToast = async <T>(
+  asyncFn: () => Promise<T>,
+  loadingMessage: string,
+  successMessage: string,
+  errorMessage?: string,
+  showErrorToast: boolean = true  // 🆕 Control de error toast
+): Promise<T> => {
+  // ... implementación ...
+  try {
+    const result = await asyncFn();
+    notifications.dismiss(toastId);
+    notifications.success(successMessage);
+    return result;
+  } catch (error) {
+    notifications.dismiss(toastId);
+    if (showErrorToast) {  // 🎯 Solo mostrar si está habilitado
+      const errorMsg = errorMessage || 'Ha ocurrido un error inesperado';
+      notifications.error(errorMsg);
+    }
+    throw error;
+  }
+};
+```
+
+#### 📊 Códigos de Error Manejados
+
+| Código HTTP | Mensaje Específico | Comportamiento |
+|-------------|-------------------|----------------|
+| `400` | "Datos inválidos. Verifique la información..." | Modal abierto |
+| `409` | "Ya existe un cliente con esta cédula..." | Modal abierto |
+| `422` | "Los datos no cumplen con los requisitos..." | Modal abierto |
+| `500` | "Error interno del servidor. Contacte admin..." | Modal abierto |
+| Otros | "Error del servidor (XXX). Intente nuevamente." | Modal abierto |
+
+#### 🎯 Beneficios de la Mejora
+
+1. **UX Mejorada**: Usuario puede corregir errores sin reabrir modal
+2. **Mensajes Específicos**: Información clara sobre qué corregir
+3. **Menos Frustración**: No perder datos ingresados por errores
+4. **Debugging Fácil**: Mensajes específicos del backend
+5. **Consistencia**: Patrón aplicable a otros CRUDs
+
+#### 🔄 Aplicación a Otros CRUDs
+
+Este patrón se puede aplicar a:
+- ✅ UsersCRUD
+- ✅ ProductsCRUD  
+- ✅ InvoicesCRUD
+- ✅ RolesCRUD
+
+---
+
 Para el mantenimiento continuo del sistema:
 
 1. **Documentación**: Toda la información está centralizada en este archivo
@@ -736,7 +875,7 @@ Para el mantenimiento continuo del sistema:
 
 ---
 
-**📅 Fecha de Documentación**: 25 de junio de 2025  
+**📅 Fecha de Documentación**: 26 de junio de 2025  
 **👨‍💻 Estado**: ✅ Sistema 100% Completado y Documentado  
-**🔄 Última Actualización**: Migración completa a react-hot-toast  
-**📊 Versión**: 1.0.0 - Producción Lista
+**🔄 Última Actualización**: Manejo avanzado de errores en CRUDs  
+**📊 Versión**: 1.0.1 - Manejo de Errores Mejorado

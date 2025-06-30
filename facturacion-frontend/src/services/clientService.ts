@@ -55,7 +55,7 @@ import type { ClientDto } from '../@types/clients';
 import { getToken } from './authService'; // Import function to get authentication token
 
 /** URL base para endpoints de la API de clientes */
-const BASE_URL = 'https://localhost:44306/api/Client';
+const BASE_URL = 'https://91c2-45-173-230-87.ngrok-free.app/api/Client';
 
 /**
  * Generates authentication headers with JWT token

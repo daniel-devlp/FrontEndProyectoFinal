@@ -167,7 +167,7 @@ export const useInvoices = ({
       notifications.success('Factura creada exitosamente');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      notifications.error('Error al crear factura: ' + (err instanceof Error ? err.message : 'Error desconocido'));
+      notifications.error('Error : ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 
