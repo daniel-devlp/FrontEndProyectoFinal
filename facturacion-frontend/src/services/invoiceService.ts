@@ -191,6 +191,7 @@ export const invoiceService = {
       body: JSON.stringify(dto),
     });
     if (!response.ok) throw new Error('Failed to create invoice');
+    //notifications.success('Factura creada exitosamente');
   },
 
   /**
